@@ -1,0 +1,177 @@
+{
+  "_comment": "Adding a city is a config edit, not a rewrite. 'method' tiers, in order of preference: api (Socrata/JSON), legistar (official Legistar Web API), rss, html, playwright (JS-rendered, robots-gated), pra_only (no automated fetch; drafts a bulk-access / public-records request instead). Every networked method is gated by robots.txt; a disallow at runtime auto-drafts a records request. Sources marked verify=true have endpoints that should be confirmed on first live run.",
+
+  "identity": {
+    "user_agent": "WindyCityReaper/1.0 (civic public-records research; +https://github.com/therealwindycity/The-Real-Windy-City-)",
+    "contact": "",
+    "delay_seconds_per_host": 3,
+    "max_docs_per_source_per_run": 40,
+    "timeout_seconds": 30
+  },
+
+  "jurisdictions": {
+    "cheyenne_wy": {
+      "label": "Cheyenne, WY",
+      "state": "WY",
+      "agency": "City of Cheyenne",
+      "custodian": "City Clerk's Office, City of Cheyenne, 2101 O'Neil Ave, Cheyenne, WY 82001",
+      "center": [41.1400, -104.8202],
+      "sources": [
+        {
+          "name": "council_minutes_agendas",
+          "method": "html",
+          "url": "https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas",
+          "enabled": true,
+          "notes": "Index page. Packets link out to cheyenne.granicus.com, whose robots.txt disallows automation; those links are refused and routed to a bulk-access request automatically."
+        },
+        {
+          "name": "granicus_packets",
+          "method": "pra_only",
+          "url": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=2",
+          "enabled": true,
+          "block_reason": "cheyenne.granicus.com's robots.txt disallows automated access",
+          "records_description": "All City Council, Finance Committee, Public Services Committee, Committee of the Whole, and Work Session agenda packets and approved minutes hosted on cheyenne.granicus.com",
+          "notes": "robots.txt disallows automated collection. Legal channel: statutory bulk-access request (drafted, human-sent)."
+        },
+        {
+          "name": "city_news",
+          "method": "html",
+          "url": "https://www.cheyennecity.org/News-articles",
+          "enabled": true
+        },
+        {
+          "name": "cap_city_news",
+          "method": "rss",
+          "url": "https://capcity.news/feed",
+          "enabled": true,
+          "sentiment": true
+        },
+        {
+          "name": "wyoming_tribune_eagle",
+          "method": "rss",
+          "url": "https://www.wyomingnews.com/search/?f=rss&l=50&s=start_time&sd=desc",
+          "enabled": false,
+          "notes": "TownNews returned 429 on first contact in the original project; run at most once/day if enabled.",
+          "sentiment": true
+        }
+      ]
+    },
+
+    "chicago_il": {
+      "label": "Chicago, IL",
+      "state": "IL",
+      "agency": "City of Chicago",
+      "custodian": "FOIA Officer, Office of the City Clerk, 121 N. LaSalle St., Room 107, Chicago, IL 60602",
+      "center": [41.8781, -87.6298],
+      "sources": [
+        {
+          "name": "building_permits",
+          "method": "api",
+          "api": "socrata",
+          "url": "https://data.cityofchicago.org/resource/ydr8-5enu.json",
+          "enabled": true,
+          "date_field": "issue_date",
+          "group_field": "community_area",
+          "group_label": "Community Area",
+          "text_fields": ["work_description", "permit_type"],
+          "title_field": "permit_type",
+          "lat_field": "latitude",
+          "lon_field": "longitude",
+          "lookback_days": 120,
+          "limit": 5000,
+          "trend": {"series": "permits_per_month", "min_slope": 3.0, "min_points": 3}
+        },
+        {
+          "name": "crimes",
+          "method": "api",
+          "api": "socrata",
+          "url": "https://data.cityofchicago.org/resource/ijzp-q8t2.json",
+          "enabled": true,
+          "date_field": "date",
+          "group_field": "ward",
+          "group_label": "Ward",
+          "text_fields": [],
+          "lookback_days": 120,
+          "limit": 20000,
+          "trend": {"series": "incidents_per_month", "min_slope": 25.0, "min_points": 3},
+          "notes": "Aggregate-only: individual incident rows are never stored as events."
+        },
+        {
+          "name": "city_council_elms",
+          "method": "playwright",
+          "url": "https://chicityclerkelms.chicago.gov/Search/",
+          "enabled": false,
+          "verify": true,
+          "notes": "Chicago moved Council records from Legistar to the Clerk's eLMS. Enable after confirming robots.txt permits it; otherwise switch to pra_only."
+        },
+        {
+          "name": "block_club_chicago",
+          "method": "rss",
+          "url": "https://blockclubchicago.org/feed/",
+          "enabled": true,
+          "sentiment": true
+        }
+      ]
+    },
+
+    "denver_co": {
+      "label": "Denver, CO",
+      "state": "CO",
+      "agency": "City and County of Denver",
+      "custodian": "Records Custodian, Office of the Clerk and Recorder, 201 W. Colfax Ave., Dept. 101, Denver, CO 80202",
+      "center": [39.7392, -104.9903],
+      "sources": [
+        {
+          "name": "council_matters",
+          "method": "legistar",
+          "client": "denver",
+          "url": "https://webapi.legistar.com/v1/denver/matters",
+          "enabled": true,
+          "verify": true,
+          "lookback_days": 30
+        },
+        {
+          "name": "denverite",
+          "method": "rss",
+          "url": "https://denverite.com/feed/",
+          "enabled": true,
+          "sentiment": true
+        }
+      ]
+    },
+
+    "aurora_co": {
+      "label": "Aurora, CO",
+      "state": "CO",
+      "agency": "City of Aurora",
+      "custodian": "Records Custodian, Office of the City Clerk, 15151 E. Alameda Pkwy, Aurora, CO 80012",
+      "center": [39.7294, -104.8319],
+      "sources": [
+        {
+          "name": "council_matters",
+          "method": "legistar",
+          "client": "aurora",
+          "url": "https://webapi.legistar.com/v1/aurora/matters",
+          "enabled": false,
+          "verify": true,
+          "lookback_days": 30,
+          "notes": "Confirm Aurora's Legistar client slug before enabling."
+        },
+        {
+          "name": "sentinel_colorado",
+          "method": "rss",
+          "url": "https://sentinelcolorado.com/feed/",
+          "enabled": true,
+          "sentiment": true
+        }
+      ]
+    }
+  },
+
+  "document_link_patterns": [
+    "agenda", "minutes", "packet", "ordinance", "resolution",
+    "staff.?report", "application", "zone.?change", "zoning", "annexation",
+    "contract", "bid", "rfp", "budget",
+    "\\.pdf($|\\?)", "\\.docx?($|\\?)", "\\.xlsx?($|\\?)", "\\.csv($|\\?)", "\\.txt($|\\?)"
+  ]
+}

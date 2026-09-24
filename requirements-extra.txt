@@ -1,0 +1,7 @@
+# Optional capabilities
+fastapi>=0.110        # public read API  (python run.py api)
+uvicorn>=0.29
+playwright>=1.44      # 'playwright' tier for JS-rendered public pages (then: playwright install chromium)
+pytesseract>=0.3      # OCR for scanned PDFs (needs system tesseract + poppler)
+pdf2image>=1.17
+pytest>=8

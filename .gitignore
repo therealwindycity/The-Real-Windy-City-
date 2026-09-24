@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.pytest_cache/
+# SQLite sidecars (the Action checkpoints WAL before committing engine.db)
+data/*.db-wal
+data/*.db-shm
+# Demo database is rebuilt on demand from synthetic fixtures
+data/demo/
+data/out/alerts.log
+.streamlit/secrets.toml

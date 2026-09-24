@@ -1,0 +1,79 @@
+name: civic-cycle
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"       # every six hours
+    - cron: "5 0-5 * * 2,3"      # hourly sweeps across Mon/Tue evening meetings (Mountain/Central time)
+  workflow_dispatch:
+    inputs:
+      jurisdiction:
+        description: "Limit to one jurisdiction key (e.g. chicago_il); blank = all"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: civic-cycle
+  cancel-in-progress: false
+
+jobs:
+  cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Selftest (offline proof before touching the network)
+        run: python run.py selftest
+
+      - name: Civic cycle
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          ALERT_MIN_SEVERITY: ${{ vars.ALERT_MIN_SEVERITY || 'medium' }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+          LLM_MODEL: ${{ vars.LLM_MODEL }}
+          REQUESTER_NAME: ${{ vars.REQUESTER_NAME }}
+          REQUESTER_CONTACT: ${{ vars.REQUESTER_CONTACT }}
+          ONLY_JURISDICTION: ${{ github.event.inputs.jurisdiction }}
+        run: |
+          if [ -n "$ONLY_JURISDICTION" ]; then
+            python run.py cycle -j "$ONLY_JURISDICTION"
+          else
+            python run.py cycle
+          fi
+
+      - name: Verify ledger
+        run: python run.py ledger verify
+
+      - name: Commit ledger, database and digest
+        run: |
+          git config user.name "civic-cycle[bot]"
+          git config user.email "civic-cycle[bot]@users.noreply.github.com"
+          for p in data/engine.db data/ledger data/out; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "No changes this cycle (true quiet)."
+          else
+            git commit -m "civic-cycle $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase --autostash || true
+            git push
+          fi

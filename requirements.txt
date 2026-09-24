@@ -1,0 +1,4 @@
+# Core engine is stdlib-only; these power the dashboard and PDF extraction.
+streamlit>=1.50
+pandas>=2.0
+pypdf>=4.0
