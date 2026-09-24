@@ -1,4 +1,4 @@
-"""Tiered ingestion: api > legistar > rss > html > playwright > pra_only.
+"""Tiered ingestion: api > legistar/elms > rss > html > playwright > pra_only.
 
 Every networked tier goes through net.Gate (robots.txt + rate limits + honest
 UA). A refusal is never a dead end: it becomes a `blocked_source` event plus an
@@ -16,7 +16,7 @@ from . import db, records
 from .analyze import compile_watchlist
 from .extract import to_text
 from .net import Blocked, FetchError, Gate
-from .util import now, now_iso, sha256, short_id
+from .util import now, now_iso, parse_iso, sha256, short_id
 
 SILENT_EDIT_METHODS = {"html", "playwright", "document"}
 
@@ -140,6 +140,40 @@ def crawl_legistar(conn, gate: Gate, cfg, jkey, jcfg, src, src_key) -> tuple[int
     return n, f"{n} matters modified since {since}"
 
 
+# ------------------------------------------------------------------ tier: Chicago eLMS (official API)
+def crawl_elms(conn, gate: Gate, cfg, jkey, jcfg, src, src_key) -> tuple[int, str]:
+    """Chicago City Clerk eLMS legislation API (replaced Legistar in 2023).
+    Swagger: https://api.chicityclerkelms.chicago.gov/"""
+    since = (now() - dt.timedelta(days=int(src.get("lookback_days", 14)))).strftime("%Y-%m-%dT00:00:00Z")
+    cap = int(src.get("limit", 1000))
+    base = src["url"].rstrip("/")
+    n, skip, total = 0, 0, None
+    while n < cap:
+        params = {"filter": f"recordCreateDate gt {since}", "sort": "introductionDate desc",
+                  "top": min(500, cap - n), "skip": skip}
+        payload = json.loads(gate.get(f"{base}/matter", params=params, accept="application/json").text())
+        rows = payload.get("data") or []
+        total = (payload.get("meta") or {}).get("count", total)
+        if not rows:
+            break
+        for m in rows:
+            url = f"https://chicityclerkelms.chicago.gov/Matter/?matterId={m.get('matterId')}"
+            title = f"{m.get('recordNumber') or ''} {m.get('title') or m.get('shortTitle') or ''}".strip()
+            text = "\n".join(str(x) for x in (
+                m.get("title"), m.get("shortTitle"), f"Type: {m.get('type')}", f"Category: {m.get('matterCategory')}",
+                f"Status: {m.get('status')} ({m.get('subStatus')})", f"Controlling body: {m.get('controllingBody')}",
+                f"Sponsor: {m.get('filingSponsor')}", f"Key legislation: {m.get('keyLegislation')}",
+                f"Economic disclosure: {m.get('economicDisclosure')}",
+                f"Introduced: {m.get('introductionDate')}") if x)
+            _store(conn, src_key=src_key, jkey=jkey, url=url, title=title[:200], text=text,
+                   content_type="application/json", method="elms_api", published_at=m.get("introductionDate"))
+            n += 1
+        skip += len(rows)
+        if total is not None and skip >= total:
+            break
+    return n, f"{n} matters created since {since[:10]}" + (f" (of {total})" if total else "")
+
+
 # ------------------------------------------------------------------ tier: rss / atom
 def _strip_tags(s: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s or "")).strip()
@@ -220,7 +254,8 @@ def crawl_html(conn, gate: Gate, cfg, jkey, jcfg, src, src_key, rendered: bool =
 
     patterns = [re.compile(p, re.I) for p in cfg.get("document_link_patterns", [])]
     cap = int(cfg["identity"].get("max_docs_per_source_per_run", 40))
-    seen, fetched, blocked_hosts = set(), 0, {}
+    seen, fetched, skipped_fresh, blocked_hosts = set(), 0, 0, {}
+    refetch_after = now() - dt.timedelta(hours=float(src.get("refetch_hours", 24)))
     for href, label in links:
         if href in seen or not href.startswith("http") or href == url:
             continue
@@ -229,6 +264,10 @@ def crawl_html(conn, gate: Gate, cfg, jkey, jcfg, src, src_key, rendered: bool =
             continue
         if fetched >= cap:
             break
+        known = db.get_document(conn, href)
+        if known is not None and (parse_iso(known["last_fetched"]) or refetch_after) > refetch_after:
+            skipped_fresh += 1  # checked recently; silent-edit recheck happens after refetch_hours
+            continue
         try:
             r = gate.get(href)
         except Blocked as b:
@@ -247,6 +286,8 @@ def crawl_html(conn, gate: Gate, cfg, jkey, jcfg, src, src_key, rendered: bool =
     for host, (example_url, reason) in blocked_hosts.items():
         record_block(conn, cfg, jkey, jcfg, url=example_url, reason=reason, source_name=src["name"])
     detail = f"page {'changed' if changed else 'unchanged'}; {fetched} linked documents fetched"
+    if skipped_fresh:
+        detail += f", {skipped_fresh} recently checked"
     if blocked_hosts:
         detail += f"; refused by robots at {', '.join(blocked_hosts)} → bulk request drafted"
     return 1 + fetched, detail
@@ -264,8 +305,8 @@ def crawl_source(conn, gate: Gate, cfg: dict, jkey: str, src: dict) -> dict:
                                records_description=src.get("records_description"), source_name=src["name"])
             n, detail, status = 0, f"legal channel: bulk request #{rid}", "legal_channel"
         else:
-            fn = {"api": crawl_socrata, "legistar": crawl_legistar, "rss": crawl_rss,
-                  "html": crawl_html}.get(method)
+            fn = {"api": crawl_socrata, "legistar": crawl_legistar, "elms": crawl_elms,
+                  "rss": crawl_rss, "html": crawl_html}.get(method)
             if method == "playwright":
                 n, detail = crawl_html(conn, gate, cfg, jkey, jcfg, src, src_key, rendered=True)
             elif fn is None:

@@ -120,6 +120,18 @@ def _matters() -> list[dict]:
     ]
 
 
+def _elms(params: dict) -> dict:
+    rows = [
+        {"matterId": "FIX-ELMS-0001", "recordNumber": "O2026-0031001", "type": "Ordinance",
+         "title": "Emergency contract with Midwest Towing Inc. for city vehicle impound services",
+         "shortTitle": "Contract(s) - Emergency", "matterCategory": "CONTRACTS | Emergency",
+         "status": "4-In Committee", "subStatus": "Referred", "controllingBody": "Committee on Finance",
+         "filingSponsor": "Demo Sponsor", "keyLegislation": "YES", "economicDisclosure": "YES",
+         "introductionDate": "2026-09-22T15:00:00+00:00"},
+    ]
+    return {"data": rows if int(params.get("skip", 0)) == 0 else [], "meta": {"count": len(rows)}}
+
+
 class FixtureWorld:
     """Context manager: starts the fixture server; `mutate()` makes the silent edit."""
 
@@ -142,6 +154,7 @@ class FixtureWorld:
                     "/feed.xml": ("application/rss+xml", _rss()),
                     "/resource/permits.json": ("application/json", json.dumps(_permits(params))),
                     "/legistar/matters": ("application/json", json.dumps(_matters())),
+                    "/elms/matter": ("application/json", json.dumps(_elms(params))),
                 }
                 if parts.path.startswith("/private/"):
                     # Only reached if a client ignores robots.txt — the engine never should.
@@ -189,7 +202,7 @@ def demo_config(base_cfg: dict, b: str = "http://fixture.local") -> dict:
             "agency": "Demo City of Chicago", "custodian": "FOIA Officer, Demo City Clerk",
             "center": [41.8781, -87.6298],
             "sources": [
-                {"name": "council_agendas", "method": "html", "url": f"{b}/agendas"},
+                {"name": "council_agendas", "method": "html", "url": f"{b}/agendas", "refetch_hours": 0},
                 {"name": "building_permits", "method": "api", "api": "socrata",
                  "url": f"{b}/resource/permits.json", "date_field": "issue_date",
                  "group_field": "community_area", "group_label": "Community Area",
@@ -197,6 +210,7 @@ def demo_config(base_cfg: dict, b: str = "http://fixture.local") -> dict:
                  "lat_field": "latitude", "lon_field": "longitude", "lookback_days": 150,
                  "trend": {"series": "permits_per_month", "min_slope": 3.0, "min_points": 3}},
                 {"name": "neighborhood_news", "method": "rss", "url": f"{b}/feed.xml", "sentiment": True},
+                {"name": "city_council_elms", "method": "elms", "url": f"{b}/elms", "lookback_days": 14},
             ],
         },
         "demo_denver": {

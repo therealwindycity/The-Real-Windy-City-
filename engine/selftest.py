@@ -82,6 +82,9 @@ def run_fixture_world(data_dir: Path, log=print):
         leg = kinds("watchlist_hit", jurisdiction="demo_denver")
         checks.append(("legistar matters scanned (sole-source)",
                        any("sole-source award" in e["watchlist_hits"] for e in leg), f"{len(leg)} hit(s)"))
+        el = [e for e in kinds("watchlist_hit", jurisdiction="demo_chicago") if "chicityclerkelms" in (e["source_url"] or "")]
+        checks.append(("Chicago eLMS matters scanned (emergency procurement)",
+                       any("emergency procurement" in e["watchlist_hits"] for e in el), f"{len(el)} hit(s)"))
         hits = db.search(conn, "variance")
         checks.append(("full-text search finds 'variance'", bool(hits), f"{len(hits)} result(s)"))
         ok, n, msg = ledger.verify()

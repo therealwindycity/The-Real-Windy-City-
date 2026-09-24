@@ -22,7 +22,7 @@ Example cycle log:
 ## Try it in 30 seconds (no network, no API keys)
 
 ```bash
-python run.py selftest            # full pipeline against a local fixture server: 10/10 checks
+python run.py selftest            # full pipeline against a local fixture server: 11/11 checks
 pip install -r requirements.txt
 python run.py demo                # builds data/demo/ from synthetic fixtures
 streamlit run streamlit_app.py    # command center; opens on the demo if no live data yet
@@ -37,7 +37,7 @@ pypdf power the dashboard and PDF extraction.
 |---|---|---|
 | Scope | One city, hard-coded Wyoming PRA | **Any city by config edit**: Cheyenne, Chicago, Denver and Aurora seeded; 27 state statute profiles plus federal FOIA |
 | Blocked sources (e.g. Granicus) | Refused, then a dead end or manual PRA | **Auto-drafted bulk-access request** under the right state law, tracked to a due date |
-| Ingestion | Polite HTML and RSS | **Tiered**: Socrata API → Legistar API → RSS → HTML → Playwright render (robots-gated) → legal channel |
+| Ingestion | Polite HTML and RSS | **Tiered**: Socrata API → Legistar / Chicago eLMS APIs → RSS → HTML → Playwright render (robots-gated) → legal channel |
 | Analysis | Keyword FTS5 + extractive summary | FTS5 + watchlist quotes + **permit/incident trend slopes** + **news sentiment shifts** + optional **LLM pass with verbatim-quote verification** |
 | Alerts | Daily digest file | **Slack, Discord, webhook, email** push plus the digest |
 | Records requests | Draft text | **Workflow**: draft → reviewed → sent → due date computed → overdue flagged; edit, download or open in your email client |
@@ -57,7 +57,9 @@ to discredit your findings. See [LEGAL.md](LEGAL.md).
 
 - **🗺️ Live Intel:** a map with pins colored by alert type, a sortable table of
   verbatim quotes and source links, and expandable detail with diffs for silent
-  edits. Any event has a one-click button to draft a records request about it.
+  edits. Each event also shows the engine's **captured copy** of every stored
+  version, so the evidence survives even if the agency edits or deletes the
+  page. Any event has a one-click button to draft a records request about it.
 - **🔎 Search:** full-text search across every captured document version.
 - **📈 Trends:** sparklines for every ward or community area, with flagged
   groups first. Also shows weekly news sentiment by topic.
@@ -100,7 +102,10 @@ letterhead.
 ## Deploy
 
 1. **Streamlit Community Cloud:** point it at this repo with `streamlit_app.py`
-   as the entry point and add secrets under *App settings → Secrets*.
+   as the entry point. Paste `.streamlit/secrets.toml.example`, filled in, under
+   *App settings → Secrets*. The app loads those keys (letterhead, alerts, LLM)
+   automatically. The first visitor sees the demo until the Action has committed
+   live data.
 2. **GitHub Actions:** `.github/workflows/civic-cycle.yml` runs every 6 hours,
    plus hourly sweeps on Monday and Tuesday meeting nights. It runs the
    selftest first, then the cycle, verifies the ledger, and commits
@@ -109,8 +114,25 @@ letterhead.
    **variables**.
 3. `tests.yml` runs the selftest and pytest on every push.
 
-Sources marked `"verify": true` (Denver/Aurora Legistar slugs, Chicago eLMS)
-should be confirmed on the first live run. The Sources tab shows their status.
+## Seeded sources (endpoints checked 2026-09-24)
+
+| City | Source | Tier | Status |
+|---|---|---|---|
+| Cheyenne, WY | Council minutes & agendas page | html | robots allows the page; Granicus packet links are refused and routed to a bulk request |
+| Cheyenne, WY | Granicus agenda packets | pra_only | Wyoming PRA bulk-access request drafted automatically |
+| Cheyenne, WY | City news, Cap City News | html, rss | as in the original project |
+| Chicago, IL | Building permits `ydr8-5enu` | api | fields confirmed; grouped by **ward**; only permit type and work description are stored |
+| Chicago, IL | Crimes `ijzp-q8t2` | api | confirmed; aggregate counts by ward only |
+| Chicago, IL | City Council legislation | elms | official City Clerk eLMS API (replaced Legistar in 2023) |
+| Chicago, IL | Block Club Chicago | rss | feed live; used for sentiment |
+| Denver, CO | Council matters | legistar | Legistar Web API client `denver` confirmed |
+| Denver, CO | Denverite | rss | feed live |
+| Aurora, CO | Council Meetings page | html | Aurora isn't on Legistar (agendas are built in eSCRIBE); this official page links packets, minutes and votes |
+| Aurora, CO | Sentinel Colorado | rss | feed live |
+
+Linked documents are re-checked at most once every 24 hours per source
+(`refetch_hours`), which is gentle on city servers and still catches silent
+edits within a day.
 
 ## Layout
 
@@ -120,7 +142,7 @@ streamlit_app.py        command center
 config/                 jurisdictions.json · watchlist.json · statutes.json
 engine/
   net.py                legality gate: robots.txt, crawl-delay, rate limit, honest UA
-  ingest.py             tiered fetchers + blocked → records-request routing
+  ingest.py             tiered fetchers (Socrata, Legistar, eLMS, RSS, HTML, Playwright) + blocked → request routing
   extract.py            HTML / PDF / OCR hook
   detect.py             SHA-256 drift + noise-filtered diffs (silent edits)
   analyze.py            watchlist, trend slopes, sentiment, LLM with quote verification

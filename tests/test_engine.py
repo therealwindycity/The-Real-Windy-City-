@@ -120,3 +120,30 @@ def test_atom_and_rss_parsing():
 def test_diff_ignores_timestamp_noise():
     d = detect.diff("Agenda\nPage generated 10:01 AM\nItem 1", "Agenda\nPage generated 10:05 AM\nItem 1")
     assert not d["removed"] and not d["added"]
+
+
+def test_linked_documents_not_refetched_within_window(tmp_path):
+    from engine import pipeline
+    from engine.util import load_config
+    with FixtureWorld() as w:
+        cfg = w.config(load_config())
+        src = cfg["jurisdictions"]["demo_chicago"]["sources"][0]
+        src["refetch_hours"] = 24
+        conn = db.connect(tmp_path / "f.db")
+        gate = Gate(cfg["identity"])
+        first = pipeline.crawl(conn, cfg, gate, ["demo_chicago"], ["council_agendas"], log=None)[0]
+        second = pipeline.crawl(conn, cfg, gate, ["demo_chicago"], ["council_agendas"], log=None)[0]
+        assert "2 linked documents fetched" in first["detail"]
+        assert "0 linked documents fetched, 2 recently checked" in second["detail"]
+
+
+def test_elms_connector_paginates_and_stores(tmp_path):
+    from engine import pipeline
+    from engine.util import load_config
+    with FixtureWorld() as w:
+        cfg = w.config(load_config())
+        conn = db.connect(tmp_path / "e.db")
+        r = pipeline.crawl(conn, cfg, Gate(cfg["identity"]), ["demo_chicago"], ["city_council_elms"], log=None)[0]
+        assert r["status"] == "ok" and r["items"] == 1
+        doc = conn.execute("SELECT * FROM documents WHERE url LIKE '%chicityclerkelms%'").fetchone()
+        assert doc["method"] == "elms_api" and "O2026-0031001" in doc["title"]

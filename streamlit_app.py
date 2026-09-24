@@ -18,6 +18,16 @@ from engine.util import ROOT, load_config, now
 
 st.set_page_config(page_title="Windy City Reaper", page_icon="🌪️", layout="wide")
 
+SECRET_KEYS = ("SLACK_WEBHOOK_URL", "DISCORD_WEBHOOK_URL", "ALERT_WEBHOOK_URL", "SMTP_HOST", "SMTP_PORT",
+               "SMTP_USER", "SMTP_PASSWORD", "ALERT_EMAIL_TO", "ALERT_EMAIL_FROM", "ALERT_MIN_SEVERITY",
+               "LLM_API_KEY", "LLM_BASE_URL", "LLM_MODEL", "REQUESTER_NAME", "REQUESTER_CONTACT")
+try:  # Streamlit Community Cloud: App settings -> Secrets
+    for _k in SECRET_KEYS:
+        if _k in st.secrets and not os.getenv(_k):
+            os.environ[_k] = str(st.secrets[_k])
+except Exception:  # no secrets.toml locally
+    pass
+
 KIND_COLOR = {  # RGBA hex for st.map
     "silent_edit": "#e5383bdd", "watchlist_hit": "#f4a261dd", "trend_flag": "#4ea8dedd",
     "sentiment_shift": "#48cae4dd", "llm_flag": "#b388ebdd", "blocked_source": "#adb5bddd",
@@ -167,6 +177,26 @@ c[4].metric("Sources OK / blocked", f"{src_stat.get('ok', 0)} / {src_stat.get('b
 tabs = st.tabs(["🗺️ Live Intel", "🔎 Search", "📈 Trends", "⚖️ Records Requests", "🛰️ Sources", "🔗 Ledger"])
 
 
+def show_captured_copy(e: dict, key_prefix: str):
+    """The engine's own archived copy: evidence survives even if the agency edits or deletes the page."""
+    if not e.get("source_url"):
+        return
+    doc = conn.execute("SELECT id, version_count FROM documents WHERE url=?", (e["source_url"],)).fetchone()
+    if not doc:
+        return
+    versions = conn.execute("SELECT hash, fetched_at, text FROM versions WHERE document_id=? ORDER BY id DESC",
+                            (doc["id"],)).fetchall()
+    if not versions:
+        return
+    if st.toggle(f"📄 Captured copy ({len(versions)} version{'s' if len(versions) != 1 else ''})",
+                 key=f"{key_prefix}-cap-{e['id']}"):
+        labels = [f"{v['fetched_at']} · sha256 {v['hash'][:12]}…" for v in versions]
+        i = st.selectbox("Version", range(len(versions)), format_func=labels.__getitem__,
+                         key=f"{key_prefix}-ver-{e['id']}") if len(versions) > 1 else 0
+        st.text_area("Stored text", versions[i]["text"] or "", height=220, disabled=True,
+                     key=f"{key_prefix}-txt-{e['id']}-{i}")
+
+
 def render_event(e: dict, key_prefix: str):
     st.markdown(f"**{SEV_BADGE.get(e['severity'], e['severity'])} · {LABEL.get(e['kind'], e['kind'])}** · "
                 f"{jlabels.get(e['jurisdiction'], e['jurisdiction'])}")
@@ -177,8 +207,13 @@ def render_event(e: dict, key_prefix: str):
         meta += f" · sha256 `{str(e['hash'])[:12]}…`"
     st.markdown(f'<div class="reaper-meta">{meta}</div>', unsafe_allow_html=True)
     if e.get("source_url"):
-        st.markdown(f"[Open source ↗]({e['source_url']})")
+        if is_demo:
+            st.caption("Source is a synthetic fixture URL (local test server), so there is no public link. "
+                       "The captured copy below is exactly what the engine stored.")
+        else:
+            st.markdown(f"[Open source ↗]({e['source_url']})")
     data = e.get("data") or {}
+    show_captured_copy(e, key_prefix)
     if e["kind"] == "silent_edit" and data.get("unified_diff"):
         st.code(data["unified_diff"], language="diff")
     if e["kind"] == "watchlist_hit" and data.get("hits"):
@@ -227,7 +262,8 @@ with tabs[0]:
                          "created_at": st.column_config.DatetimeColumn("When", format="YYYY-MM-DD HH:mm"),
                          "sev": "Severity", "type": "Type", "place": "Jurisdiction", "title": "Title",
                          "quote": st.column_config.TextColumn("Verbatim quote", width="large"),
-                         "source_url": st.column_config.LinkColumn("Source", display_text="open ↗"),
+                         "source_url": (st.column_config.TextColumn("Source (synthetic)") if is_demo
+                                        else st.column_config.LinkColumn("Source", display_text="open ↗")),
                      })
         st.subheader("Event detail")
         ranked = sorted(df.to_dict("records"), key=lambda e: (-SEV_RANK.get(e["severity"], 0), e["created_at"]))
@@ -246,7 +282,8 @@ with tabs[1]:
         st.caption(f"{len(hits)} result(s) · SQLite FTS5 with porter stemming")
         for h in hits:
             snippet = (h.get("snippet") or "").replace("[[", "**").replace("]]", "**")
-            st.markdown(f"**[{h['title'] or h['url']}]({h['url']})** · {jlabels.get(h['jurisdiction'], h['jurisdiction'])} "
+            head = f"**{h['title'] or h['url']}**" if is_demo else f"**[{h['title'] or h['url']}]({h['url']})**"
+            st.markdown(f"{head} · {jlabels.get(h['jurisdiction'], h['jurisdiction'])} "
                         f"· `{h['method']}` · fetched {h['last_fetched']}\n\n> …{snippet}…")
 
 
@@ -352,9 +389,9 @@ with tabs[4]:
     st.dataframe(sdf, hide_index=True, width="stretch", column_config={
         "key": "Source", "method": "Tier", "enabled": "Enabled", "last_status": "Status",
         "last_run": "Last run", "items_last_run": "Items", "last_detail": st.column_config.TextColumn("Detail", width="large"),
-        "url": st.column_config.LinkColumn("URL", display_text="open ↗")})
+        "url": st.column_config.TextColumn("URL") if is_demo else st.column_config.LinkColumn("URL", display_text="open ↗")})
     st.markdown("""
-**Tier order:** `api` (Socrata) → `legistar` (official API) → `rss` → `html` → `playwright` (rendered, robots-gated) → `pra_only`.
+**Tier order:** `api` (Socrata) → `legistar` / `elms` (official legislation APIs) → `rss` → `html` → `playwright` (rendered, robots-gated) → `pra_only`.
 Every networked tier checks `robots.txt` with an honest, identifying User-Agent. A refusal (robots disallow, 401/403/451)
 is logged as a ⛔ event and becomes a drafted bulk-access request under that state's public-records law.
 Add cities or sources in `config/jurisdictions.json`.""")
