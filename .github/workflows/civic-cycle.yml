@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: "17 */6 * * *"       # every six hours
     - cron: "5 0-5 * * 2,3"      # hourly sweeps across Mon/Tue evening meetings (Mountain/Central time)
-  push:  # TEMPORARY: live verification runs on the PR branch before merge (removed afterwards)
-    branches: ["arena/01a0d566-the-real-windy-city"]
-    paths: [".github/workflows/civic-cycle.yml"]
   workflow_dispatch:
     inputs:
       jurisdiction:
