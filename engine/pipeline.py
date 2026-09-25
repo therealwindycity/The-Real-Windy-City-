@@ -118,23 +118,30 @@ def trends(conn, cfg, log=print) -> int:
             continue
         series = f"{src['name']}:{t['series']}"
         rows = db.get_series(conn, jkey, series)
+        min_excess = float(t.get("min_excess_growth", 0.25))
         for grp, vals, buckets, s in analyze.trend_flags(
                 rows, float(t.get("min_slope", 3)), int(t.get("min_points", 3)),
                 int(t.get("window", 3)), current_bucket=current):
+            # Seasonality control: a group must outgrow the whole city over the same buckets.
+            ok, grp_ratio, city_ratio = analyze.outpaces_city(rows, vals, buckets, min_excess)
+            if not ok:
+                continue
             label = src.get("group_label", src.get("group_field", "group"))
             pretty = src["name"].replace("_", " ").capitalize()
             if db.add_event(conn, {
                 "id": short_id("trend", jkey, series, str(grp), buckets[-1]),
                 "jurisdiction": jkey, "kind": "trend_flag", "severity": "medium",
-                "title": f"{pretty} trending +{s:.1f}/mo — {label} {grp}",
+                "title": f"{pretty} up {100 * (grp_ratio - 1):.0f}% vs citywide {100 * (city_ratio - 1):+.0f}% — {label} {grp}",
                 "quote": f"Monthly counts {' → '.join(str(int(v)) for v in vals)} "
-                         f"({', '.join(buckets)}); least-squares slope +{s:.1f}/mo.",
+                         f"({', '.join(buckets)}); slope +{s:.1f}/mo. Citywide change over the same months: "
+                         f"{100 * (city_ratio - 1):+.0f}%.",
                 "source_url": src["url"], "method": "official_api+trend",
                 "fetched_at": now_iso(),
-                "data": {"series": series, "group": grp, "values": vals, "buckets": buckets, "slope": s},
+                "data": {"series": series, "group": grp, "values": vals, "buckets": buckets, "slope": s,
+                         "group_ratio": grp_ratio, "city_ratio": city_ratio},
             }):
                 n += 1
-                _log(f"trend: [{jkey}] {series} {label} {grp} = {vals} → slope=+{s:.1f} → FLAG", log)
+                _log(f"trend: [{jkey}] {series} {label} {grp} = {vals} → ×{grp_ratio:.2f} vs city ×{city_ratio:.2f} → FLAG", log)
     return n
 
 

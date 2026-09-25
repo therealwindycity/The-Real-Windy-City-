@@ -86,6 +86,15 @@ def slope(values: list[float]) -> float:
     return sum((i - xbar) * (v - ybar) for i, v in enumerate(values)) / den if den else 0.0
 
 
+def outpaces_city(series_rows: list[dict], vals: list[float], buckets: list[str], min_excess: float = 0.25):
+    """Seasonality control. Returns (ok, group_ratio, city_ratio): ok when the group's growth over the
+    window (last/first) beats the all-groups total's growth by at least min_excess (0.25 = 25%)."""
+    city = {b: sum(r["value"] for r in series_rows if r["bucket"] == b) for b in (buckets[0], buckets[-1])}
+    city_ratio = city[buckets[-1]] / city[buckets[0]] if city[buckets[0]] else 1.0
+    grp_ratio = vals[-1] / vals[0] if vals[0] else float("inf")
+    return grp_ratio >= city_ratio * (1 + min_excess), grp_ratio, city_ratio
+
+
 def trend_flags(series_rows: list[dict], min_slope: float, min_points: int = 3,
                 window: int = 3, drop_partial_last: bool = True, current_bucket: str | None = None):
     """series_rows: metric rows for one series. Yields (group, values, buckets, slope)."""

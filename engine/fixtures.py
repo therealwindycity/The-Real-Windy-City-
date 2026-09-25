@@ -76,7 +76,7 @@ def _rss() -> str:
     return f'<?xml version="1.0"?><rss version="2.0"><channel><title>Fixture News</title>{items}</channel></rss>'
 
 
-PERMIT_SERIES = {"31": [12, 15, 22, 4], "8": [10, 9, 11, 2], "24": [5, 6, 6, 1]}
+PERMIT_SERIES = {"31": [12, 15, 22, 4], "8": [10, 9, 11, 2], "24": [5, 6, 6, 1], "1": [100, 98, 104, 20]}
 
 
 def _permit_rows() -> list[dict]:

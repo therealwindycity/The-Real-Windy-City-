@@ -134,6 +134,23 @@ Linked documents are re-checked at most once every 24 hours per source
 (`refetch_hours`), which is gentle on city servers and still catches silent
 edits within a day.
 
+### Noise controls (tuned on the first live run, 2026-09-24)
+
+- **Trends are seasonality-adjusted.** A ward or area is flagged only if its growth
+  beats the citywide total's growth over the same months by `min_excess_growth`
+  (default 25%). The first live run flagged 31 wards before this rule because
+  summer lifts every ward.
+- **Only records hosts become records requests.** If the agency's own site or an
+  agenda platform (Granicus, Legistar, CivicPlus, eSCRIBE, BoardDocs, …) refuses
+  access, the engine drafts a bulk request. A refusal from a third-party widget,
+  such as a text-to-speech service, is logged and ignored.
+- **No duplicate pages.** Language-picker links are skipped, and linked documents
+  with identical text are stored once.
+- **Scoped news feeds.** `exclude_url_patterns` drops wire and national sections
+  (Sentinel's `/nation-world/`). "Settlement" matches only legal settlements.
+- **Complete Legistar pulls.** The engine paginates past the API's 1000-row page limit
+  (`limit`, default 2000).
+
 ## Layout
 
 ```

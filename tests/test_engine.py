@@ -147,3 +147,77 @@ def test_elms_connector_paginates_and_stores(tmp_path):
         assert r["status"] == "ok" and r["items"] == 1
         doc = conn.execute("SELECT * FROM documents WHERE url LIKE '%chicityclerkelms%'").fetchone()
         assert doc["method"] == "elms_api" and "O2026-0031001" in doc["title"]
+
+
+def test_feed_text_unescapes_html_entities():
+    rss = ('<rss><channel><item><title>Council&#8217;s vote</title><link>https://x/b</link>'
+           '<description><![CDATA[<p>&#8220;No-bid&#8221; award &amp; more</p>]]></description></item></channel></rss>')
+    it = parse_feed(rss)[0]
+    assert it["title"] == "Council\u2019s vote"
+    assert it["summary"] == "\u201cNo-bid\u201d award & more"
+
+
+def test_only_records_hosts_become_bulk_requests():
+    from engine.ingest import is_records_host
+    page = "https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas"
+    assert is_records_host("cheyenne.granicus.com", page)          # agenda platform
+    assert is_records_host("files.cheyennecity.org", page)         # agency's own site
+    assert is_records_host("data.colorado.gov", page)              # government host
+    assert not is_records_host("app-oc.readspeaker.com", page)     # text-to-speech widget
+    assert not is_records_host("www.facebook.com", page)
+
+
+def test_language_picker_and_excluded_links_skipped():
+    from engine.ingest import excluded, is_language_variant
+    page = "https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas"
+    assert is_language_variant(page + "?oc_lang=es", page)
+    assert is_language_variant("https://x.org/other", page, "Spanish Select this as your preferred language")
+    assert not is_language_variant("https://www.cheyennecity.org/files/agenda.pdf", page, "Agenda")
+    src = {"exclude_url_patterns": ["/nation-world/"]}
+    assert excluded("https://sentinelcolorado.com/nation-world/nation/story/", src)
+    assert not excluded("https://sentinelcolorado.com/news/metro/story/", src)
+
+
+def test_trend_must_outpace_citywide_growth():
+    def rows(series):
+        return [{"grp": g, "bucket": b, "value": v}
+                for g, vals in series.items() for b, v in zip(["2026-06", "2026-07", "2026-08"], vals)]
+    buckets = ["2026-06", "2026-07", "2026-08"]
+    seasonal = rows({"A": [100, 120, 140], "B": [200, 240, 280], "C": [50, 60, 70]})
+    ok, g, c = analyze.outpaces_city(seasonal, [100, 120, 140], buckets)
+    assert not ok and g == pytest.approx(1.4) and c == pytest.approx(1.4)   # everyone grew: summer
+    hotspot = rows({"A": [10, 18, 30], "B": [200, 198, 205], "C": [50, 52, 49]})
+    ok, g, c = analyze.outpaces_city(hotspot, [10, 18, 30], buckets)
+    assert ok and g == pytest.approx(3.0)
+
+
+def test_legistar_paginates_past_first_page(tmp_path):
+    from engine.ingest import crawl_legistar
+
+    class Resp:
+        def __init__(self, body):
+            self._b = body
+
+        def text(self):
+            return self._b
+
+    class FakeGate:
+        def __init__(self):
+            self.calls = []
+
+        def get(self, url, params=None, accept=None):
+            self.calls.append(params)
+            skip, top = params["$skip"], params["$top"]
+            total = 1300
+            page = [{"MatterId": i, "MatterFile": f"26-{i}", "MatterName": f"Matter {i}",
+                     "MatterTitle": f"Title {i}", "MatterLastModifiedUtc": "2026-09-20T00:00:00"}
+                    for i in range(skip, min(skip + top, total))]
+            return Resp(json.dumps(page))
+
+    conn = db.connect(tmp_path / "l.db")
+    gate = FakeGate()
+    src = {"name": "council_matters", "method": "legistar", "client": "denver",
+           "url": "https://webapi.legistar.com/v1/denver/matters", "lookback_days": 14}
+    n, _ = crawl_legistar(conn, gate, {"identity": {}}, "denver_co", {"state": "CO"}, src, "denver_co:council_matters")
+    assert [c["$skip"] for c in gate.calls] == [0, 1000]
+    assert n == 1300

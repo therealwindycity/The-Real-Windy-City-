@@ -181,6 +181,7 @@
           "method": "rss",
           "url": "https://sentinelcolorado.com/feed/",
           "enabled": true,
+          "exclude_url_patterns": ["/nation-world/"],
           "sentiment": true,
           "notes": "Feed confirmed live 2026-09-24."
         }

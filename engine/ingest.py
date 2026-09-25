@@ -7,6 +7,7 @@ auto-drafted statutory bulk-access request for the same public records.
 from __future__ import annotations
 
 import datetime as dt
+import html as htmllib
 import json
 import re
 import urllib.parse
@@ -56,6 +57,35 @@ def record_block(conn, cfg, jkey, jcfg, *, url: str, reason: str,
         "data": {"request_id": req_id, "host": host, "source": source_name, "new_request": created},
     })
     return req_id
+
+
+CIVIC_PLATFORMS = re.compile(
+    r"(\.gov$|\.gov\.|granicus|legistar|civicplus|civicweb|escribemeetings|boarddocs|novusagenda|iqm2|"
+    r"primegov|civicclerk|municode|laserfiche|agendacenter|swagit|destinyhosted)", re.I)
+
+
+def _site(host: str) -> str:
+    parts = host.lower().split(":")[0].split(".")
+    return ".".join(parts[-2:]) if len(parts) >= 2 else host.lower()
+
+
+def is_records_host(host: str, source_url: str) -> bool:
+    """A refusal only becomes a records request when it guards public records: the agency's own
+    site or a known agenda/records platform. Third-party widgets (text-to-speech, social, ads) don't."""
+    src_host = urllib.parse.urlsplit(source_url).netloc
+    return _site(host) == _site(src_host) or bool(CIVIC_PLATFORMS.search(host.split(":")[0]))
+
+
+def is_language_variant(href: str, page_url: str, label: str = "") -> bool:
+    """Language-picker links re-serve the page itself (e.g. ?oc_lang=es); fetching them only duplicates hits."""
+    h, p = urllib.parse.urlsplit(href), urllib.parse.urlsplit(page_url)
+    same_page = (h.netloc, h.path.rstrip("/")) == (p.netloc, p.path.rstrip("/"))
+    return (same_page and bool(re.search(r"(^|&)[a-z_]*lang(uage)?=", h.query, re.I))) or \
+        bool(re.search(r"preferred language|translate this page", label, re.I))
+
+
+def excluded(url: str, src: dict) -> bool:
+    return any(re.search(p, url, re.I) for p in src.get("exclude_url_patterns", []))
 
 
 # ------------------------------------------------------------------ tier: api (Socrata)
@@ -120,9 +150,16 @@ def _f(v):
 # ------------------------------------------------------------------ tier: legistar (official API)
 def crawl_legistar(conn, gate: Gate, cfg, jkey, jcfg, src, src_key) -> tuple[int, str]:
     since = (now() - dt.timedelta(days=int(src.get("lookback_days", 30)))).strftime("%Y-%m-%d")
-    params = {"$filter": f"MatterLastModifiedUtc ge datetime'{since}'",
-              "$orderby": "MatterLastModifiedUtc desc", "$top": 200}
-    matters = json.loads(gate.get(src["url"], params=params, accept="application/json").text())
+    cap = int(src.get("limit", 2000))
+    matters: list[dict] = []
+    while len(matters) < cap:
+        page_size = min(1000, cap - len(matters))  # Legistar returns at most 1000 rows per call
+        params = {"$filter": f"MatterLastModifiedUtc ge datetime'{since}'",
+                  "$orderby": "MatterLastModifiedUtc desc", "$top": page_size, "$skip": len(matters)}
+        page = json.loads(gate.get(src["url"], params=params, accept="application/json").text())
+        matters += page
+        if len(page) < page_size:
+            break
     client = src.get("client", "")
     n = 0
     for m in matters:
@@ -176,7 +213,7 @@ def crawl_elms(conn, gate: Gate, cfg, jkey, jcfg, src, src_key) -> tuple[int, st
 
 # ------------------------------------------------------------------ tier: rss / atom
 def _strip_tags(s: str) -> str:
-    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s or "")).strip()
+    return re.sub(r"\s+", " ", htmllib.unescape(re.sub(r"<[^>]+>", " ", s or ""))).strip()
 
 
 def parse_feed(xml_text: str) -> list[dict]:
@@ -186,7 +223,7 @@ def parse_feed(xml_text: str) -> list[dict]:
     content_ns = "{http://purl.org/rss/1.0/modules/content/}encoded"
     for it in root.iter("item"):
         items.append({
-            "title": (it.findtext("title") or "").strip(),
+            "title": htmllib.unescape(it.findtext("title") or "").strip(),
             "link": (it.findtext("link") or "").strip(),
             "summary": _strip_tags(it.findtext(content_ns) or it.findtext("description") or ""),
             "published": (it.findtext("pubDate") or "").strip(),
@@ -207,15 +244,14 @@ def crawl_rss(conn, gate: Gate, cfg, jkey, jcfg, src, src_key) -> tuple[int, str
     items = parse_feed(resp.text())
     cap = int(cfg["identity"].get("max_docs_per_source_per_run", 40))
     new = 0
+    items = [it for it in items if it["link"] and not excluded(it["link"], src)]
     for it in items[:cap]:
-        if not it["link"]:
-            continue
         # Headline + publisher-provided summary only; we don't scrape full articles.
         text = f"{it['title']}\n\n{it['summary']}".strip()
         if _store(conn, src_key=src_key, jkey=jkey, url=it["link"], title=it["title"][:200], text=text,
                   content_type="application/rss+xml", method="rss", published_at=it["published"]):
             new += 1
-    return new, f"{len(items)} items in feed, {new} new/changed"
+    return new, f"{len(items)} in-scope items in feed, {new} new/changed"
 
 
 # ------------------------------------------------------------------ tier: html / playwright
@@ -254,13 +290,15 @@ def crawl_html(conn, gate: Gate, cfg, jkey, jcfg, src, src_key, rendered: bool =
 
     patterns = [re.compile(p, re.I) for p in cfg.get("document_link_patterns", [])]
     cap = int(cfg["identity"].get("max_docs_per_source_per_run", 40))
-    seen, fetched, skipped_fresh, blocked_hosts = set(), 0, 0, {}
+    seen, fetched, skipped_fresh, blocked_hosts, ignored_hosts = set(), 0, 0, {}, set()
+    seen_hashes = {sha256(text)}
     refetch_after = now() - dt.timedelta(hours=float(src.get("refetch_hours", 24)))
     for href, label in links:
         if href in seen or not href.startswith("http") or href == url:
             continue
         seen.add(href)
-        if not any(p.search(f"{href} {label}") for p in patterns):
+        if not any(p.search(f"{href} {label}") for p in patterns) or excluded(href, src) \
+                or is_language_variant(href, url, label):
             continue
         if fetched >= cap:
             break
@@ -271,15 +309,20 @@ def crawl_html(conn, gate: Gate, cfg, jkey, jcfg, src, src_key, rendered: bool =
         try:
             r = gate.get(href)
         except Blocked as b:
-            blocked_hosts.setdefault(urllib.parse.urlsplit(href).netloc, (href, b.reason))
+            host = urllib.parse.urlsplit(href).netloc
+            if is_records_host(host, url):
+                blocked_hosts.setdefault(host, (href, b.reason))
+            else:
+                ignored_hosts.add(host)
             continue
         except FetchError:
             continue
         if len(r.body) > 25_000_000:
             continue
         dtitle, dtext, _ = to_text(r.body, r.content_type, r.url)
-        if not dtext:
-            continue
+        if not dtext or sha256(dtext) in seen_hashes:
+            continue  # empty, or a duplicate (e.g. language-picker links to the same page)
+        seen_hashes.add(sha256(dtext))
         _store(conn, src_key=src_key, jkey=jkey, url=href, title=(label or dtitle or href)[:200],
                text=dtext, content_type=r.content_type, method="document")
         fetched += 1
@@ -289,7 +332,9 @@ def crawl_html(conn, gate: Gate, cfg, jkey, jcfg, src, src_key, rendered: bool =
     if skipped_fresh:
         detail += f", {skipped_fresh} recently checked"
     if blocked_hosts:
-        detail += f"; refused by robots at {', '.join(blocked_hosts)} → bulk request drafted"
+        detail += f"; refused at {', '.join(blocked_hosts)} → routed to bulk records request"
+    if ignored_hosts:
+        detail += f"; ignored refusals from third-party hosts {', '.join(sorted(ignored_hosts))}"
     return 1 + fetched, detail
 
 
