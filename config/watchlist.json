@@ -1,0 +1,29 @@
+{
+  "_comment": "Terms are case-insensitive regexes. severity: high | medium | low. 'jurisdictions' limits a term to specific places (omit = everywhere). Public-official scope only: never add personal addresses, phone numbers, family members, or other non-public personal data.",
+  "terms": [
+    {"term": "no[- ]bid", "label": "no-bid contract", "severity": "high"},
+    {"term": "sole[- ]source", "label": "sole-source award", "severity": "high"},
+    {"term": "emergency (procurement|purchase|contract)", "label": "emergency procurement", "severity": "high"},
+    {"term": "change order", "label": "change order", "severity": "medium"},
+    {"term": "zoning (variance|change|amendment)|rezon(e|ing)|zone change", "label": "zoning change", "severity": "medium"},
+    {"term": "tax increment|\\bTIF\\b", "label": "tax increment financing", "severity": "medium"},
+    {"term": "annex(ation|ed)", "label": "annexation", "severity": "medium"},
+    {"term": "executive session|closed session", "label": "closed session", "severity": "low"},
+    {"term": "moratorium", "label": "moratorium", "severity": "medium"},
+    {"term": "conflict of interest|recus(e|al|ed)", "label": "conflict / recusal", "severity": "high"},
+    {"term": "data cent(er|re)", "label": "data center", "severity": "medium"},
+    {"term": "settlement agreement|judgment and settlement|settle[sd]? (a |the )?(lawsuit|claim|case|suit)|settlement (to resolve|payment|amount)", "label": "settlement", "severity": "medium"},
+    {"term": "water rights?|water (discharge|allocation)", "label": "water", "severity": "low"},
+    {"term": "eminent domain|condemnation", "label": "eminent domain", "severity": "high"},
+    {"term": "Ordinance No\\.? ?4687", "label": "Ordinance 4687", "severity": "high", "jurisdictions": ["cheyenne_wy"]},
+    {"term": "Cox Ranch", "label": "Cox Ranch", "severity": "medium", "jurisdictions": ["cheyenne_wy"]},
+    {"term": "Project (Jade|Latigo)", "label": "Project Jade / Latigo", "severity": "high", "jurisdictions": ["cheyenne_wy"]}
+  ],
+  "sentiment_topics": {
+    "chicago_il": ["Pilsen", "Logan Square", "Bronzeville", "Englewood", "Little Village"],
+    "cheyenne_wy": ["data center", "annexation", "BOPU"],
+    "denver_co": ["Five Points", "RiNo", "Sun Valley"],
+    "aurora_co": ["Aurora City Council", "Havana"]
+  },
+  "sentiment_shift_threshold": 0.15
+}
