@@ -1,5 +1,6 @@
 {
   "_comment": "Adding a city is a config edit, not a rewrite. 'method' tiers, in order of preference: api (Socrata/JSON), legistar (official Legistar Web API), elms (Chicago City Clerk eLMS API), rss, html, playwright (JS-rendered, robots-gated), pra_only (no automated fetch; drafts a bulk-access / public-records request instead). Every networked method is gated by robots.txt; a disallow at runtime auto-drafts a records request. Sources marked verify=true have endpoints that should be confirmed on first live run.",
+  "default_jurisdiction": "cheyenne_wy",
   "identity": {
     "user_agent": "WindyCityReaper/1.0 (civic public-records research; +https://github.com/therealwindycity/The-Real-Windy-City-)",
     "contact": "",

@@ -55,6 +55,10 @@ to discredit your findings. See [LEGAL.md](LEGAL.md).
 
 ## Dashboard tabs
 
+The dashboard opens filtered to **Cheyenne, WY**, the project's home city.
+Change `default_jurisdiction` in `config/jurisdictions.json` to use another city,
+or clear the Jurisdictions filter in the sidebar to see all of them.
+
 - **🗺️ Live Intel:** a map with pins colored by alert type, a sortable table of
   verbatim quotes and source links, and expandable detail with diffs for silent
   edits. Each event also shows the engine's **captured copy** of every stored

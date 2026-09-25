@@ -137,7 +137,11 @@ else:
 
 jlabels = {k: v.get("label", k) for k, v in cfg["jurisdictions"].items()}
 with st.sidebar:
-    jur = st.multiselect("Jurisdictions", list(jlabels), format_func=jlabels.get)
+    home = cfg.get("default_jurisdiction")
+    home = [home] if home in jlabels else []
+    jur = st.multiselect("Jurisdictions", list(jlabels), default=home, format_func=jlabels.get,
+                         help="Opens on the home jurisdiction (`default_jurisdiction` in config/jurisdictions.json). "
+                              "Clear it to see every city.")
     kinds = st.multiselect("Event types", list(LABEL), format_func=lambda k: f"{KIND_EMOJI.get(k, '')} {LABEL[k]}")
     min_sev = st.select_slider("Minimum severity", ["info", "low", "medium", "high"], value="info")
     days = st.slider("Window (days)", 1, 365, 90)
@@ -327,7 +331,8 @@ with tabs[3]:
                 "the engine computes the statutory response deadline and flags it overdue when that passes.")
     with st.expander("➕ New public-records request", expanded=False):
         with st.form("new_pra"):
-            j = st.selectbox("Jurisdiction", list(jlabels), format_func=jlabels.get)
+            j = st.selectbox("Jurisdiction", list(jlabels), format_func=jlabels.get,
+                             index=list(jlabels).index(home[0]) if home else 0)
             desc = st.text_area("Records sought", placeholder="e.g. All emails between the City Manager and "
                                 "Project Latigo representatives regarding water allocation")
             rng = st.text_input("Date range", "January 1, 2025 to present")
