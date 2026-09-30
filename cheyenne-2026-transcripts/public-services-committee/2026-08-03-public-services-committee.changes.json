@@ -1,0 +1,24 @@
+{
+ "source": "public-services-committee/2026-08-03-public-services-committee.md",
+ "video_id": "IM0VKGNplhA",
+ "glossary": "tools/stitch/glossary.json",
+ "stitched_at": "2026-09-26T21:48:03+00:00",
+ "raw_lines": 28,
+ "raw_words": 726,
+ "corrections": 2,
+ "changes": [
+  {
+   "kind": "confusion",
+   "before": "Dr. Rennie",
+   "after": "Dr. Rinne",
+   "count": 1
+  },
+  {
+   "kind": "fuzzy",
+   "before": "North Orange Business Park",
+   "after": "North Range Business Park",
+   "score": 0.98,
+   "context": "nstruction yard, so industrial style use. It is adjacent to North Orange Business Park which is all for the most part zone, uh, BP Business Park. "
+  }
+ ]
+}

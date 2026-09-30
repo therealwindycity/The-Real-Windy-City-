@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://therealwindycity.github.io/The-Real-Windy-City-/sitemap.xml
