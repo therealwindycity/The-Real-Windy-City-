@@ -1,0 +1,258 @@
+{
+  "video_id": "01",
+  "title": "Lawrence J. Wolfe \u2014 position timeline (statements about Miller, delegated state authority, and later local negotiating choices)",
+  "output_base": "01_wolfe_positions",
+  "status": "pending-footage-review",
+  "handoff_rules": [
+    "Confirm identity from the recording and/or reliable contemporaneous records before using official-name spellings in graphics.",
+    "Keep unlike agenda items separate; never juxtapose separate dates/items as one conversation.",
+    "Preserve complete turns, questions/prompts, chair rulings, responses, relevant roll call/outcome, and context before/after each cut.",
+    "A no vote or a negotiation proposal does not prove adoption of Miller's legal position."
+  ],
+  "sources": [
+    {
+      "master": "2026-06-22-city-council.mp4",
+      "source_url": "https://www.youtube.com/watch?v=RjSGlhh4q9s",
+      "youtube_id": "RjSGlhh4q9s",
+      "date": "2026-06-22",
+      "body": "City Council"
+    },
+    {
+      "master": "2026-07-06-public-services-committee.mp4",
+      "source_url": "https://www.youtube.com/watch?v=7BwdzgyTD2Y",
+      "youtube_id": "7BwdzgyTD2Y",
+      "date": "2026-07-06",
+      "body": "Public Services Committee"
+    },
+    {
+      "master": "2026-08-28-work-session.mp4",
+      "source_url": "https://www.youtube.com/watch?v=MG6Zaw7ATGA",
+      "youtube_id": "MG6Zaw7ATGA",
+      "date": "2026-08-28",
+      "body": "City Council Work Session"
+    },
+    {
+      "master": "2026-09-14-city-council.mp4",
+      "source_url": "https://www.youtube.com/watch?v=-zBOAUpDE3E",
+      "youtube_id": "-zBOAUpDE3E",
+      "date": "2026-09-14",
+      "body": "City Council"
+    }
+  ],
+  "clips": [
+    {
+      "id": "W-01",
+      "source": 0,
+      "date": "2026-06-22",
+      "body": "City Council",
+      "agenda_scope": "Swan Ranch business-park expansion near Clear Creek Parkway/Gannett Peak Drive; not Cox Ranch",
+      "in": "00:19:08",
+      "out": "00:23:45",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-06-22 \u2014 City Council",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Swan Ranch business-park expansion near Clear Creek Parkway/Gannett Peak Drive; not Cox Ranch",
+          "On camera: Charles Miller, Dr. Emmons, Lawrence J. Wolfe",
+          "Source: https://www.youtube.com/watch?v=RjSGlhh4q9s",
+          "Source in/out: 00:19:08 \u2013 00:23:45 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "The legislature created this scheme",
+          "we have no authority to disagree with"
+        ],
+        "editorial_note": "Include Miller's preceding statement, Emmons's response, and Wolfe's complete response. The line is about a state industrial-siting process for a Swan Ranch expansion, not the Cox Ranch annexation.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    },
+    {
+      "id": "W-02A",
+      "source": 1,
+      "date": "2026-07-06",
+      "body": "Public Services Committee",
+      "agenda_scope": "Microsoft annexation / proposed delayed effective date and community-benefits agreement",
+      "in": "00:14:00",
+      "out": "00:20:59",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-07-06 \u2014 Public Services Committee",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Microsoft annexation / proposed delayed effective date and community-benefits agreement",
+          "On camera: Lawrence J. Wolfe",
+          "Source: https://www.youtube.com/watch?v=7BwdzgyTD2Y",
+          "Source in/out: 00:14:00 \u2013 00:20:59 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "allow the mayor and the staff time to negotiate a community benefit agreement with Microsoft Inc"
+        ],
+        "editorial_note": "Wolfe proposes a delayed effective date for this Microsoft item. Preserve that this is a different project and a proposed motion, not an adopted agreement.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    },
+    {
+      "id": "W-02B",
+      "source": 1,
+      "date": "2026-07-06",
+      "body": "Public Services Committee",
+      "agenda_scope": "Microsoft annexation / question about the mayor's negotiating capacity",
+      "in": "00:21:37",
+      "out": "00:23:36",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-07-06 \u2014 Public Services Committee",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Microsoft annexation / question about the mayor's negotiating capacity",
+          "On camera: Lawrence J. Wolfe, committee members",
+          "Source: https://www.youtube.com/watch?v=7BwdzgyTD2Y",
+          "Source in/out: 00:21:37 \u2013 00:23:36 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "The mayor has the power",
+          "the ability to be in a position of negotiating equality"
+        ],
+        "editorial_note": "This is a statement about local negotiating posture in a Microsoft annexation item. Do not portray it as a ruling on the separate June 22 Industrial Siting Act question.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    },
+    {
+      "id": "W-03",
+      "source": 2,
+      "date": "2026-08-28",
+      "body": "City Council Work Session",
+      "agenda_scope": "Cox Ranch annexation update; work session, no public input",
+      "in": "00:52:30",
+      "out": "01:05:44",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-08-28 \u2014 City Council Work Session",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Cox Ranch annexation update; work session, no public input",
+          "On camera: Lawrence J. Wolfe, developer's counsel, Pete Laybourn, chair",
+          "Source: https://www.youtube.com/watch?v=MG6Zaw7ATGA",
+          "Source in/out: 00:52:30 \u2013 01:05:44 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "I'm not aware of anything in the annexation statutes that talk about",
+          "I sat down with AI the other night and drafted one",
+          "It is entirely appropriate"
+        ],
+        "editorial_note": "Show the lawyer's question, Wolfe's proposal, the later scope dispute, and the chair's ruling. This demonstrates recorded negotiation efforts; it does not establish that a particular agreement is required by statute or that the proposal was adopted.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    },
+    {
+      "id": "W-04",
+      "source": 3,
+      "date": "2026-09-14",
+      "body": "City Council",
+      "agenda_scope": "Cox Ranch annexation, second reading",
+      "in": "02:09:36",
+      "out": "02:14:37",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-09-14 \u2014 City Council",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Cox Ranch annexation, second reading",
+          "On camera: Lawrence J. Wolfe, council roll call",
+          "Source: https://www.youtube.com/watch?v=-zBOAUpDE3E",
+          "Source in/out: 02:09:36 \u2013 02:14:37 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "I'm going to vote no on this",
+          "a lot more work",
+          "The annexation is approved on second reading"
+        ],
+        "editorial_note": "Include Wolfe's full statement, the intervening council comments, and the roll call/result. A no vote does not prove that Wolfe adopted Miller's legal claims.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    }
+  ],
+  "gaps": [
+    {
+      "after": "W-01",
+      "duration": 5,
+      "card": {
+        "title": "DIFFERENT BODY, DIFFERENT PROJECT",
+        "lines": [
+          "Next: July 6, 2026 \u2014 Public Services Committee \u2014 Microsoft annexation item.",
+          "This is NOT the June 22 Swan Ranch / Industrial Siting Act discussion.",
+          "Do not present the two as one conversation."
+        ]
+      }
+    },
+    {
+      "after": "W-02B",
+      "duration": 5,
+      "card": {
+        "title": "DIFFERENT SETTING",
+        "lines": [
+          "Next: August 28, 2026 \u2014 City Council WORK SESSION on the Cox Ranch annexation update.",
+          "Work session: council discussion, no public input.",
+          "A negotiation proposal here is not an adopted agreement and not a ruling on the June 22 state-authority question."
+        ]
+      }
+    },
+    {
+      "after": "W-03",
+      "duration": 5,
+      "card": {
+        "title": "SECOND READING",
+        "lines": [
+          "Next: September 14, 2026 \u2014 City Council \u2014 Cox Ranch annexation, second reading.",
+          "Preserve Wolfe's full statement, intervening council comments, and the roll call/result.",
+          "A no vote is not a finding that any legal claim was correct."
+        ]
+      }
+    }
+  ]
+}

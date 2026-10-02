@@ -21,6 +21,7 @@ This is the continuation of the video-evidence project started on branch `arena/
 | [`fetch_source_recordings.sh`](fetch_source_recordings.sh) | One-command public-source fetch kit (checksums, retrieval log, caption-track capture). |
 | [`available-footage-inventory.md`](available-footage-inventory.md) | The only real footage reachable from this sandbox (9 legacy clips, hashed + probed) and its honest scope limits. |
 | [`connectivity_test_2026-10-02.log`](connectivity_test_2026-10-02.log) | Raw connectivity evidence. |
+| [`production/`](production/) | **Staged production package** (built while blocked): a tested evidence-video renderer with a verification gate, Batch-1 EDL skeletons for videos 01–02 from the Phase 1 cut plan, and per-video review workbooks for videos 03–17 distilled from the phase scans. See [`production/README.md`](production/README.md). |
 
 ## Fastest path to the 17 videos
 

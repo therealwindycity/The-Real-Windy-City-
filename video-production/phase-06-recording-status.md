@@ -49,3 +49,12 @@ No transcript-card substitute videos were produced: the handoff reserves that fo
 3. **User-approved alternative format** (e.g. clearly-labeled transcript-research videos) — requires explicit approval per the handoff; not recommended for an evidence project.
 
 Once masters are in hand, production proceeds in small batches per the handoff: Tier-1 first (videos 1 and 2 from the nine exact Phase 1 windows), each cut verified against the recording (speaker, item, complete turns, roll call), with SRT/VTT sidecars, edit-decision lists, provenance READMEs, and QA records per file.
+
+## Preparation completed while blocked (2026-10-02, same session)
+
+So that production can start the hour masters arrive, this session also staged a complete production package in [`production/`](production/):
+
+- **`production/render_video.py`** — an evidence-video renderer with the handoff's rules encoded: it *refuses* to render EDL clips not marked `verified` by a human reviewer, burns a provenance slate (date, body, item, source URL, source in/out) before every clip, never upscales, and emits the SRT/VTT sidecar, EDL export, provenance README, and a QA record whose human-review fields must be signed before any "final/verified" label. Self-tested end-to-end in-sandbox on two real recovered clips (see `production/SELFTEST.md` — toolchain test only, not a deliverable).
+- **`production/edl/01_wolfe_positions.edl.json` and `02_laybourn_positions.edl.json`** — Batch-1 EDL skeletons built from the Phase 1 cut manifest: all nine windows with source in/out, required text, editorial notes, and anti-conflation context cards between unlike items (≈32.5 min and ≈14.4 min estimated runtimes).
+- **`production/workbooks/03…17_*.md`** — fifteen per-video review workbooks distilling the Phase 2–4 candidate scans into prioritized, timestamped, link-backed review queues with verification checklists, denominator/rule requirements for the comparator videos, and "not established" criteria.
+- **`production/reference/`** — hashed, byte-for-byte copies of the Phase 1 clip manifest and the legacy 616-row Miller index, so production does not depend on cross-repo checkout.

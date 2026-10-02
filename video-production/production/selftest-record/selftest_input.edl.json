@@ -1,0 +1,41 @@
+{
+  "video_id": "ST",
+  "title": "PIPELINE SELF-TEST — NOT A DELIVERABLE",
+  "output_base": "SELFTEST_pipeline_check",
+  "selftest": true,
+  "sources": [
+    {"master": "mar9_return.mp4", "source_url": "https://www.youtube.com/watch?v=19tQtLA8klo (March 9, 2026 City Council — legacy clip, source in/out within master unknown)"},
+    {"master": "apr27_nine.mp4", "source_url": "https://www.youtube.com/watch?v=y9vnXtjZpR0 (April 27, 2026 City Council — legacy clip, source in/out within master unknown)"}
+  ],
+  "clips": [
+    {
+      "id": "ST-1", "source": 0, "in": "00:00:03", "out": "00:00:33",
+      "status": "selftest-unverified",
+      "date": "2026-03-09", "body": "city-council",
+      "slate": {
+        "title": "PIPELINE SELF-TEST — NOT A DELIVERABLE",
+        "lines": ["Clip ST-1 — legacy March 9, 2026 City Council source clip",
+                  "Source in/out within the original meeting recording: UNKNOWN (legacy cut, no offset metadata)",
+                  "This render only exercises the toolchain: slates, cuts, concat, captions, EDL, QA."],
+        "duration": 4
+      },
+      "caption_text": "[SELF-TEST] March 9, 2026 City Council — legacy clip trim 00:03–00:33 (offset within official recording unknown)"
+    },
+    {
+      "id": "ST-2", "source": 1, "in": "00:00:05", "out": "00:00:35",
+      "status": "selftest-unverified",
+      "date": "2026-04-27", "body": "city-council",
+      "slate": {
+        "title": "PIPELINE SELF-TEST — NOT A DELIVERABLE",
+        "lines": ["Clip ST-2 — legacy April 27, 2026 City Council source clip",
+                  "Source in/out within the original meeting recording: UNKNOWN (legacy cut, no offset metadata)"],
+        "duration": 4
+      },
+      "caption_text": "[SELF-TEST] April 27, 2026 City Council — legacy clip trim 00:05–00:35 (offset within official recording unknown)"
+    }
+  ],
+  "gaps": [
+    {"after": "ST-1", "duration": 4,
+     "card": {"title": "CONTEXT CARD TEST", "lines": ["Gap/context cards render between clips.", "Handoff rule: never juxtapose separate dates/items as one conversation."]}}
+  ]
+}

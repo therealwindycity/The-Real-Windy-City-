@@ -1,0 +1,32 @@
+{
+  "video": "SELFTEST_pipeline_check",
+  "qa_run_utc": "2026-10-02 21:47:24 UTC",
+  "automated_checks": {
+    "file": "SELFTEST_pipeline_check.mp4",
+    "sha256": "78a9844c46bcc6c6cc1dd12fb1096d0d1231f7d50fe987fee50f263f9aa584b6",
+    "bytes": 3153359,
+    "duration_s": 72.08,
+    "expected_duration_s": 72.0,
+    "duration_match": true,
+    "video_stream": "854x480 @ 29.93fps",
+    "audio_stream": true,
+    "sidecars": [
+      "SELFTEST_pipeline_check.srt",
+      "SELFTEST_pipeline_check.vtt",
+      "SELFTEST_pipeline_check.edl.json",
+      "SELFTEST_pipeline_check_PROVENANCE.md"
+    ]
+  },
+  "human_review_required": {
+    "full_start_end_plays": null,
+    "no_black_or_frozen_segments_at_cuts": null,
+    "audio_continuous_at_cuts": null,
+    "caption_timing_and_spelling": null,
+    "names_spelled_per_official_records": null,
+    "citations_complete": null,
+    "no_omitted_response_changing_meaning": null,
+    "reviewer": null,
+    "review_date": null
+  },
+  "label_rules": "This file may NOT be called final/complete/verified until every human_review_required field is confirmed by a named reviewer."
+}

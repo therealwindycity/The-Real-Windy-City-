@@ -1,0 +1,225 @@
+{
+  "video_id": "02",
+  "title": "Pete Laybourn \u2014 position timeline (early criticism of Miller and later statements/actions)",
+  "output_base": "02_laybourn_positions",
+  "status": "pending-footage-review",
+  "handoff_rules": [
+    "Confirm identity from the recording and/or reliable contemporaneous records before using official-name spellings in graphics.",
+    "Keep unlike agenda items separate; never juxtapose separate dates/items as one conversation.",
+    "Preserve complete turns, questions/prompts, chair rulings, responses, relevant roll call/outcome, and context before/after each cut.",
+    "A no vote or a negotiation proposal does not prove adoption of Miller's legal position."
+  ],
+  "sources": [
+    {
+      "master": "2026-05-11-city-council.mp4",
+      "source_url": "https://www.youtube.com/watch?v=vBJi7WeZ4C0",
+      "youtube_id": "vBJi7WeZ4C0",
+      "date": "2026-05-11",
+      "body": "City Council"
+    },
+    {
+      "master": "2026-06-15-public-services-committee.mp4",
+      "source_url": "https://www.youtube.com/watch?v=e8pByyWP7RE",
+      "youtube_id": "e8pByyWP7RE",
+      "date": "2026-06-15",
+      "body": "Public Services Committee"
+    },
+    {
+      "master": "2026-08-28-work-session.mp4",
+      "source_url": "https://www.youtube.com/watch?v=MG6Zaw7ATGA",
+      "youtube_id": "MG6Zaw7ATGA",
+      "date": "2026-08-28",
+      "body": "City Council Work Session"
+    },
+    {
+      "master": "2026-09-14-city-council.mp4",
+      "source_url": "https://www.youtube.com/watch?v=-zBOAUpDE3E",
+      "youtube_id": "-zBOAUpDE3E",
+      "date": "2026-09-14",
+      "body": "City Council"
+    }
+  ],
+  "clips": [
+    {
+      "id": "L-01",
+      "source": 0,
+      "date": "2026-05-11",
+      "body": "City Council",
+      "agenda_scope": "West Edge / Reed Avenue comments; not Cox Ranch",
+      "in": "01:17:09",
+      "out": "01:23:43",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-05-11 \u2014 City Council",
+        "duration": 5,
+        "lines": [
+          "Agenda item: West Edge / Reed Avenue comments; not Cox Ranch",
+          "On camera: Charles Miller, mayor, Dr. Emmons, Pete Laybourn",
+          "Source: https://www.youtube.com/watch?v=vBJi7WeZ4C0",
+          "Source in/out: 01:17:09 \u2013 01:23:43 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "Charles Miller",
+          "not exactly sure about that one",
+          "the spreading of incredible misinformation"
+        ],
+        "editorial_note": "Retain the late recognition, Miller's uncertainty/correction of a lead-poisoning assertion, and the surrounding response before Laybourn's comment. This is a different agenda subject; it is not evidence about the Cox Ranch statutes.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    },
+    {
+      "id": "L-02",
+      "source": 1,
+      "date": "2026-06-15",
+      "body": "Public Services Committee",
+      "agenda_scope": "Rezoning/planning item and public-comment procedure; not the June 22 Swan Ranch item",
+      "in": "02:05:09",
+      "out": "02:09:52",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-06-15 \u2014 Public Services Committee",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Rezoning/planning item and public-comment procedure; not the June 22 Swan Ranch item",
+          "On camera: Charles Miller, Pete Laybourn, committee chair",
+          "Source: https://www.youtube.com/watch?v=e8pByyWP7RE",
+          "Source in/out: 02:05:09 \u2013 02:09:52 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "This individual has wasted a lot of our time",
+          "he still has a minute left",
+          "I think that's the kind of conversation that should never happen"
+        ],
+        "editorial_note": "Keep the chair's response and Laybourn's full ensuing comment. Verify the actual timer on footage before making any lost-time or time-limit claim.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    },
+    {
+      "id": "L-03",
+      "source": 2,
+      "date": "2026-08-28",
+      "body": "City Council Work Session",
+      "agenda_scope": "Cox Ranch update; work session, no public input",
+      "in": "01:03:36",
+      "out": "01:05:44",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-08-28 \u2014 City Council Work Session",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Cox Ranch update; work session, no public input",
+          "On camera: Pete Laybourn, chair, Lawrence J. Wolfe",
+          "Source: https://www.youtube.com/watch?v=MG6Zaw7ATGA",
+          "Source in/out: 01:03:36 \u2013 01:05:44 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "my understanding of work sessions",
+          "I hope we learned a lot from it",
+          "entirely appropriate"
+        ],
+        "editorial_note": "Show Laybourn's argument that the Council should discuss the proposed agreement in a work session, along with the chair's contrary scope ruling. Do not imply that the room was accepting public comments.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    },
+    {
+      "id": "L-04",
+      "source": 3,
+      "date": "2026-09-14",
+      "body": "City Council",
+      "agenda_scope": "Cox Ranch annexation, second reading",
+      "in": "02:14:14",
+      "out": "02:14:37",
+      "status": "pending-footage-review",
+      "fade": 0.0,
+      "slate": {
+        "title": "2026-09-14 \u2014 City Council",
+        "duration": 5,
+        "lines": [
+          "Agenda item: Cox Ranch annexation, second reading",
+          "On camera: Pete Laybourn, council roll call",
+          "Source: https://www.youtube.com/watch?v=-zBOAUpDE3E",
+          "Source in/out: 02:14:14 \u2013 02:14:37 (official recording)"
+        ]
+      },
+      "verification": {
+        "required_text_on_audio": [
+          "Mr. Leborn, Mr. Moody, and Mr. Wolf",
+          "The annexation is approved on second reading"
+        ],
+        "editorial_note": "The auto-caption mis-spells names here; verify the roll call against the recording and official minutes. Show the motion, vote, and outcome. The vote is not a finding that Miller was correct.",
+        "speaker_identity_confirmed": null,
+        "complete_turns_preserved": null,
+        "context_lead_lag_reviewed": null,
+        "caption_corrections": [],
+        "reviewer": null,
+        "review_date": null
+      },
+      "caption_pending_note": "Transcript pending verification against audio; corrections will be logged in the EDL."
+    }
+  ],
+  "gaps": [
+    {
+      "after": "L-01",
+      "duration": 5,
+      "card": {
+        "title": "DIFFERENT BODY, DIFFERENT ITEM",
+        "lines": [
+          "Next: June 15, 2026 \u2014 Public Services Committee \u2014 rezoning/planning item and comment procedure.",
+          "This is NOT the June 22 Swan Ranch item and NOT Cox Ranch.",
+          "Verify the actual timer on footage before any lost-time or time-limit claim."
+        ]
+      }
+    },
+    {
+      "after": "L-02",
+      "duration": 5,
+      "card": {
+        "title": "WORK SESSION",
+        "lines": [
+          "Next: August 28, 2026 \u2014 Cox Ranch update work session.",
+          "Show Laybourn's argument to discuss the proposed agreement in a work session and the chair's contrary scope ruling.",
+          "Do not imply the room was taking public comments."
+        ]
+      }
+    },
+    {
+      "after": "L-03",
+      "duration": 5,
+      "card": {
+        "title": "SECOND READING \u2014 ROLL CALL",
+        "lines": [
+          "Next: September 14, 2026 \u2014 Cox Ranch annexation, second reading.",
+          "Auto-captions mis-spell names in the roll call ('Mr. Leborn, Mr. Moody, Mr. Wolf').",
+          "Verify each name against the recording and official minutes before graphics use."
+        ]
+      }
+    }
+  ]
+}

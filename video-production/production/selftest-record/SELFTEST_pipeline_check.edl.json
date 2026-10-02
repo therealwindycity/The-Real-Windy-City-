@@ -1,0 +1,73 @@
+{
+  "video_id": "ST",
+  "title": "PIPELINE SELF-TEST \u2014 NOT A DELIVERABLE",
+  "rendered_utc": "2026-10-02 21:47:24 UTC",
+  "canvas": "854x480",
+  "fps": 29.97,
+  "no_upscaling": "canvas equals largest source frame; smaller sources padded, larger scaled down",
+  "sources": [
+    {
+      "master": "mar9_return.mp4",
+      "sha256": "b3be0142629e1e3bec98fef56f0f7048980b75f2642c8afabca8a5d03351d225",
+      "source_url": "https://www.youtube.com/watch?v=19tQtLA8klo (March 9, 2026 City Council \u2014 legacy clip, source in/out within master unknown)",
+      "probe": {
+        "duration": 120.05,
+        "width": 854,
+        "height": 480,
+        "fps": 29.96,
+        "has_audio": true
+      }
+    },
+    {
+      "master": "apr27_nine.mp4",
+      "sha256": "fd913ed5e1e2e3beabbd13b3eb52f0dc45ad572de8df5c8b5000a04807e545e7",
+      "source_url": "https://www.youtube.com/watch?v=y9vnXtjZpR0 (April 27, 2026 City Council \u2014 legacy clip, source in/out within master unknown)",
+      "probe": {
+        "duration": 110.01,
+        "width": 854,
+        "height": 480,
+        "fps": 29.97,
+        "has_audio": true
+      }
+    }
+  ],
+  "timeline": [
+    {
+      "clip_id": "ST-1",
+      "master": "mar9_return.mp4",
+      "source_in": "00:00:03",
+      "source_out": "00:00:33",
+      "output_start": "00:00:00.000",
+      "duration_s": 30.0,
+      "slate": {
+        "title": "PIPELINE SELF-TEST \u2014 NOT A DELIVERABLE",
+        "lines": [
+          "Clip ST-1 \u2014 legacy March 9, 2026 City Council source clip",
+          "Source in/out within the original meeting recording: UNKNOWN (legacy cut, no offset metadata)",
+          "This render only exercises the toolchain: slates, cuts, concat, captions, EDL, QA."
+        ],
+        "duration": 4
+      },
+      "status_at_render": "selftest-unverified",
+      "caption_corrections": []
+    },
+    {
+      "clip_id": "ST-2",
+      "master": "apr27_nine.mp4",
+      "source_in": "00:00:05",
+      "source_out": "00:00:35",
+      "output_start": "00:00:38.000",
+      "duration_s": 30.0,
+      "slate": {
+        "title": "PIPELINE SELF-TEST \u2014 NOT A DELIVERABLE",
+        "lines": [
+          "Clip ST-2 \u2014 legacy April 27, 2026 City Council source clip",
+          "Source in/out within the original meeting recording: UNKNOWN (legacy cut, no offset metadata)"
+        ],
+        "duration": 4
+      },
+      "status_at_render": "selftest-unverified",
+      "caption_corrections": []
+    }
+  ]
+}
