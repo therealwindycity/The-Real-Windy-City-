@@ -1,10 +1,11 @@
 # Pipeline self-test record — 2026-10-02
 
-`render_video.py` was exercised end-to-end in the production sandbox using two of the nine
-real legacy clips recovered via GitHub (`mar9_return.mp4`, `apr27_nine.mp4`). **This was a
-toolchain test only — the output is not a deliverable and must not be published as one.**
+`render_video.py` and `extract_review_windows.py` were exercised end-to-end in the
+production sandbox using two of the nine real legacy clips recovered via GitHub
+(`mar9_return.mp4`, `apr27_nine.mp4`). **These were toolchain tests only — their outputs
+are not deliverables and must not be published as one.**
 
-## What was tested
+## Renderer self-test (`render_video.py`)
 
 | Check | Result |
 |---|---|
@@ -40,3 +41,19 @@ Pillow 12.3.0, Python 3.11.
 - The self-test clips have no source-offset metadata, so its slates say "offset within
   official recording unknown" — real deliverables get exact source in/out slates from the
   verified EDL.
+
+## Review-kit self-test (`extract_review_windows.py`)
+
+Tested on `mar9_return.mp4` with a synthetic pending window (planned 00:00:30–00:01:00,
+lead 15 s / lag 10 s):
+
+| Check | Result |
+|---|---|
+| Review cut with lead/lag (55 s) | ✅ 1.6 MB, re-encoded frame-accurate |
+| MASTER-clock burn-in (libass track, per-second) | ✅ verified pixel-differentially: same master frame with/without overlay differs strongly in the clock band (mean 11.9) and is unchanged elsewhere (mean 1.7) — `drawtext` is absent from the minimal ffmpeg builds, so the clock is burned via a generated `.ass` track |
+| Draft caption extraction from transcript | ✅ 2 cues in-window, correct relative times (master 00:00:49 → review 00:00:34) |
+| Transcript parser robustness | ✅ handles both blank-line-separated and single-line transcript formats (cues delimited by their own `[HH:MM:SS]` markers; the March 9 file has no blank lines and initially produced a 284 KB mega-cue — fixed and re-tested) |
+| Pre-filled verification form | ✅ required text, editorial note, master/window facts, reviewer fields |
+| Kit INDEX.md | ✅ |
+
+Self-test outputs (not committed): `/tmp/reviewkit-test/kit/`.

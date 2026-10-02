@@ -50,7 +50,7 @@
       "p3_candidate_cues": 11,
       "p4_candidate_cues": 4,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1095,
+      "granicus_clip_id": "1095",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_0cf4c381-4e0b-11f1-9b4d-005056a89546.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1095"
     },
@@ -262,7 +262,7 @@
       "p3_candidate_cues": 7,
       "p4_candidate_cues": 3,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1050,
+      "granicus_clip_id": "1050",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_fc57ddc3-d766-412e-9940-66459ea16b52.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1050"
     },
@@ -348,7 +348,7 @@
       "p3_candidate_cues": 13,
       "p4_candidate_cues": 0,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1053,
+      "granicus_clip_id": "1053",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_d5d0cd14-5d48-4a1d-a7f0-4a26b4d3dc0a.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1053"
     },
@@ -406,7 +406,7 @@
       "p3_candidate_cues": 16,
       "p4_candidate_cues": 2,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1060,
+      "granicus_clip_id": "1060",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_d7fc0fd0-ac85-4676-8f5a-d7ff97fe05f6.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1060"
     },
@@ -459,7 +459,7 @@
       "p3_candidate_cues": 27,
       "p4_candidate_cues": 8,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1071,
+      "granicus_clip_id": "1071",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_b8b4e031-f557-48f6-9d95-f20827d12bd1.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1071"
     },
@@ -517,7 +517,7 @@
       "p3_candidate_cues": 8,
       "p4_candidate_cues": 5,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1091,
+      "granicus_clip_id": "1091",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_70e51848-551f-4877-a951-af3ba281ef8a.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1091"
     },
@@ -607,7 +607,7 @@
       "p3_candidate_cues": 8,
       "p4_candidate_cues": 10,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1093,
+      "granicus_clip_id": "1093",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_d2778ec1-4334-11f1-bb28-005056a89546.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1093"
     },
@@ -666,7 +666,7 @@
       "p3_candidate_cues": 33,
       "p4_candidate_cues": 3,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1097,
+      "granicus_clip_id": "1097",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_cd1d772e-6046-40f0-ba52-164b7e9cc954.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1097"
     },
@@ -756,7 +756,7 @@
       "p3_candidate_cues": 11,
       "p4_candidate_cues": 6,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1099,
+      "granicus_clip_id": "1099",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_19b59235-f7f4-4274-9aca-c19a21c54031.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1099"
     },
@@ -870,7 +870,7 @@
       "p3_candidate_cues": 34,
       "p4_candidate_cues": 8,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1120,
+      "granicus_clip_id": "1120",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_4e312fa5-44f7-41ff-acf7-91e8a7511436.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1120"
     },
@@ -902,7 +902,7 @@
       "p3_candidate_cues": 5,
       "p4_candidate_cues": 1,
       "in_legacy_miller_index": true,
-      "granicus_clip_id": 1122,
+      "granicus_clip_id": "1122",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_526429bc-8a88-11f1-bb61-005056a89546.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1122"
     },
@@ -957,7 +957,7 @@
       "p3_candidate_cues": 4,
       "p4_candidate_cues": 0,
       "in_legacy_miller_index": false,
-      "granicus_clip_id": 1124,
+      "granicus_clip_id": "1124",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_a6f9f4cb-9596-11f1-bb61-005056a89546.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1124"
     },
@@ -1012,7 +1012,7 @@
       "p3_candidate_cues": 1,
       "p4_candidate_cues": 0,
       "in_legacy_miller_index": false,
-      "granicus_clip_id": 1126,
+      "granicus_clip_id": "1126",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_dfb5f093-463f-4fb7-97a5-bef9c54ca023.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1126"
     },
@@ -1310,7 +1310,7 @@
       "p3_candidate_cues": 17,
       "p4_candidate_cues": 4,
       "in_legacy_miller_index": false,
-      "granicus_clip_id": 1066,
+      "granicus_clip_id": "1066",
       "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_443994e8-08e0-4d61-8dce-7841c9ce20fc.mp4",
       "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1066"
     },
@@ -1412,10 +1412,7 @@
       "p2_candidate_cues": 0,
       "p3_candidate_cues": 12,
       "p4_candidate_cues": 0,
-      "in_legacy_miller_index": false,
-      "granicus_clip_id": 1075,
-      "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_6d600b3f-38b3-4805-aa9b-cc4fee18f924.mp4",
-      "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1075"
+      "in_legacy_miller_index": false
     },
     {
       "date": "2026-03-17",
@@ -1435,10 +1432,7 @@
       "p2_candidate_cues": 0,
       "p3_candidate_cues": 14,
       "p4_candidate_cues": 0,
-      "in_legacy_miller_index": false,
-      "granicus_clip_id": 1081,
-      "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_574126e6-f220-44cd-87a4-b59f13413666.mp4",
-      "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1081"
+      "in_legacy_miller_index": false
     },
     {
       "date": "2026-03-23",
@@ -1462,9 +1456,9 @@
       "p3_candidate_cues": 3,
       "p4_candidate_cues": 3,
       "in_legacy_miller_index": false,
-      "granicus_clip_id": 1087,
-      "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_64802b09-32c2-4214-85c5-3280da166665.mp4",
-      "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1087"
+      "granicus_clip_id": "1086",
+      "granicus_mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_6dcd7f0d-d260-4113-86a3-ed78761059bf.mp4",
+      "granicus_agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1086"
     },
     {
       "date": "2026-04-06",
@@ -2082,10 +2076,76 @@
       "in_legacy_miller_index": false
     }
   ],
-  "granicus_direct_mp4_note": "Direct MP4 URLs recovered from the legacy pipeline index (pipeline/meetings.json at therealwindycity/therealwindycity main b6e707a, generated before 2026-08-24; view covers City Council). They cover only some catalog dates; all others must come from the official YouTube links or a re-indexed Granicus feed. The archive-video.granicus.com host is blocked from the production sandbox like all other non-GitHub/PyPI hosts.",
+  "granicus_direct_mp4_note": "Direct MP4 URLs recovered from the legacy pipeline index (pipeline/meetings.json at therealwindycity/therealwindycity main b6e707a, generated before 2026-08-24; its feed covered City Council recordings only). Links are attached ONLY to catalog city-council rows backed by a REGULAR 'City Council' Granicus recording on the same date; special sessions, committee meetings, and ambiguous dates carry no link and must be fetched from the official YouTube source. See uncataloged_special_sessions_2026 for special sessions that exist on Granicus but are absent from the transcript corpus entirely. The archive-video.granicus.com host is blocked from the production sandbox like all non-GitHub/PyPI hosts.",
   "legacy_granicus_index_coverage": {
-    "catalog_dates_with_direct_mp4": 17,
+    "catalog_dates_with_direct_mp4": 15,
     "index_generated_through": "2026-08-24",
-    "index_total_meetings": 479
-  }
+    "index_total_meetings": 479,
+    "uncataloged_special_sessions": 7
+  },
+  "uncataloged_special_sessions_2026": [
+    {
+      "date": "2026-01-23",
+      "name": "Special City Council Meeting",
+      "granicus_clip_id": "1052",
+      "mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_6b88ce0e-fd61-11f0-bb28-005056a89546.mp4",
+      "agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1052",
+      "in_transcript_catalog": false,
+      "note": "Special session present in the Granicus archive but not in the transcript corpus. No transcript exists, so no Phase 2-4 scan covered it; review manually if exhaustive \"every event\" scope (videos 12/13) is claimed."
+    },
+    {
+      "date": "2026-02-23",
+      "name": "Special City Council Meeting",
+      "granicus_clip_id": "1063",
+      "mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_a3f24875-1719-11f1-bb28-005056a89546.mp4",
+      "agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1063",
+      "in_transcript_catalog": true,
+      "note": "Special session present in the Granicus archive but not in the transcript corpus. No transcript exists, so no Phase 2-4 scan covered it; review manually if exhaustive \"every event\" scope (videos 12/13) is claimed."
+    },
+    {
+      "date": "2026-03-05",
+      "name": "Special City Council Meeting",
+      "granicus_clip_id": "1069",
+      "mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_0a284898-197b-11f1-bb28-005056a89546.mp4",
+      "agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1069",
+      "in_transcript_catalog": false,
+      "note": "Special session present in the Granicus archive but not in the transcript corpus. No transcript exists, so no Phase 2-4 scan covered it; review manually if exhaustive \"every event\" scope (videos 12/13) is claimed."
+    },
+    {
+      "date": "2026-03-12",
+      "name": "Special City Council Meeting",
+      "granicus_clip_id": "1073",
+      "mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_3bbc7b15-1ee8-11f1-bb28-005056a89546.mp4",
+      "agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1073",
+      "in_transcript_catalog": false,
+      "note": "Special session present in the Granicus archive but not in the transcript corpus. No transcript exists, so no Phase 2-4 scan covered it; review manually if exhaustive \"every event\" scope (videos 12/13) is claimed."
+    },
+    {
+      "date": "2026-03-16",
+      "name": "Special City Council Meeting",
+      "granicus_clip_id": "1075",
+      "mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_6d600b3f-38b3-4805-aa9b-cc4fee18f924.mp4",
+      "agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1075",
+      "in_transcript_catalog": true,
+      "note": "Special session present in the Granicus archive but not in the transcript corpus. No transcript exists, so no Phase 2-4 scan covered it; review manually if exhaustive \"every event\" scope (videos 12/13) is claimed."
+    },
+    {
+      "date": "2026-03-17",
+      "name": "Special City Council Meeting",
+      "granicus_clip_id": "1081",
+      "mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_574126e6-f220-44cd-87a4-b59f13413666.mp4",
+      "agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1081",
+      "in_transcript_catalog": true,
+      "note": "Special session present in the Granicus archive but not in the transcript corpus. No transcript exists, so no Phase 2-4 scan covered it; review manually if exhaustive \"every event\" scope (videos 12/13) is claimed."
+    },
+    {
+      "date": "2026-03-23",
+      "name": "Special City Council Meeting",
+      "granicus_clip_id": "1087",
+      "mp4_url": "https://archive-video.granicus.com/cheyenne/cheyenne_64802b09-32c2-4214-85c5-3280da166665.mp4",
+      "agenda_url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1087",
+      "in_transcript_catalog": true,
+      "note": "Special session present in the Granicus archive but not in the transcript corpus. No transcript exists, so no Phase 2-4 scan covered it; review manually if exhaustive \"every event\" scope (videos 12/13) is claimed."
+    }
+  ]
 }

@@ -22,12 +22,30 @@ input is the six Tier-1 recordings (see [`../missing_source_urls.md`](../missing
 2. Confirm each master's duration covers the latest window end (W-04 ends 02:14:37 on
    Sept 14 — check the recording actually runs that long; YouTube recordings of long
    meetings are sometimes truncated or split).
+3. **Build the review kit** (does the mechanical part of the per-window review):
+   ```
+   python3 production/extract_review_windows.py \
+     --edl production/edl/01_wolfe_positions.edl.json \
+     --masters source-masters \
+     --transcripts cheyenne-2026-transcripts \
+     --out review_kit
+   ```
+   For each of the nine windows this produces a review MP4 (window + 2 min lead / 1 min
+   lag) with the **master clock burned into the picture**, a DRAFT caption file pulled
+   from the transcript (caption-derived — expect errors), and a pre-filled verification
+   form. Repeat with the `02_laybourn_positions.edl.json`.
+
+   **Note on who can review:** footage verification is inherently a watch/listen step.
+   The agent session that staged this package cannot view or listen to footage, so the
+   forms must be completed by a human reviewer (or a vision-capable agent session). The
+   kit is designed so that takes minutes per window.
 
 ## Review procedure — per window (do this for all 9 windows)
 
 For each `clips[]` entry in the EDL:
 
-1. **Watch the window plus lead/lag** (≥2 minutes before, until the exchange fully closes).
+1. **Open the review file** (`review_kit/<ID>_review.mp4`) — the burned master clock lets
+   you propose exact adjusted in/out points. The draft SRT is a transcription aid only.
 2. **Confirm `required_text` is actually spoken** (against audio, not captions). Note any
    caption mis-hearing in `caption_corrections` — never silently rewrite.
 3. **Confirm speaker identity** for `speaker_focus` — Lawrence J. Wolfe / Pete Laybourn

@@ -8,7 +8,7 @@ Machine-readable version: [`source_acquisition_manifest.json`](source_acquisitio
 
 ## Tier 1 — unblocks videos 1, 2, and the core of 10 (7 recordings)
 
-| Meeting | Phase 1 windows | Official source | Direct Granicus MP4 (if recovered) |
+| Meeting | Phase 1 windows | Official source | Direct Granicus MP4 (if verified) |
 |---|---|---|---|
 | 2026-05-11 City Council | L-01 (videos 1–2) | [YouTube vBJi7WeZ4C0](https://www.youtube.com/watch?v=vBJi7WeZ4C0) | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_0cf4c381-4e0b-11f1-9b4d-005056a89546.mp4) |
 | 2026-06-15 Public Services Committee | L-02 (videos 1–2) | [YouTube e8pByyWP7RE](https://www.youtube.com/watch?v=e8pByyWP7RE) | — |
@@ -74,9 +74,9 @@ These seven masters plus the Phase 1 cut manifest are everything needed to rende
 | 2026-03-02 planning-commission | [https://www.youtube.com/watch?v=mkZEFuoNUPI](https://www.youtube.com/watch?v=mkZEFuoNUPI) | — | 0/46/0 |
 | 2026-03-02 planning-commission | [https://www.youtube.com/watch?v=8QhiMDr6aoY](https://www.youtube.com/watch?v=8QhiMDr6aoY) | — | 0/46/0 |
 | 2026-03-03 finance-committee | [https://www.youtube.com/watch?v=CbxmKEdhA0I](https://www.youtube.com/watch?v=CbxmKEdhA0I) | — | 0/31/0 |
-| 2026-03-16 public-services-committee | [https://www.youtube.com/watch?v=7KLyD7KU1ms](https://www.youtube.com/watch?v=7KLyD7KU1ms) | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_6d600b3f-38b3-4805-aa9b-cc4fee18f924.mp4) | 0/12/0 |
-| 2026-03-17 finance-committee | [https://www.youtube.com/watch?v=ZIcVQwZEnqA](https://www.youtube.com/watch?v=ZIcVQwZEnqA) | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_574126e6-f220-44cd-87a4-b59f13413666.mp4) | 0/14/0 |
-| 2026-03-23 city-council | [https://www.youtube.com/watch?v=ey_oCFcK7Cs](https://www.youtube.com/watch?v=ey_oCFcK7Cs) | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_64802b09-32c2-4214-85c5-3280da166665.mp4) | 0/3/3 |
+| 2026-03-16 public-services-committee | [https://www.youtube.com/watch?v=7KLyD7KU1ms](https://www.youtube.com/watch?v=7KLyD7KU1ms) | — | 0/12/0 |
+| 2026-03-17 finance-committee | [https://www.youtube.com/watch?v=ZIcVQwZEnqA](https://www.youtube.com/watch?v=ZIcVQwZEnqA) | — | 0/14/0 |
+| 2026-03-23 city-council | [https://www.youtube.com/watch?v=ey_oCFcK7Cs](https://www.youtube.com/watch?v=ey_oCFcK7Cs) | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_6dcd7f0d-d260-4113-86a3-ed78761059bf.mp4) | 0/3/3 |
 | 2026-04-06 public-services-committee | [https://www.youtube.com/watch?v=-KV5z3Rg8Ss](https://www.youtube.com/watch?v=-KV5z3Rg8Ss) | — | 0/38/3 |
 | 2026-04-06 planning-commission | [https://www.youtube.com/watch?v=KMsoAcN7S2o](https://www.youtube.com/watch?v=KMsoAcN7S2o) | — | 0/38/3 |
 | 2026-04-07 finance-committee | [https://www.youtube.com/watch?v=eYat3pcO3Ko](https://www.youtube.com/watch?v=eYat3pcO3Ko) | — | 0/23/0 |
@@ -112,8 +112,22 @@ These seven masters plus the Phase 1 cut manifest are everything needed to rende
 - 2026-02-05 urban-renewal-authority — [https://www.youtube.com/watch?v=STAKNzVKU60](https://www.youtube.com/watch?v=STAKNzVKU60) (no Phase 1 window, no Phase 2–4 cues; fetch only if later review requires)
 - 2026-06-18 board-of-adjustment — [https://www.youtube.com/watch?v=c-rdM6D4RMo](https://www.youtube.com/watch?v=c-rdM6D4RMo) (no Phase 1 window, no Phase 2–4 cues; fetch only if later review requires)
 
+## Uncataloged special sessions (2026) — exist on Granicus, absent from the transcript corpus
+
+The legacy Granicus index also shows **seven 2026 special City Council sessions that are not in the transcript catalog** — no transcript, no Phase 2–4 scan coverage. If any exhaustive-scope video claims "every" interruption/mention (videos 12, 13), these sessions must be reviewed too (or the scope limitation stated on screen).
+
+| Date | Granicus clip | Direct MP4 | Agenda |
+|---|---|---|---|
+| 2026-01-23 | 1052 | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_6b88ce0e-fd61-11f0-bb28-005056a89546.mp4) | [agenda](https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1052) |
+| 2026-02-23 | 1063 | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_a3f24875-1719-11f1-bb28-005056a89546.mp4) | [agenda](https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1063) |
+| 2026-03-05 | 1069 | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_0a284898-197b-11f1-bb28-005056a89546.mp4) | [agenda](https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1069) |
+| 2026-03-12 | 1073 | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_3bbc7b15-1ee8-11f1-bb28-005056a89546.mp4) | [agenda](https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1073) |
+| 2026-03-16 | 1075 | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_6d600b3f-38b3-4805-aa9b-cc4fee18f924.mp4) | [agenda](https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1075) |
+| 2026-03-17 | 1081 | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_574126e6-f220-44cd-87a4-b59f13413666.mp4) | [agenda](https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1081) |
+| 2026-03-23 | 1087 | [mp4](https://archive-video.granicus.com/cheyenne/cheyenne_64802b09-32c2-4214-85c5-3280da166665.mp4) | [agenda](https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&clip_id=1087) |
+
 ## Notes
 
-- Direct Granicus MP4 links were recovered from the legacy pipeline index (`pipeline/meetings.json` at `therealwindycity/therealwindycity` main `b6e707a`, generated before 2026-08-24). They exist only for some catalog dates; the remaining meetings must be fetched from their official YouTube links or from a freshly re-indexed Granicus feed (the legacy `cheyenne_pipeline.py index` command rebuilds that index from the Granicus site).
+- Direct Granicus MP4 links were recovered from the legacy pipeline index (`pipeline/meetings.json` at `therealwindycity/therealwindycity` main `b6e707a`, generated before 2026-08-24; its feed covered City Council recordings only). A link is attached only where a **regular** City Council Granicus recording matches the catalog date; special sessions and all committee/board meetings must be fetched from their official YouTube links. Two wrong-meeting attachments made in an earlier draft of this manifest (March 16 PSC and March 17 Finance rows pointing at special-session recordings) were corrected on 2026-10-02.
 - The September 28, 2026 third-reading recording exists on the City's Granicus player (per the Phase 5 source register, entry C3) but has no YouTube ID in the transcript catalog; its agenda is at the GeneratedAgendaViewer link in the manifest. The reported 8–2 vote remains secondary until certified minutes are obtained.
 - All YouTube IDs come from the transcript catalog `cheyenne-2026-transcripts/meetings.json` and each transcript header (source: City of Cheyenne official YouTube channel).

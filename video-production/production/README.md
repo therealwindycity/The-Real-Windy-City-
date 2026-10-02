@@ -11,6 +11,9 @@ masters arrive, with the evidentiary rules enforced by tooling rather than memor
 production/
 ├── render_video.py            # evidence-video renderer (slates, SRT/VTT, EDL export,
 │                              #   provenance README, QA record, verification gate)
+├── extract_review_windows.py  # builds the human footage-review kit: review cuts with a
+│                              #   burned master clock, DRAFT captions from the transcript,
+│                              #   pre-filled per-window verification forms
 ├── generate_edl_batch01.py    # builds the Batch-1 EDL skeletons from the Phase 1 manifest
 ├── generate_workbooks.py      # builds the per-video review workbooks from the phase scans
 ├── BATCH_01_PLAN.md           # production plan for videos 01–02 (ready except masters)
@@ -26,9 +29,10 @@ production/
 
 ## Order of work once masters arrive
 
-1. **Batch 1 (videos 01, 02):** follow [`BATCH_01_PLAN.md`](BATCH_01_PLAN.md) — review the
-   nine Phase 1 windows on the six Tier-1 masters, mark each EDL clip `verified`, render,
-   complete the human QA gates.
+1. **Batch 1 (videos 01, 02):** follow [`BATCH_01_PLAN.md`](BATCH_01_PLAN.md) — build the
+   review kit (`extract_review_windows.py`), have a reviewer complete the nine per-window
+   forms (the staging agent cannot watch footage — see the plan's note), transfer the
+   answers into the EDLs (status → `verified`), render, complete the human QA gates.
 2. **Batch 2 (videos 03, 11):** review the 11 direct in-person-request candidates and the
    staff-recognition/greeting candidates (Tier-2 masters).
 3. **Batch 3 (videos 12, 16):** the interruption/time-credit reels over the legacy-index

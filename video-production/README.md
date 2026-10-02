@@ -16,7 +16,7 @@ This is the continuation of the video-evidence project started on branch `arena/
 | File | What it is |
 |---|---|
 | [`phase-06-recording-status.md`](phase-06-recording-status.md) | Full status report: verification results, what was recovered, per-video blockers, unblock options. |
-| [`source_acquisition_manifest.json`](source_acquisition_manifest.json) | All 85 catalog meetings + Sept 28 Granicus: official URLs, priority tiers, needed-for-video mapping, cue counts, 17 direct MP4 links. |
+| [`source_acquisition_manifest.json`](source_acquisition_manifest.json) | All 85 catalog meetings + Sept 28 Granicus: official URLs, priority tiers, needed-for-video mapping, cue counts, 15 verified direct-MP4 links, 7 uncataloged special sessions. |
 | [`missing_source_urls.md`](missing_source_urls.md) | The exact missing URLs, human-readable, tiered. |
 | [`fetch_source_recordings.sh`](fetch_source_recordings.sh) | One-command public-source fetch kit (checksums, retrieval log, caption-track capture). |
 | [`available-footage-inventory.md`](available-footage-inventory.md) | The only real footage reachable from this sandbox (9 legacy clips, hashed + probed) and its honest scope limits. |
