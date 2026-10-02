@@ -4,6 +4,10 @@ Verbatim, timestamped transcripts of every 2026 public meeting of the Cheyenne (
 
 Transcript text is dedicated to the public domain (CC0). Video remains © City of Cheyenne / YouTube.
 
+## Video evidence project (Phase 6)
+
+The 17-video source-footage suite built on these transcripts is currently **blocked on recording access**: this environment cannot reach YouTube or the City's Granicus hosts. See [video-production/](video-production/) for the verification report, the exact missing-source URL list (tiered by priority), a one-command fetch kit to run on any machine with egress, and an inventory of the only footage recoverable via GitHub.
+
 ## Other archives in this series
 - [Meeting archives, 2008–2013](https://github.com/therealwindycity/cheyenne-archives-2008-2013) — agendas, agenda packets, supporting documents, minutes.
 - [Meeting archives, 2014–2017](https://github.com/therealwindycity/cheyenne-archives-2014-2017) — agendas, agenda packets, supporting documents, minutes.
