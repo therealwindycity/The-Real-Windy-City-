@@ -1,0 +1,24 @@
+# Raw source archives (hundreds of MB — regenerate with tools/, never commit)
+data/raw/
+data/unpacked/
+
+# Plaintext dataset. This is personal history: it is encrypted into atlas/enc/
+# (tools/lock_atlas.py) and only the ciphertext is committed.
+atlas/data/
+atlas/exports/
+
+# Local secrets — never commit a passphrase
+PASSPHRASE*.txt
+atlas-passphrase*.txt
+.env
+
+# Build / runtime noise
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+*.log
+
+# Local preview artifacts
+.cache/
+*.tmp

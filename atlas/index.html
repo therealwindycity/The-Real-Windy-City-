@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paradox Atlas — Personal AI &amp; Google History Explorer</title>
+<meta name="description" content="Interactive mind map and choose-your-own-adventure explorer for a personal AI history archive: every prompt, every output, when it happened, what it produced, how complete it was, and one-click handoff packets so another agent can resume.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="css/atlas.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="glyph"></div>
+      <div>
+        Paradox Atlas
+        <small id="brandsub">personal archive · local only</small>
+      </div>
+    </div>
+
+    <div class="searchwrap">
+      <span class="icon">⌕</span>
+      <input id="q" type="search" placeholder="Search every prompt and output…  ( / )" autocomplete="off" spellcheck="false">
+      <kbd>⌘K</kbd>
+    </div>
+
+    <div class="row" style="gap:8px">
+      <button class="btn sm" id="btnFilters">Filters <span class="muted" id="filterCount"></span></button>
+      <button class="btn sm" id="btnStory">Continue story ▸</button>
+      <button class="btn sm primary" id="btnExport">Export handoff</button>
+      <button class="btn sm ghost" id="btnLock" title="Lock">🔒</button>
+      <button class="btn sm ghost" id="btnHelp" title="Shortcuts">?</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="rail">
+      <div class="nav" id="nav">
+        <button data-view="map" class="active">◉ Mind map</button>
+        <button data-view="story">➤ Story (CYOA)</button>
+        <button data-view="timeline">⣿ Timeline</button>
+        <button data-view="ledger">▤ Ledger</button>
+        <button data-view="handoff">⇪ Handoff</button>
+        <button data-view="coverage">◫ Sources &amp; coverage</button>
+        <button data-view="import">↧ Import</button>
+      </div>
+
+      <h4>Archive</h4>
+      <div class="stat"><span>Turns</span><b id="sTurns">—</b></div>
+      <div class="stat"><span>Prompts</span><b id="sPrompts">—</b></div>
+      <div class="stat"><span>Threads</span><b id="sThreads">—</b></div>
+      <div class="stat"><span>Words produced</span><b id="sChars">—</b></div>
+      <div class="stat"><span>Window</span><b id="sRange" class="small">—</b></div>
+
+      <h4>Themes <button class="btn sm ghost" id="themeAll" style="float:right;padding:1px 6px">all</button></h4>
+      <div class="legend" id="legend"></div>
+
+      <h4>Resume queue</h4>
+      <div id="queue" class="legend"></div>
+    </nav>
+
+    <main class="main">
+
+      <!-- ============================ MAP ============================ -->
+      <section class="view" id="view-map">
+        <div id="mapview">
+          <div id="mapcanvas">
+            <svg id="mapsvg"><g id="maproot"></g></svg>
+            <div class="mapctl">
+              <select id="mapLayout" title="Layout">
+                <option value="radial">Radial</option>
+                <option value="tree">Horizontal tree</option>
+                <option value="status">Group by status</option>
+                <option value="theme-cluster">Theme clusters</option>
+              </select>
+              <select id="mapDepth" title="Depth">
+                <option value="2">Themes + threads</option>
+                <option value="3" selected>Themes + threads + turns</option>
+              </select>
+              <button class="btn sm" id="mapFit">Fit</button>
+              <button class="btn sm" id="mapZoomIn">＋</button>
+              <button class="btn sm" id="mapZoomOut">－</button>
+              <label class="small muted"><input type="checkbox" id="mapLabels" checked> labels</label>
+              <label class="small muted"><input type="checkbox" id="mapSized"> size ∝ volume</label>
+            </div>
+            <div class="maplegend" id="maplegend"></div>
+          </div>
+          <aside class="inspector" id="inspector">
+            <div class="ipad"><p class="muted small">Select any node to inspect it. Double-click to focus, ⌫ to step back.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============================ STORY ============================ -->
+      <section class="view" id="view-story" hidden>
+        <div id="storyview">
+          <div class="chapters">
+            <input id="chapterSearch" placeholder="Filter threads…">
+            <div id="chapterList"></div>
+          </div>
+          <div class="story" id="storyBody">
+            <div class="empty">Pick a thread on the left to enter its story.</div>
+          </div>
+          <aside class="inspector" id="storyInspector">
+            <div class="ipad"><p class="muted small">Story inspector: completeness, evidence, artifacts, branches.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============================ TIMELINE ============================ -->
+      <section class="view" id="view-timeline" hidden>
+        <div class="pad">
+          <h2 class="page">Timeline</h2>
+          <p class="small">Every recorded turn, newest first, with what it produced. Click a row to open the full record.</p>
+          <div class="row" style="margin-bottom:12px">
+            <select id="tlGroup" class="btn sm"><option value="month">Group by month</option><option value="week">Group by week</option><option value="day">Group by day</option></select>
+            <select id="tlSort" class="btn sm"><option value="desc">Newest first</option><option value="asc">Oldest first</option></select>
+            <span class="muted small" id="tlCount"></span>
+          </div>
+          <div id="tlBody"></div>
+        </div>
+      </section>
+
+      <!-- ============================ LEDGER ============================ -->
+      <section class="view" id="view-ledger" hidden>
+        <div class="pad">
+          <h2 class="page">Ledger</h2>
+          <p class="small">Sortable inventory of the archive. Export the current selection to CSV or JSON.</p>
+          <div class="row" style="margin-bottom:10px">
+            <input id="ledgerSearch" placeholder="Filter rows…" style="padding:7px 10px;background:var(--bg-3);border:1px solid var(--line);border-radius:8px;min-width:240px">
+            <button class="btn sm" id="ledgerCsv">Export CSV</button>
+            <button class="btn sm" id="ledgerJson">Export JSON</button>
+            <span class="muted small" id="ledgerCount"></span>
+          </div>
+          <div class="tbl-wrap"><table class="ledger" id="ledgerTable"></table></div>
+        </div>
+      </section>
+
+      <!-- ============================ HANDOFF ============================ -->
+      <section class="view" id="view-handoff" hidden>
+        <div class="pad">
+          <h2 class="page">Handoff packets</h2>
+          <p class="small">Everything another agent needs to continue exactly where this left off — state, evidence, artifacts, URLs, open threads and a paste-ready resume prompt.</p>
+          <div class="grid2">
+            <div class="card padc">
+              <h3>Build a packet</h3>
+              <div class="field"><label>Scope</label>
+                <select id="hoScope">
+                  <option value="thread">One thread (current selection)</option>
+                  <option value="theme">A whole theme</option>
+                  <option value="queue">Resume queue (top unfinished)</option>
+                  <option value="all">Entire archive (index + packets)</option>
+                </select>
+              </div>
+              <div class="field"><label>Thread</label><select id="hoThread"></select></div>
+              <div class="field"><label>Theme</label><select id="hoTheme"></select></div>
+              <div class="row small" style="gap:14px">
+                <label><input type="checkbox" id="hoTranscript" checked> include full transcripts</label>
+                <label><input type="checkbox" id="hoRedact"> redact emails/phones</label>
+                <label><input type="checkbox" id="hoZip" checked> bundle as .zip</label>
+              </div>
+              <div class="field" style="margin-top:10px"><label>Max characters per turn (full transcripts)</label>
+                <input type="number" id="hoCap" value="6000" min="500" step="500"></div>
+              <div class="row">
+                <button class="btn primary" id="hoBuild">Build packet</button>
+                <button class="btn" id="hoCopy" disabled>Copy Markdown</button>
+                <button class="btn" id="hoDownload" disabled>Download</button>
+              </div>
+              <div class="small muted" id="hoStatus" style="margin-top:8px"></div>
+            </div>
+
+            <div class="card padc">
+              <h3>Resume prompt preview</h3>
+              <p class="small muted">Paste this into any capable agent to continue the thread without re-explaining the project.</p>
+              <textarea class="code" id="hoPreview" readonly placeholder="Build a packet to see the resume prompt…"></textarea>
+              <div class="row" style="margin-top:8px">
+                <button class="btn sm" id="hoCopyPrompt" disabled>Copy resume prompt</button>
+                <button class="btn sm" id="hoOpenStory" disabled>Open this story</button>
+              </div>
+            </div>
+
+            <div class="card padc">
+              <h3>Pre-built packets on disk</h3>
+              <p class="small muted">Generated by <span class="mono">tools/build_atlas.py</span> into <span class="mono">atlas/exports/</span> — Markdown + JSON for the highest-value threads.</p>
+              <div id="hoFiles" class="small mono"></div>
+            </div>
+
+            <div class="card padc">
+              <h3>Machine-readable state</h3>
+              <p class="small muted">Download the filtered archive, the raw graph, or the coverage inventory.</p>
+              <div class="row">
+                <button class="btn sm" id="dlAtlas">atlas.json</button>
+                <button class="btn sm" id="dlIndex">atlas-index.json</button>
+                <button class="btn sm" id="dlInventory">inventory.json</button>
+                <button class="btn sm" id="dlTurns">turns CSV</button>
+              </div>
+              <div class="hr"></div>
+              <p class="small muted">Each downloaded bundle is self-describing: <span class="mono">kind: "agent-handoff"</span>, version, scope, and the full turn objects.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ COVERAGE ============================ -->
+      <section class="view" id="view-coverage" hidden>
+        <div class="pad">
+          <h2 class="page">Sources &amp; coverage</h2>
+          <p class="small">What is inside the archive, where each piece lives, and what is still missing from the full Google history.</p>
+          <div id="coverageBody"></div>
+        </div>
+      </section>
+
+      <!-- ============================ IMPORT ============================ -->
+      <section class="view" id="view-import" hidden>
+        <div class="pad">
+          <h2 class="page">Import more history</h2>
+          <p class="small">Files are parsed in your browser. Nothing is uploaded anywhere — then download the merged <span class="mono">atlas.json</span> to make it permanent.</p>
+          <div class="grid2">
+            <div class="card padc">
+              <h3>Drop files</h3>
+              <div class="drop" id="dropzone">
+                <b>Takeout zip</b>, <span class="mono">MyActivity.html</span>, <span class="mono">MyActivity.json</span>,
+                exported chat text, or a previous <span class="mono">atlas.json</span><br>
+                <span class="small">Click to choose, or drag and drop.</span>
+                <input type="file" id="fileInput" multiple hidden accept=".zip,.html,.htm,.json,.txt,.md,.csv">
+              </div>
+              <div class="progress" style="margin-top:10px"><i id="impBar"></i></div>
+              <div class="log" id="impLog" style="margin-top:10px">Ready.</div>
+              <div class="row" style="margin-top:10px">
+                <button class="btn primary" id="impMerge" disabled>Merge into archive</button>
+                <button class="btn" id="impDownload" disabled>Download merged atlas.json</button>
+                <button class="btn ghost" id="impReset">Clear imported</button>
+              </div>
+            </div>
+            <div class="card padc">
+              <h3>Get your complete Google history</h3>
+              <p class="small">Google does not expose Search, Chrome, YouTube or NotebookLM history through any API — the only complete source is a Takeout export. Yours already exist in Drive (some are multi-GB); download the parts you care about and drop them here.</p>
+              <ol class="small" style="padding-left:18px;line-height:1.9">
+                <li>Open <a href="https://takeout.google.com" target="_blank" rel="noopener">takeout.google.com</a> (or reuse the archives already sitting in your Drive).</li>
+                <li>Pick the services you want: <b>My Activity</b>, <b>Search</b>, <b>Gemini Apps</b>, <b>Chrome</b>, <b>YouTube</b>, <b>Gmail</b>, <b>Drive</b>, <b>NotebookLM</b>.</li>
+                <li>Prefer <b>JSON</b> or <b>HTML</b> for My Activity — both are read here.</li>
+                <li>Drop the <span class="mono">.zip</span> straight in. The importer reads My Activity, Gemini activity, Drive file indexes and Gmail metadata from inside it.</li>
+              </ol>
+              <div class="hr"></div>
+              <h3>What is read from a Takeout zip</h3>
+              <div class="small mono" style="line-height:1.8">
+                Takeout/My Activity/*/MyActivity.{html,json}<br>
+                Takeout/My Activity/Gemini*/…<br>
+                Takeout/Drive/*.csv (file inventory + links)<br>
+                Takeout/Gmail/*.mbox (message headers)<br>
+                Takeout/Chrome/*.json (browsing history)
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- search palette -->
+<div class="palette" id="palette" hidden>
+  <input id="paletteInput" placeholder="Search prompts, outputs, artifacts, URLs…" autocomplete="off">
+  <div class="results" id="paletteResults"></div>
+</div>
+
+<!-- detail drawer -->
+<div class="drawer" id="drawer">
+  <div class="dhead">
+    <b id="drawerTitle">Turn</b>
+    <span class="spacer" style="flex:1"></span>
+    <button class="btn sm ghost" id="drawerPrev">‹ prev</button>
+    <button class="btn sm ghost" id="drawerNext">next ›</button>
+    <button class="btn sm ghost" id="drawerClose">close ✕</button>
+  </div>
+  <div class="dpad" id="drawerBody"></div>
+</div>
+
+<!-- filters -->
+<div class="drawer" id="filters" style="width:min(420px,94vw)">
+  <div class="dhead"><b>Filters</b><span class="spacer" style="flex:1"></span>
+    <button class="btn sm ghost" id="filtersClear">clear</button>
+    <button class="btn sm ghost" id="filtersClose">close ✕</button></div>
+  <div class="dpad">
+    <div class="field"><label>Status</label><select id="fStatus" multiple size="6"></select></div>
+    <div class="field"><label>Source</label><select id="fSource" multiple size="5"></select></div>
+    <div class="field"><label>Completeness</label>
+      <div class="row"><input type="number" id="fMin" value="0" min="0" max="100" style="width:80px;background:var(--bg-3);border:1px solid var(--line);border-radius:8px;padding:6px">
+      <span class="muted">to</span>
+      <input type="number" id="fMax" value="100" min="0" max="100" style="width:80px;background:var(--bg-3);border:1px solid var(--line);border-radius:8px;padding:6px"></div>
+    </div>
+    <div class="field"><label>Dates</label>
+      <div class="row"><input type="date" id="fFrom" class="btn sm"><input type="date" id="fTo" class="btn sm"></div>
+    </div>
+    <div class="field"><label>Only show</label>
+      <label class="small"><input type="checkbox" id="fArtifacts"> turns that produced artifacts</label>
+      <label class="small"><input type="checkbox" id="fUrls"> turns with URLs</label>
+      <label class="small"><input type="checkbox" id="fBranches"> turns with unexplored branches</label>
+      <label class="small"><input type="checkbox" id="fOpen"> unresolved / open threads</label>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script src="js/lock.js"></script>
+<script src="js/core.js"></script>
+<script src="js/map.js"></script>
+<script src="js/story.js"></script>
+<script src="js/views.js"></script>
+<script src="js/export.js"></script>
+<script src="js/import.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
