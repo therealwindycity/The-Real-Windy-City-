@@ -1,0 +1,108 @@
+name: Deploy site
+
+# Publishes the static site to GitHub Pages:
+#   https://therealwindycity.github.io/The-Real-Windy-City-/
+#
+# The published artifact is assembled here rather than served straight from the
+# branch, so build tooling and sources stay out of the site and the plaintext
+# dataset can never be published by accident (see the guard step).
+#
+# Triggering branches:
+#   main                                  — the normal publishing branch
+#   arena/850039e7-the-real-windy-city    — session branch (needs to be allowed
+#                                           under Settings → Environments →
+#                                           github-pages → Deployment branches)
+on:
+  push:
+    branches:
+      - main
+      - arena/850039e7-the-real-windy-city
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble the site
+        run: |
+          mkdir -p site
+          rsync -a --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='tools' \
+            --exclude='data' \
+            --exclude='node_modules' \
+            --exclude='*.zip' \
+            ./ site/
+          echo "files: $(find site -type f | wc -l)"
+          echo "size:  $(du -sh site | cut -f1)"
+          ls site
+
+      - name: Refuse to publish plaintext
+        run: |
+          fail=0
+          # 1. no decrypted dataset anywhere in the artifact
+          for p in site/atlas/data site/atlas/exports site/data/raw site/data/unpacked; do
+            if [ -e "$p" ]; then
+              echo "::error::plaintext dataset present in the site: $p"
+              fail=1
+            fi
+          done
+          # 2. the encrypted dataset must be there and complete
+          blobs=$(ls site/atlas/enc/blobs 2>/dev/null | wc -l)
+          if [ ! -f site/atlas/enc/manifest.json ]; then
+            echo "::error::atlas/enc/manifest.json missing — the app would have nothing to decrypt"
+            fail=1
+          elif [ "$blobs" -lt 100 ]; then
+            echo "::error::expected the encrypted dataset, found only $blobs blobs"
+            fail=1
+          else
+            echo "encrypted dataset: $blobs ciphertext blobs, manifest present"
+          fi
+          # 3. ciphertext must actually be opaque (defence against publishing a broken lock)
+          if python3 - <<'PY'
+          import os, re, sys
+          hits = []
+          root = 'site/atlas/enc/blobs'
+          for fn in sorted(os.listdir(root))[:25]:
+              head = open(os.path.join(root, fn), 'rb').read(4096)
+              if re.search(rb'(?i)prompted|[\w.\-]+@[\w.\-]+\.(?:com|net|org)|cheyenne', head):
+                  hits.append(fn)
+          if hits:
+              print('::error::readable plaintext found inside ciphertext:', hits)
+              sys.exit(1)
+          print('ciphertext spot-check: opaque')
+          PY
+          then :; else fail=1; fi
+          exit $fail
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
