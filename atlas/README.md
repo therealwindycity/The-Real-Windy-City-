@@ -21,6 +21,32 @@ python3 tools/serve_locked.py --port 8000
 
 It needs to be served over HTTP (browsers block `fetch` on `file://`).
 
+## Live on GitHub Pages
+
+**https://therealwindycity.github.io/The-Real-Windy-City-/atlas/**
+
+The whole site — the meeting transcripts and the Atlas — is published by
+`.github/workflows/pages.yml`, which assembles the artifact instead of serving
+the branch directly:
+
+* `rsync` excludes `.git`, `.github`, `tools/`, `data/` and `*.zip`, so build
+  tooling and sources never reach the web;
+* a **guard step refuses to publish plaintext** — it fails the build if
+  `atlas/data`, `atlas/exports`, `data/raw` or `data/unpacked` appear, requires
+  the encrypted dataset (manifest + ≥100 blobs), and spot-checks blobs for
+  readable content. A rebuild that somehow left the dataset decrypted cannot
+  reach the public site.
+
+The published Atlas is the **encrypted** build: visitors get the lock screen and
+need the passphrase, exactly like a local copy. Crawlers are kept out of the
+ciphertext by `robots.txt` (`Disallow: /atlas/enc/`) and the page carries
+`noindex,nofollow`.
+
+One operational note: the `github-pages` environment has a deployment branch
+policy, so the branch that publishes must be listed under
+**Settings → Environments → github-pages → Deployment branches and tags**
+(`main` is listed by default; add others to publish from them).
+
 ## Password protection
 
 **The shipped dataset is ciphertext.** `atlas/enc/` holds AES-256-GCM blobs;

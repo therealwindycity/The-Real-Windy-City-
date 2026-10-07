@@ -18,6 +18,9 @@ into an interactive **mind map** and a **choose-your-own-adventure** reader:
 - **handoff packets** (Markdown + JSON + a paste-ready resume prompt, zipped) so any capable
   agent can pick a thread up exactly where it left off
 
+**Live:** <https://therealwindycity.github.io/The-Real-Windy-City-/atlas/> — the published copy is
+the encrypted build, so it asks for the Atlas passphrase before it shows anything.
+
 ```bash
 python3 -m http.server 8000      # then open http://localhost:8000/atlas/
 python3 tools/serve_locked.py --port 8000     # same app, behind an HTTP password
