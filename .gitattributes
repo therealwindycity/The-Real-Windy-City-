@@ -1,0 +1,4 @@
+# Ciphertext: never diff, never merge, never line-ending-convert.
+atlas/enc/manifest.json text
+atlas/enc/blobs/** -text -diff
+sealed/** -text -diff
