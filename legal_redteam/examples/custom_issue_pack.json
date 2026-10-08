@@ -1,0 +1,36 @@
+{
+  "rules": [
+    {
+      "id": "local_zoning_variance",
+      "title": "Local zoning, variances, and land-use procedure",
+      "trigger_terms": ["zoning variance", "conditional use", "special use permit", "zoning appeal"],
+      "issue_question": "Identify the operative zoning text, decision-maker, record, review standard, notice, and available appeal route for this land-use decision.",
+      "authority_lanes": [
+        "state_statute",
+        "state_case",
+        "county_code",
+        "municipal_code",
+        "local_charter_or_resolution",
+        "local_administrative_decision",
+        "court_rule"
+      ],
+      "elements_to_verify": [
+        "Identify the parcel, zoning district, requested use, and code version in effect on the decision date.",
+        "Verify the decision-maker's delegated authority, required findings, notice, hearing, and voting procedure.",
+        "Determine finality, standing, exhaustion, record scope, appeal deadline, and available remedy."
+      ],
+      "evidence_to_collect": [
+        "Current and historical zoning text, application, staff report, notice, minutes, exhibits, and written findings.",
+        "Parcel maps, neighboring uses, service/impact evidence, communications, and administrative appeal filings."
+      ],
+      "opposing_questions": [
+        "Does the code commit the decision to discretion and support the findings in the record?",
+        "Was the challenger timely, properly before the tribunal, and prejudiced by any procedural defect?"
+      ],
+      "research_queries": [
+        "Retrieve the adopted local code and amendment history from official enactment records.",
+        "Find controlling state decisions on the specific variance criteria, review standard, and deadline."
+      ]
+    }
+  ]
+}

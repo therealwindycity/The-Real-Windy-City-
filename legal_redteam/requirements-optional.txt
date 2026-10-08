@@ -1,0 +1,9 @@
+# Install only when parsing these input formats.
+pypdf>=4.0
+python-docx>=1.1
+
+# Optional OCR for textless PDF pages. The Tesseract system executable must
+# also be installed separately; OCR remains opt-in via the --ocr flag.
+PyMuPDF>=1.24
+Pillow>=10.0
+pytesseract>=0.3.10

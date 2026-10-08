@@ -1,0 +1,20 @@
+{
+  "codes/replace-with-municipal-enactment.pdf": {
+    "title": "PLACEHOLDER — replace with the exact official source title",
+    "citation": "PLACEHOLDER — replace with the enacted citation",
+    "layer": "municipal_code",
+    "jurisdiction": "PLACEHOLDER municipality and state",
+    "official_url": "https://official-municipality.example/source",
+    "primary_source_status": "PLACEHOLDER — state exactly what was checked",
+    "source_kind": "municipal_code_pdf"
+  },
+  "records/replace-with-county-resolution.pdf": {
+    "title": "PLACEHOLDER — replace with the exact official source title",
+    "citation": "PLACEHOLDER — replace with the adopted resolution citation",
+    "layer": "county_code",
+    "jurisdiction": "PLACEHOLDER county and state",
+    "official_url": "https://official-county.example/source",
+    "primary_source_status": "PLACEHOLDER — state exactly what was checked",
+    "source_kind": "county_resolution"
+  }
+}

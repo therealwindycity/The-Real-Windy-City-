@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Civic Legal Research Red-Team Custom Issue Pack",
+  "description": "Append-only, transparent issue rules. Rules create research prompts and never state or decide governing law.",
+  "type": "object",
+  "properties": {
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,79}$"},
+          "title": {"type": "string", "minLength": 1},
+          "trigger_terms": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "issue_question": {"type": "string", "minLength": 1},
+          "authority_lanes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "federal_constitution", "federal_statute", "federal_regulation", "federal_case",
+                "state_constitution", "state_statute", "state_regulation", "state_case",
+                "county_code", "municipal_code", "local_charter_or_resolution",
+                "local_administrative_decision", "court_rule", "treaty",
+                "customary_international_law", "international_decision", "international_soft_law",
+                "tribal_law", "foreign_law", "interstate_compact", "agency_guidance",
+                "agency_record", "legislative_history", "contract_or_private_rule",
+                "secondary_source", "other"
+              ]
+            }
+          },
+          "elements_to_verify": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "evidence_to_collect": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "opposing_questions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "research_queries": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        },
+        "required": [
+          "id", "title", "trigger_terms", "issue_question", "authority_lanes",
+          "elements_to_verify", "evidence_to_collect", "opposing_questions", "research_queries"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["rules"],
+  "additionalProperties": false
+}

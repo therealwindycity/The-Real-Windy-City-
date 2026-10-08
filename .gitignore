@@ -1,0 +1,9 @@
+# Optional local legal-source downloads and caches
+.legal_redteam_cache/
+
+# Private case-file uploads staged by the local preview app
+.legal_redteam_private/
+
+# Python test/runtime files
+__pycache__/
+*.py[cod]

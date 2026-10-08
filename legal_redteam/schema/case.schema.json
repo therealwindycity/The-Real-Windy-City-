@@ -1,0 +1,651 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Civic Legal Research Red-Team Case Packet",
+  "description": "Normalized input for offline issue spotting plus provenance, researcher-reviewed research links, and qualitative evidence assessments. The schema and program do not determine whether facts or legal authority are true or applicable.",
+  "type": "object",
+  "properties": {
+    "case_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "jurisdiction": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "county": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "municipality": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "other": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "forum": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "level": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "district_or_circuit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "procedural_posture": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "captured_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "publisher": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "primary_source_status": {
+            "type": "string"
+          },
+          "original_filename": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "content_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "byte_size": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "extraction_method": {
+            "type": "string"
+          },
+          "extraction_confidence": {
+            "type": "string"
+          },
+          "extraction_warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "archived_path": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Relative archive filename written only when the caller explicitly selects a source archive directory."
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "unclassified",
+              "unverified",
+              "alleged",
+              "disputed",
+              "undisputed",
+              "adjudicated",
+              "inference"
+            ]
+          },
+          "source_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "locator": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "event_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "issue_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source_quote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "extraction_method": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "extraction_confidence": {
+            "type": "string"
+          },
+          "evidence_assessment": {
+            "type": "object",
+            "description": "Qualitative, person-entered review only; the engine does not infer or compute evidence weight.",
+            "properties": {
+              "strength": {
+                "type": "string",
+                "enum": [
+                  "not_assessed",
+                  "strong",
+                  "moderate",
+                  "weak",
+                  "contested"
+                ]
+              },
+              "authenticity": {
+                "type": "string",
+                "enum": [
+                  "not_assessed",
+                  "authenticated",
+                  "contested",
+                  "unknown"
+                ]
+              },
+              "directness": {
+                "type": "string",
+                "enum": [
+                  "not_assessed",
+                  "firsthand",
+                  "documentary",
+                  "hearsay_or_secondhand",
+                  "inference",
+                  "expert",
+                  "mixed",
+                  "unknown"
+                ]
+              },
+              "corroboration": {
+                "type": "string",
+                "enum": [
+                  "not_assessed",
+                  "corroborated",
+                  "single_source",
+                  "contradicted",
+                  "unknown"
+                ]
+              },
+              "rationale": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewer": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "limitations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "statement"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "authorities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "citation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "layer": {
+            "type": "string",
+            "enum": [
+              "federal_constitution",
+              "federal_statute",
+              "federal_regulation",
+              "federal_case",
+              "state_constitution",
+              "state_statute",
+              "state_regulation",
+              "state_case",
+              "county_code",
+              "municipal_code",
+              "local_charter_or_resolution",
+              "local_administrative_decision",
+              "court_rule",
+              "treaty",
+              "customary_international_law",
+              "international_decision",
+              "international_soft_law",
+              "tribal_law",
+              "foreign_law",
+              "interstate_compact",
+              "agency_guidance",
+              "agency_record",
+              "legislative_history",
+              "contract_or_private_rule",
+              "secondary_source",
+              "other"
+            ]
+          },
+          "jurisdiction": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "court_or_body": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "bindingness": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "controlling",
+              "binding",
+              "persuasive",
+              "nonbinding"
+            ]
+          },
+          "treatment": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "supports",
+              "contrary",
+              "distinguishes",
+              "neutral"
+            ]
+          },
+          "issue_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "proposition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pinpoint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "official_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decision_or_enactment_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "effective_from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "effective_to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verification_checks": {
+            "type": "object",
+            "properties": {
+              "citation": {
+                "type": "string",
+                "enum": [
+                  "not_checked",
+                  "checked",
+                  "failed",
+                  "unresolved",
+                  "not_applicable"
+                ]
+              },
+              "primary_text": {
+                "type": "string",
+                "enum": [
+                  "not_checked",
+                  "checked",
+                  "failed",
+                  "unresolved",
+                  "not_applicable"
+                ]
+              },
+              "currentness": {
+                "type": "string",
+                "enum": [
+                  "not_checked",
+                  "checked",
+                  "failed",
+                  "unresolved",
+                  "not_applicable"
+                ]
+              },
+              "subsequent_history": {
+                "type": "string",
+                "enum": [
+                  "not_checked",
+                  "checked",
+                  "failed",
+                  "unresolved",
+                  "not_applicable"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "source_excerpt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "official_opinion_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "docket_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "docket_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reporter_citation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "precedential_status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_capture_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "captured_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "citation"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "narrative_text": {
+      "type": "string"
+    },
+    "ingestion_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Warnings about skipped or unreadable files when ingesting a source directory."
+    },
+    "research_links": {
+      "type": "array",
+      "description": "Proposed or human-reviewed edges connecting facts/authorities to issues/elements or facts.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "from_type": {
+            "type": "string",
+            "enum": [
+              "fact",
+              "authority"
+            ]
+          },
+          "from_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to_type": {
+            "type": "string",
+            "enum": [
+              "issue",
+              "element",
+              "fact"
+            ]
+          },
+          "to_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "supports",
+              "undercuts",
+              "distinguishes",
+              "corroborates",
+              "contradicts",
+              "addresses",
+              "analogizes"
+            ]
+          },
+          "review_status": {
+            "type": "string",
+            "enum": [
+              "proposed",
+              "reviewed",
+              "rejected"
+            ],
+            "default": "proposed"
+          },
+          "rationale": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reviewer": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reviewed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "from_type",
+          "from_id",
+          "to_type",
+          "to_id",
+          "relation"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": true
+}

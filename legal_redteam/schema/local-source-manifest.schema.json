@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local Official-Source Corpus Manifest",
+  "description": "Optional user-entered metadata for local statutes, ordinances, charters, official opinions, and administrative records. Labels are not independently verified.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "title": {"type": "string"},
+      "citation": {"type": "string"},
+      "layer": {
+        "type": "string",
+        "enum": [
+          "federal_constitution", "federal_statute", "federal_regulation", "federal_case",
+          "state_constitution", "state_statute", "state_regulation", "state_case",
+          "county_code", "municipal_code", "local_charter_or_resolution",
+          "local_administrative_decision", "court_rule", "treaty",
+          "customary_international_law", "international_decision", "international_soft_law",
+          "tribal_law", "foreign_law", "interstate_compact", "agency_guidance",
+          "agency_record", "legislative_history", "contract_or_private_rule",
+          "secondary_source", "other"
+        ]
+      },
+      "jurisdiction": {"type": "string"},
+      "official_url": {"type": "string", "format": "uri"},
+      "primary_source_status": {"type": "string"},
+      "source_kind": {"type": "string"}
+    },
+    "additionalProperties": false
+  }
+}

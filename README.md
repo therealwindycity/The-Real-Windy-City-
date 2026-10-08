@@ -11,3 +11,6 @@ Transcript text is dedicated to the public domain (CC0). Video remains © City o
 - [Meeting archives, 2022](https://github.com/therealwindycity/cheyenne-archives-2022) — agendas, agenda packets, supporting documents, minutes.
 - [Meeting archives, 2023–2024](https://github.com/therealwindycity/cheyenne-archives-2023-2024) — agendas, agenda packets, supporting documents, minutes.
 - [Meeting archives, 2025–2026](https://github.com/therealwindycity/cheyenne-archives-2025-2026) — agendas, agenda packets, supporting documents, minutes.
+
+## Experimental research tooling
+- [Civic Legal Research Red-Team Engine](legal_redteam/README.md) — an offline-first issue-spotting CLI with explicitly invoked source-search, case-treatment, ingestion, review-graph, and optional drafting workflows. It is an experimental research aid, not legal advice or a complete legal research platform.

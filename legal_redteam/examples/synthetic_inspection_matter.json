@@ -1,0 +1,84 @@
+{
+  "case_id": "synthetic-inspection-example",
+  "title": "Synthetic municipal inspection issue — training example only",
+  "as_of": "2026-10-06",
+  "jurisdiction": {
+    "country": "United States",
+    "state": "Wyoming",
+    "county": null,
+    "municipality": null
+  },
+  "forum": {
+    "name": null,
+    "level": null
+  },
+  "procedural_posture": "Fictional draft-policy review; no real person, property, ordinance, or court case is represented.",
+  "actors": [
+    "Municipal inspection official (role and authority not independently verified)"
+  ],
+  "questions": [
+    "What facts and legal sources are needed to assess a proposed nonconsensual residential inspection process?"
+  ],
+  "documents": [
+    {
+      "id": "draft-policy",
+      "title": "Fictional draft inspection policy",
+      "kind": "synthetic_policy_excerpt",
+      "text": "A fictional city proposes periodic interior inspections of private residences. A resident may decline entry, after which the city says it may seek an administrative warrant. The draft policy refers to verifying code compliance but does not identify a schedule, selection criteria, or the proposed warrant's scope.",
+      "url": null,
+      "captured_at": "2026-10-06",
+      "publisher": "Training example",
+      "primary_source_status": "synthetic"
+    },
+    {
+      "id": "hearing-note",
+      "title": "Fictional hearing note",
+      "kind": "synthetic_transcript_excerpt",
+      "text": "One speaker asserted that the inspection process would violate the Constitution. No finding, sworn evidence, or citation is included in this fictional note.",
+      "url": null,
+      "captured_at": "2026-10-06",
+      "publisher": "Training example",
+      "primary_source_status": "synthetic"
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact-1",
+      "statement": "A fictional city proposes periodic interior inspections of private residences.",
+      "status": "alleged",
+      "source_id": "draft-policy",
+      "locator": "paragraph 1",
+      "event_date": null,
+      "issue_tags": ["administrative_search"]
+    },
+    {
+      "id": "fact-2",
+      "statement": "The draft says a resident may decline entry and the city may then seek an administrative warrant.",
+      "status": "alleged",
+      "source_id": "draft-policy",
+      "locator": "paragraph 1",
+      "event_date": null,
+      "issue_tags": ["administrative_search"]
+    },
+    {
+      "id": "fact-3",
+      "statement": "The draft refers to verifying code compliance but does not identify a schedule, selection criteria, or warrant scope.",
+      "status": "alleged",
+      "source_id": "draft-policy",
+      "locator": "paragraph 1",
+      "event_date": null,
+      "issue_tags": ["administrative_search", "delegated_authority"]
+    },
+    {
+      "id": "fact-4",
+      "statement": "A hearing speaker called the process unconstitutional, but the note includes no citation or adjudicated finding.",
+      "status": "unverified",
+      "source_id": "hearing-note",
+      "locator": "paragraph 1",
+      "event_date": null,
+      "issue_tags": ["administrative_search"]
+    }
+  ],
+  "authorities": [],
+  "narrative_text": ""
+}
