@@ -35,6 +35,22 @@ memory. `python3 tools/lock_atlas.py lock` re-locks after a rebuild;
 See [atlas/README.md](atlas/README.md) for the data model, the scoring rules and the privacy notes.
 Raw archives (hundreds of MB) are git-ignored; the derived dataset in `atlas/data/` ships with the app.
 
+## Audit pipeline: structured indexing of the transcripts
+
+[`audit/`](audit/) holds a deterministic ingest node and a Streamlit review dashboard. Together
+they break every transcript into timestamped passages and tag each one with entities (agencies,
+officials, `W.S.` citations, ordinance numbers), procedural markers, a rhetorical profile and the
+matching procedural remedies. It can also ingest CSV/JSONL files, Socrata datasets and ArcGIS layers.
+
+```bash
+pip install -r audit/requirements.txt
+python3 audit/audit_ingest_node.py --mode rebuild transcripts
+streamlit run audit/app.py
+```
+
+Scores are keyword counts that rank passages for human review. They are not findings. See
+[audit/README.md](audit/README.md).
+
 ## Other archives in this series
 - [Meeting archives, 2008–2013](https://github.com/therealwindycity/cheyenne-archives-2008-2013) — agendas, agenda packets, supporting documents, minutes.
 - [Meeting archives, 2014–2017](https://github.com/therealwindycity/cheyenne-archives-2014-2017) — agendas, agenda packets, supporting documents, minutes.

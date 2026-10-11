@@ -1,0 +1,71 @@
+{
+  "version": "2026.10.1",
+  "_comment": "Deterministic marker lexicon for audit_ingest_node.py. Matching is case-insensitive on whole words/phrases (regex word boundaries), never substrings, so 'warrant' does not fire on 'warranty'. Any edit changes lexicon_sha256, which is stamped on every output record so results stay reproducible.",
+
+  "procedural_deviation": [
+    "warrant", "statute", "timeline", "ordinance",
+    "prolonged", "unverified", "non-compliant", "pretext",
+    "tabled", "postponed", "without notice", "no notice",
+    "point of order", "out of order", "suspend the rules", "waive the rules",
+    "emergency ordinance", "executive session", "past the deadline", "missed the deadline",
+    "not on the agenda", "without a second", "failed to", "appeal"
+  ],
+
+  "statutory_nexus": [
+    "w.s.", "wyoming statute", "municipal code", "city code", "fourth amendment",
+    "due process", "administrative procedure", "title 16",
+    "public meetings act", "public records act", "open meetings",
+    "unified development code", "udc", "charter", "state law"
+  ],
+
+  "enforcement_tier": [
+    "detention", "detained", "felony", "misdemeanor", "citation", "seizure",
+    "arrest", "code enforcement", "nuisance abatement", "lien", "penalty"
+  ],
+
+  "rhetoric": {
+    "objective": [
+      "according to", "per the", "the data", "the report", "staff report", "the record",
+      "section", "percent", "dollars", "the statute", "the ordinance says", "as written",
+      "documented", "the numbers", "audit"
+    ],
+    "subjective": [
+      "i feel", "i think", "i believe", "in my opinion", "frankly", "honestly",
+      "i'm concerned", "i am concerned", "my gut", "i'm not comfortable", "personally"
+    ],
+    "deferral": [
+      "look into it", "get back to you", "follow up", "table this", "at a later date",
+      "next meeting", "not prepared", "we'll see", "down the road", "take it under advisement"
+    ],
+    "authority_appeal": [
+      "legal advised", "city attorney", "our attorney", "legal counsel", "staff recommends",
+      "staff recommendation", "the state requires", "we're required", "we are required", "mandated"
+    ]
+  },
+
+  "agencies": [
+    "City Council", "Governing Body", "Finance Committee", "Public Services Committee",
+    "Planning Commission", "Board of Adjustment", "Historic Preservation Board",
+    "Urban Renewal Authority", "Downtown Development Authority",
+    "Board of Public Utilities", "BOPU", "Cheyenne Police Department", "Police Department",
+    "Cheyenne Fire Rescue", "Fire Department", "Laramie County", "County Commission",
+    "Laramie County Sheriff", "WYDOT", "Wyoming Department of Transportation",
+    "Planning and Development", "Development Office", "City Attorney", "City Clerk",
+    "Municipal Court", "Cheyenne Regional Airport", "Cheyenne Transit", "Visit Cheyenne",
+    "LEADS", "F.E. Warren", "Wyoming Legislature", "Secretary of State"
+  ],
+
+  "titles": [
+    "Mayor", "Councilman", "Councilwoman", "Councilmember", "Council Member",
+    "President", "Chairman", "Chairwoman", "Chair", "Commissioner", "Director",
+    "Chief", "Sheriff", "Attorney", "Clerk", "Treasurer", "Senator", "Representative",
+    "Mr.", "Mrs.", "Ms.", "Dr."
+  ],
+
+  "scoring": {
+    "_comment": "compliance_friction_score = deviation_weight * |unique deviation terms| + statutory_weight * |unique statutory terms|. Records above review_threshold are flagged for human review.",
+    "deviation_weight": 1.5,
+    "statutory_weight": 2.0,
+    "review_threshold": 3.0
+  }
+}
