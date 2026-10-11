@@ -95,6 +95,35 @@ Every run also writes two side files:
 * Remediation pathways are general research pointers. They are not legal advice. Check the current
   statute text and deadlines, or ask a Wyoming attorney.
 
+## v2: multi-source analysis
+
+v1 classifies caption passages one at a time. v2 cross-checks three independent records of the same meetings:
+the caption transcripts, the official agendas, and the approved minutes (`reference/official_records.json`,
+extracted from CivicWatch's `civic.db` by `official_records.py`).
+
+```bash
+python3 audit/build_analysis.py          # ~30 s; writes audit/output/analysis/ and audit/reports/
+streamlit run audit/app.py               # sidebar: "Multi-source analysis (v2)" | "Passage matrix (v1)"
+```
+
+| Module | What it does |
+|---|---|
+| `minutes_parser.py` | Minutes text → roster plus entries (motions, outcomes, roll-call votes, ordinance/resolution numbers, public commenters, postponements). Repairs PDF artifacts ("Esquibe l", "amend ed"). |
+| `alignment.py` | Places each agenda item on the video timeline from the spoken item numbers ("next item is number 8…", including caption homophones such as "number A"). Labels every segment as agenda reading, public comment or official. |
+| `claims.py` | Extracts legal assertions (violation, illegality, unconstitutional, void/ultra vires, preemption, procedural defect, non-compliance), their polarity, any cited authority, and a candidate official response in the same item. |
+| `reconcile.py` | Voting record and checks R1–R8: postponement continuity, ordinance lifecycles, agenda↔minutes coverage, minutes integrity, public-comment rosters, attendance, statute-citation grounding, and executive-session basis (W.S. 16-4-405). |
+| `build_analysis.py` / `report.py` | Orchestrates everything, rescores v1 passages (v2 score), and writes `reports/ANALYSIS_2026.md` and `reports/analysis_summary.json`. |
+| `analysis_ui.py` | Streamlit tabs: Overview, Claims, Reconciliation, Ordinance lifecycles, Votes, Meetings, Passages v2. |
+
+Lexicon v2026.10.2 adds context exclusions: stormwater "detention", "warrant" as a verb, "curb appeal", and
+"prepayment penalty". The v2 passage score also drops markers that are the item's own subject (for example
+"warrant" during the Administrative Inspection Warrants ordinance) and adds weight for legal claims.
+
+**The same cautions apply, more strongly.** Claims are allegations, not findings. Captions misspell names and
+statute numbers. Every exception is a lead with a link to the source. Quoted text in the report is redacted of
+names of members of the public. The tests in `tests/test_analysis.py` pin each minutes construction that was
+misparsed during development, and each was checked by hand against the official minutes.
+
 ## Adding it to the TheReelWindyCity app
 
 The multipage Streamlit app lives in `bartimoussmith-oss/therealwindycity`:

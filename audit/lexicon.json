@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.1",
+  "version": "2026.10.2",
   "_comment": "Deterministic marker lexicon for audit_ingest_node.py. Matching is case-insensitive on whole words/phrases (regex word boundaries), never substrings, so 'warrant' does not fire on 'warranty'. Any edit changes lexicon_sha256, which is stamped on every output record so results stay reproducible.",
 
   "procedural_deviation": [
@@ -61,6 +61,14 @@
     "Chief", "Sheriff", "Attorney", "Clerk", "Treasurer", "Senator", "Representative",
     "Mr.", "Mrs.", "Ms.", "Dr."
   ],
+
+  "exclusions": {
+    "_comment": "Context rules that cancel a match. 'near' is searched within 60 characters on either side, 'after' only in the 25 characters that follow. Added after the v1 review: 22 of 39 'detention' hits were stormwater ponds, and 'warrant' also matched the verb.",
+    "detention": {"near": "\\b(?:pond|ponds|basin|basins|storm ?water|drainage|retention|facility|area)\\b"},
+    "warrant": {"after": "^(?:s)?\\s+(?:a|an|the|further|more|it|some|any|that|this|additional|consideration|review|discussion)\\b"},
+    "appeal": {"near": "\\b(?:curb|visual|aesthetic|appealing|appeals? to (?:me|people|them|voters))\\b"},
+    "penalty": {"near": "\\b(?:prepayment|early payment)\\b"}
+  },
 
   "scoring": {
     "_comment": "compliance_friction_score = deviation_weight * |unique deviation terms| + statutory_weight * |unique statutory terms|. Records above review_threshold are flagged for human review.",

@@ -252,6 +252,9 @@ class RegulatoryAuditPipeline:
         self._rhetoric = {mode: _compile_terms(terms)
                           for mode, terms in self.lexicon.get("rhetoric", {}).items()}
         self._agencies = _compile_terms(self.lexicon.get("agencies", []))
+        self._exclusions = {
+            term.lower(): {k: re.compile(v, re.IGNORECASE) for k, v in rule.items() if k in ("near", "after")}
+            for term, rule in self.lexicon.get("exclusions", {}).items() if not term.startswith("_")}
         titles = sorted(self.lexicon.get("titles", []), key=len, reverse=True)
         title_alt = "|".join(re.escape(t) for t in titles)
         self._official_re = re.compile(
@@ -366,11 +369,21 @@ class RegulatoryAuditPipeline:
         for term, key, pat in compiled:
             if key not in lowered:
                 continue
-            m = pat.search(text)
-            if m:
-                out.append({"term": term, "count": len(pat.findall(text)),
-                            "snippet": _snippet(text, m.start(), m.end())})
+            ms = [m for m in pat.finditer(text) if not self._excluded(term, text, m)]
+            if ms:
+                out.append({"term": term, "count": len(ms),
+                            "snippet": _snippet(text, ms[0].start(), ms[0].end())})
         return out
+
+    def _excluded(self, term: str, text: str, m: re.Match) -> bool:
+        rule = self._exclusions.get(term.lower())
+        if not rule:
+            return False
+        if "near" in rule and rule["near"].search(text[max(0, m.start() - 60): m.end() + 60]):
+            return True
+        if "after" in rule and rule["after"].search(text[m.end(): m.end() + 25]):
+            return True
+        return False
 
     def extract_entities(self, text: str, lowered: Optional[str] = None) -> Dict[str, List[str]]:
         lowered = text.lower() if lowered is None else lowered
