@@ -1,0 +1,76 @@
+{
+ "generated_at": "2026-10-11",
+ "since": "2026-01-01",
+ "sources": {
+  "transcripts": 83,
+  "official_meetings": 51,
+  "official_agenda_items": 1800,
+  "official_minutes": 47,
+  "official_source_commit": "6d1c48a9911914c524d5522dd05d986d6f5f3a29"
+ },
+ "headline": {
+  "council_meetings_aligned": 17,
+  "agenda_items_aligned": 264,
+  "items_joined_to_minutes": 203,
+  "claims_total": 244,
+  "claims_asserted": 230,
+  "claims_strong_asserted": 48,
+  "claims_public_comment": 168,
+  "claims_official": 62,
+  "official_denials": 14,
+  "public_claims_with_candidate_response": 72,
+  "reconciliation_checks_run": 215,
+  "reconciliation_exceptions": 67,
+  "contested_votes_2026": 79,
+  "tie_votes_2026": 2,
+  "passages_flagged_v1": 240,
+  "passages_flagged_v2": 221,
+  "v1_flags_removed_topic_terms": 49,
+  "v1_flags_removed_other": 0,
+  "flags_added_by_claims": 30
+ },
+ "exceptions_by_check": {
+  "R2": 22,
+  "R3": 2,
+  "R4": 3,
+  "R5": 22,
+  "R7": 9,
+  "R8": 9
+ },
+ "checks_run_by_check": {
+  "R1": 19,
+  "R2": 22,
+  "R3": 2,
+  "R4": 3,
+  "R5": 113,
+  "R6": 16,
+  "R7": 31,
+  "R8": 9
+ },
+ "validation": {
+  "alignment_number_match_rate": 0.966,
+  "items_with_minutes_match_rate": 0.769,
+  "public_comment_count_correlation_minutes_vs_captions": 0.902,
+  "r5_items_compared": 113,
+  "alias_mentions_resolved": 0.61
+ },
+ "claims_by_authority_class": {
+  "constitution": 19,
+  "municipal_code": 5,
+  "udc_or_plan": 5,
+  "wyoming_statute": 3,
+  "named_act": 2,
+  "case_law": 1
+ },
+ "public_claim_item_outcomes": {
+  "carried": 86,
+  "postponed": 22,
+  "failed": 4,
+  "referred": 2
+ },
+ "lifecycles": {
+  "ordinances_tracked": 93,
+  "adopted": 80,
+  "flagged": 22
+ }
+}

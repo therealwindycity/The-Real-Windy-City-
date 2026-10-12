@@ -1,0 +1,7 @@
+# Ingest node: stdlib only for local sources; requests for socrata/arcgis/discover.
+requests>=2.31
+# Dashboard
+streamlit>=1.35
+pandas>=2.0
+# Tests
+pytest>=8

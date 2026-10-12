@@ -16,9 +16,13 @@ atlas-passphrase*.txt
 __pycache__/
 *.pyc
 node_modules/
+.venv/
 .DS_Store
 *.log
 
 # Local preview artifacts
 .cache/
 *.tmp
+
+# Audit pipeline output (rebuild in ~10 s: python3 audit/audit_ingest_node.py --mode rebuild transcripts)
+audit/output/
