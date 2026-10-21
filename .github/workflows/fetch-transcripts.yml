@@ -62,45 +62,40 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-          say() { echo "::notice title=probe::$(echo "$1" | tr -d '\n\r' | cut -c1-900)"; }
-          # 1-2. Does yt-dlp see a Granicus clip + its subtitles? (CC 2026-10-12 = clip 1139)
-          out=$(yt-dlp --list-subs --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" 2>&1)
-          say "GRANICUS list-subs tail: $(echo "$out" | tail -4 | tr '\n' ' ')"
-          subs=$(yt-dlp -J --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" 2>/dev/null | python3 -c "import json,sys
+          cat > /tmp/probe.py <<'PYEOF'
+          import re, sys
+          def say(msg):
+              print("::notice title=probe::" + re.sub(r"\s+", " ", str(msg))[:900])
           try:
-              d=json.load(sys.stdin); s=d.get('subtitles') or {}; a=d.get('automatic_captions') or {}
-              print('title=', (d.get('title') or '')[:60], '| subs=', {k:[f.get('ext') for f in v] for k,v in list(s.items())[:4]}, '| auto=', list(a)[:4], '| dur=', d.get('duration'))
-          except Exception as e: print('JSON fail', e)" 2>&1)
-          say "GRANICUS -J: $subs"
-          # 3. Does the subtitles payload include a direct VTT url we can hit in later runs?
-          vtt=$(yt-dlp -J --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" 2>/dev/null | python3 -c "import json,sys
-          try:
-              d=json.load(sys.stdin); s=d.get('subtitles') or {}
-              en=s.get('en') or (list(s.values())[0] if s else [])
-              print(next((f.get('url','') for f in en if f.get('ext')=='vtt'), 'no-vtt-url')[:300])
-          except Exception as e: print('fail', e)" 2>&1)
-          say "GRANICUS vtt url: $vtt"
-          # 4. Legacy MediaPlayer page: any caption/vtt/m3u8 references?
-          hits=$(curl -s -m 30 -A "$UA" "https://cheyenne.granicus.com/MediaPlayer.php?view_id=5&clip_id=1139" | grep -oiE "[^\"<> ]*(\.vtt|caption|\.m3u8)[^\"<> ]*" | sort -u | head -6 | tr '\n' ' ')
-          say "MEDIAPLAYER hits: ${hits:-none}"
-          # 5. Which Granicus views exist (committees? boards?) - one compressed line
-          views=""
-          for v in 1 2 3 4 5 6 7 8 9 10 11 12; do
-            title=$(curl -s -m 20 -A "$UA" "https://cheyenne.granicus.com/ViewPublisher.php?view_id=$v" | grep -oiE "<title>[^<]*" | head -1 | sed 's/<title>//I' | cut -c1-40)
-            views="$views [$v:${title:-?}]"
-          done
-          say "VIEWS:$views"
-          # 6-7. Fallback caption APIs from runner IP
-          code=$(curl -s -o /tmp/inv.json -w "%{http_code}" -m 25 "https://inv.nadeko.net/api/v1/captions/tuNz5g8X0YA" || echo FAIL)
-          say "INVIDIOUS nadeko HTTP $code body: $(head -c 220 /tmp/inv.json | tr -d '\n')"
-          code=$(curl -s -o /tmp/piped.json -w "%{http_code}" -m 25 "https://pipedapi.kavin.rocks/streams/tuNz5g8X0YA" || echo FAIL)
-          say "PIPED kavin HTTP $code subs: $(python3 -c "import json; d=json.load(open('/tmp/piped.json')); print([ (s.get('name'), (s.get('url') or '')[:90]) for s in (d.get('subtitles') or [])][:3])" 2>&1 | head -c 300)"
-          # 8. Older clip with known YT transcript (CC 2026-09-14 = 1134): granicus subs too?
-          out=$(yt-dlp --list-subs --skip-download "https://cheyenne.granicus.com/player/clip/1134?view_id=5&redirect=true" 2>&1)
-          say "GRANICUS 1134 list-subs tail: $(echo "$out" | tail -3 | tr '\n' ' ')"
-          # full probe log as artifact for the record
-          yt-dlp -J --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" > /tmp/granicus-1139.json 2>/tmp/granicus-1139.err || true
+              from curl_cffi import requests as creq
+          except Exception as e:
+              say(f"curl_cffi import fail: {e}"); sys.exit(0)
+          def probe(name, url, pats=("caption", ".vtt", ".m3u8", ".mp4")):
+              try:
+                  r = creq.get(url, impersonate="chrome", timeout=30)
+                  body = r.text or ""
+                  hits = []
+                  for p in pats:
+                      hits += [m.group(0)[:110] for m in re.finditer(r"[^\"<> ]*" + re.escape(p) + r"[^\"<> ]*", body, re.I)][:3]
+                  say(f"{name}: HTTP {r.status_code} {len(body)}B hits={hits[:6]}")
+                  return body
+              except Exception as e:
+                  say(f"{name}: FAIL {type(e).__name__}: {str(e)[:180]}")
+                  return ""
+          probe("GRANICUS player 1139 (impersonate)", "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true")
+          probe("GRANICUS MediaPlayer 1139", "https://cheyenne.granicus.com/MediaPlayer.php?view_id=5&clip_id=1139")
+          body = probe("GRANICUS ViewPublisher v5", "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5", pats=("<title>", "clip/"))
+          titles = re.findall(r"<title>([^<]*)", body or "", re.I)
+          say(f"ViewPublisher title: {titles[:1]}")
+          probe("GRANICUS GeneratedAgendaViewer ev1448", "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1448", pats=("agenda",))
+          probe("GRANICUS rss guess", "https://cheyenne.granicus.com/rss.php?view_id=5", pats=("rss", "item"))
+          PYEOF
+          python3 /tmp/probe.py
+          say2() { echo "::notice title=probe::$(echo "$1" | tr -d '\n\r' | cut -c1-900)"; }
+          out=$(yt-dlp --impersonate chrome --list-subs --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" 2>&1)
+          say2 "YT-DLP impersonate granicus list-subs: $(echo "$out" | tail -3 | tr '\n' ' ')"
+          out=$(curl -s -o /dev/null -w "%{http_code} %{size_download}" -m 25 -A "Mozilla/5.0" "https://archive-stream.granicus.com/OnDemand/_definst_/mp4:archive/cheyenne/nonexistent.mp4/playlist.m3u8")
+          say2 "ARCHIVE-STREAM host reachability (expect 404-ish): $out"
 
       - name: Upload probe artifacts
         if: always() && (inputs.probe == 'true' || contains(github.event.head_commit.message, '[fetch-probe]'))
