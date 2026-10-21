@@ -1,0 +1,29 @@
+{
+  "scope": "Checked-in cheyenne-2026-transcripts catalog and Markdown files only; excludes external archive repositories and uncollected city records.",
+  "generated_by": "python3 tools/build_archive_coverage.py",
+  "metrics": {
+    "meetings_indexed": 85,
+    "unique_document_contents": 84,
+    "stored_markdown_files": 86,
+    "searchable_catalog_documents": 84,
+    "caption_transcripts": 84,
+    "auto_generated_caption_transcripts": 82,
+    "other_or_unlabeled_caption_sources": 2,
+    "catalog_entries_without_transcript_file": 1,
+    "audio_checked_excerpts": 0,
+    "original_source_checks": 0,
+    "image_review_or_ocr_pending": null
+  },
+  "rules": {
+    "unique_document_contents": "Distinct SHA-256 hashes among transcript files referenced by catalog entries; identical content counts once.",
+    "stored_markdown_files": "Every Markdown file under cheyenne-2026-transcripts, including unreferenced variants; this is not a count of all stored files or attachments.",
+    "searchable_catalog_documents": "Referenced Markdown files with non-empty extracted text. This does not establish that an associated PDF or source is searchable.",
+    "caption_transcripts": "Searchable transcript files in this archive. Transcript is not minutes.",
+    "auto_generated_caption_transcripts": "Catalogued searchable transcripts whose Markdown source header explicitly labels the captions auto-generated.",
+    "other_or_unlabeled_caption_sources": "Caption transcripts whose header does not explicitly say auto-generated; this does not prove captions were human-created.",
+    "audio_checked_excerpts": "Zero recorded excerpt-level audio checks in this repository's current verification register; absence of a check record is not proof no one listened.",
+    "original_source_checks": "Zero documented comparisons against original publisher files in the current verification register.",
+    "image_review_or_ocr_pending": "Not measured: this repository's checked-in 2026 transcript catalog does not include a complete inventory of PDF page images or a linked page-level extraction audit queue."
+  },
+  "verification_note": "A successful site build or deployment is not evidence that new government records were collected or verified."
+}

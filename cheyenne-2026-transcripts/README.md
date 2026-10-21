@@ -1,8 +1,8 @@
 # Cheyenne, Wyoming — City Council & Committee Meeting Transcripts (2026)
 
-**Verbatim transcripts of every 2026 public meeting of the Cheyenne City Council, its Finance and Public Services committees, council work sessions, the Planning Commission, Board of Adjustment, Historic Preservation Board, and Urban Renewal Authority** — derived from the city's official YouTube videos and published here as searchable text so residents, journalists, researchers, and AI tools can quote and analyze exactly what was said.
+**Searchable caption-derived transcripts catalogued from 2026 public meeting videos** of the Cheyenne City Council, its Finance and Public Services committees, council work sessions, the Planning Commission, Board of Adjustment, Historic Preservation Board, and Urban Renewal Authority. This is not a guarantee that every 2026 meeting is covered. Captions may be human-uploaded or auto-generated and can contain transcription errors; the text is not certified or official minutes. Check the linked recording before quoting or formal use.
 
-Why this exists: the City of Cheyenne posts meeting *videos* to YouTube and minutes (summaries) to its website, but no full-text record. Video is not searchable, not quotable, and invisible to search engines. This archive closes that gap — one Markdown file per meeting, each with `[HH:MM:SS]` timestamps so any passage can be checked against the video in seconds.
+Why this exists: searchable timestamped text can make public meeting videos easier to navigate and review. This archive adds caption-derived text for catalogued recordings, but does not establish complete meeting coverage or replace official minutes. Where available, `[HH:MM:SS]` timestamps help readers check a passage against the linked video.
 
 ## Contents
 

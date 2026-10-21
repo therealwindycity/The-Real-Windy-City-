@@ -1,6 +1,8 @@
-# Cheyenne 2026 Meeting Transcripts
+# Cheyenne 2026 Meeting Transcript Archive
 
-Verbatim, timestamped transcripts of every 2026 public meeting of the Cheyenne (Wyoming) City Council, committees, and boards — one Markdown file per meeting, each linked to the city's official video. See [cheyenne-2026-transcripts/](cheyenne-2026-transcripts/) ([catalog](cheyenne-2026-transcripts/meetings.json)).
+A searchable catalog of 2026 Cheyenne (Wyoming) public-meeting caption transcripts, each linked to its source video where available. Captions may be human-uploaded or auto-generated; they are not official minutes and can mis-transcribe names, technical terms, and quotations. Verify important passages against the original recording. Catalog coverage is not a claim that every meeting or record is included. See [cheyenne-2026-transcripts/](cheyenne-2026-transcripts/) ([catalog](cheyenne-2026-transcripts/meetings.json)).
+
+The [public archive homepage](https://therealwindycity.github.io/The-Real-Windy-City-/) now shows record-based freshness, a qualified October 19, 2026 Planning Commission outcome reconstruction, coverage definitions, known gaps, and a corrections page. The checked-in catalog currently has no recorded collection-check timestamp; deployment time is not used as a substitute.
 
 Transcript text is dedicated to the public domain (CC0). Video remains © City of Cheyenne / YouTube.
 
