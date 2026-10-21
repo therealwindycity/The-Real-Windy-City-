@@ -16,6 +16,14 @@ on:
         description: "Optional comma-separated YouTube IDs to limit the run"
         required: false
         default: ""
+  # Fallback for tokens that can push but cannot dispatch workflows:
+  # a push whose head-commit message contains [fetch-transcripts] runs the
+  # same job. The bot's own result commit never contains the marker, so
+  # this cannot loop. Ordinary pushes do not fetch anything.
+  push:
+    branches:
+      - main
+      - "arena/**"
 
 permissions:
   contents: write
@@ -26,6 +34,7 @@ concurrency:
 
 jobs:
   fetch:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[fetch-transcripts]')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
