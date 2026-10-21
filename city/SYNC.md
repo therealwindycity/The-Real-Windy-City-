@@ -73,9 +73,10 @@ Expected location:
 `https://therealwindycity.github.io/The-Real-Windy-City-/city/mirror/`
 
 The workflow uses the built-in Pages token; no city login, API key, or PAT is
-needed. Tests run before sync. Existing encrypted Atlas safeguards remain in place.
-Cache, tests and build directories are excluded from the public site artifact.
-No generated crawl corpus is committed to Git.
+needed. Offline tests, browser-script syntax checks, and the evidence-artifact
+check run in `publish` before anything is uploaded. Existing encrypted Atlas
+safeguards remain in place. Cache, tests and build directories are excluded
+from the public site artifact. No generated crawl corpus is committed to Git.
 
 ## Persistence and integrity limits
 
@@ -95,6 +96,12 @@ or a guarantee against changes between crawls.
 If a source disappears, the last copy is retained with its observed error status.
 A robots block also labels an existing copy; it is not fetched again. Check the
 run-level status for network errors. No automated takedown decision is made.
+
+If a restored snapshot fails validation (truncated or unparseable cache), it is
+quarantined outside the cached directory and the publish renders an explicit
+empty mirror with a visible recovery note instead of failing or inventing
+figures. The next successful crawl rebuilds the snapshot from real fetches and
+moves the note to history (`last_recovery`).
 
 ## Troubleshooting
 

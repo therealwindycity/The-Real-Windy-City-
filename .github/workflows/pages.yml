@@ -7,6 +7,17 @@ name: Deploy site
 # branch, so build tooling and sources stay out of the site and the plaintext
 # dataset can never be published by accident (see the guard step).
 #
+# Two jobs with separate concerns, so a slow city website can never block a
+# static homepage fix:
+#   publish — fast and offline. Restores the last-known-good city-mirror
+#             snapshot (read-only), renders it without network access, rebuilds
+#             coverage counts, assembles and validates the static site, then
+#             deploys. Every push to a publishing branch reaches Pages in
+#             minutes, even if the city website is slow or unreachable.
+#   crawl   — slow and networked. Refreshes the city-mirror snapshot and saves
+#             it to the Actions cache for a later publish. Runs on schedule or
+#             manual dispatch only; never on push; never blocks publish.
+#
 # Triggering branches:
 #   main                                  — the normal publishing branch
 #   arena/850039e7-the-real-windy-city    — session branch (needs to be allowed
@@ -18,22 +29,20 @@ on:
       - main
       - arena/850039e7-the-real-windy-city
   schedule:
-    - cron: "17 9 * * *" # Daily at 09:17 UTC, on the default branch
+    - cron: "17 9 * * *" # Daily at 09:17 UTC, on the default branch: publish and crawl run independently
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 30
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,7 +50,13 @@ jobs:
       - name: Test mirror service
         run: python3 -m unittest discover -s tests -v
 
-      - name: Restore city mirror state
+      - name: Validate browser scripts
+        run: |
+          for f in city/city.js city/mirror-search.js city/portal.js city/coverage.js; do
+            node --check "$f"
+          done
+
+      - name: Restore city mirror snapshot (read-only)
         uses: actions/cache/restore@v4
         with:
           path: .cache/city-mirror
@@ -49,31 +64,24 @@ jobs:
           restore-keys: |
             city-mirror-v1-${{ github.ref_name }}-
 
-      - name: Sync public city website
-        id: city_sync
-        continue-on-error: true
-        run: python3 tools/sync_city.py
-
-      - name: Preserve city mirror state
-        if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: .cache/city-mirror
-          key: city-mirror-v1-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
-
-      - name: Report city sync health
-        if: always()
+      - name: Render last-known-good mirror (no network)
         run: |
           python3 tools/sync_city.py --render-only
           python3 - <<'PYTHON'
           import json, os, pathlib
-          p = pathlib.Path('city/mirror/status.json')
-          state = json.loads(p.read_text())
-          report = state.get('latest_run', {'status': 'not yet run'})
+          state = json.loads(pathlib.Path('city/mirror/status.json').read_text())
+          report = {
+              'latest_run': state.get('latest_run', {'status': 'not yet run'}),
+              'last_successful_fetch_run': state.get('last_successful_fetch_run'),
+              'last_completed_run': state.get('last_completed_run'),
+              'state_recovery': state.get('state_recovery'),
+          }
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
-              f.write('## City mirror sync\n```json\n' + json.dumps(report, indent=2) + '\n```\n')
-          if report['status'] != 'completed':
-              print('::warning::City mirror sync is incomplete; see the public sync status page and job summary.')
+              f.write('## City mirror snapshot (publish is offline)\n```json\n' + json.dumps(report, indent=2) + '\n```\n')
+          if report['state_recovery']:
+              print('::warning::Restored mirror snapshot failed validation and was quarantined; publishing an explicit empty mirror. See city/mirror/status.html.')
+          elif report['latest_run'].get('status') not in ('completed', 'not yet run'):
+              print('::warning::Latest mirror snapshot is not from a completed crawl; its real age and errors are published visibly on the sync status page.')
           PYTHON
 
       - name: Assemble the site
@@ -96,6 +104,9 @@ jobs:
           echo "files: $(find site -type f | wc -l)"
           echo "size:  $(du -sh site | cut -f1)"
           ls site
+
+      - name: Check evidence artifact
+        run: python3 tools/check_evidence_site.py --site site
 
       - name: Refuse to publish plaintext
         run: |
@@ -143,9 +154,65 @@ jobs:
         with:
           path: site
 
-  deploy:
-    needs: build
+  crawl:
+    # Collection runs on its own clock. It must never gate a static publish,
+    # so it does not run on push and uses its own concurrency group.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    timeout-minutes: 100
+    concurrency:
+      group: city-mirror-crawl
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore city mirror state
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache/city-mirror
+          key: city-mirror-v1-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            city-mirror-v1-${{ github.ref_name }}-
+
+      - name: Sync public city website
+        id: city_sync
+        timeout-minutes: 95
+        run: python3 tools/sync_city.py
+
+      - name: Preserve city mirror state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/city-mirror
+          key: city-mirror-v1-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Report city sync health
+        if: always()
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, pathlib
+          p = pathlib.Path('.cache/city-mirror/state.json')
+          state = json.loads(p.read_text()) if p.exists() else {}
+          report = state.get('latest_run', {'status': 'no snapshot written'})
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('## City mirror crawl\n```json\n' + json.dumps(report, indent=2) + '\n```\n')
+          if report['status'] != 'completed':
+              print('::warning::City mirror crawl did not complete; the next publish keeps serving the last-known-good snapshot with its real age visible.')
+          PYTHON
+
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

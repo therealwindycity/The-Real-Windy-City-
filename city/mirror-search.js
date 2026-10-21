@@ -5,8 +5,17 @@
   const count = document.getElementById('mirror-count');
   const more = document.getElementById('mirror-more');
   let limit = 40;
+  async function fetchWithTimeout(url, ms = 15000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ms);
+    try {
+      return await fetch(url, { signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
   try {
-    const response = await fetch('catalog.json');
+    const response = await fetchWithTimeout('catalog.json');
     if (!response.ok) throw new Error('Catalog unavailable');
     const entries = await response.json();
     function render() {
