@@ -155,9 +155,22 @@ def main():
             problems.append(f'city/freshness.json does not parse: {error}')
         else:
             # Build/assembly must never substitute its own timestamp for a
-            # collection check or invent a verified outcome.
-            if freshness.get('meeting_information_last_checked') is not None:
-                problems.append('freshness.json: meeting_information_last_checked must stay null until a real collection check is recorded')
+            # collection check or invent a verified outcome. A recorded
+            # collection check is a plain YYYY-MM-DD date of a human
+            # collection event (anything carrying a time-of-day reads as a
+            # build/deployment timestamp and is rejected), and it cannot be
+            # in the future or predate the newest indexed meeting.
+            checked = freshness.get('meeting_information_last_checked')
+            if checked is not None:
+                if not isinstance(checked, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', checked):
+                    problems.append('freshness.json: meeting_information_last_checked must be null or a plain YYYY-MM-DD collection date, never a timestamp')
+                else:
+                    import datetime
+                    if checked > datetime.datetime.now(datetime.timezone.utc).date().isoformat():
+                        problems.append('freshness.json: meeting_information_last_checked is in the future')
+                    latest_here = freshness.get('latest_meeting_indexed')
+                    if isinstance(latest_here, str) and checked < latest_here:
+                        problems.append('freshness.json: meeting_information_last_checked predates the latest indexed meeting')
             if freshness.get('latest_verified_outcome') is not None:
                 problems.append('freshness.json: latest_verified_outcome must stay null until a verified outcome is recorded')
             dated = [m.get('date') for m in catalog if isinstance(m, dict) and isinstance(m.get('date'), str) and len(m.get('date')) == 10]
