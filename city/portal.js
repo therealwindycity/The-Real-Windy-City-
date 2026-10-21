@@ -1,7 +1,16 @@
 'use strict';
 (async () => {
+  async function fetchWithTimeout(url, ms = 15000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ms);
+    try {
+      return await fetch(url, { signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
   try {
-    const response = await fetch('city/freshness.json');
+    const response = await fetchWithTimeout('city/freshness.json');
     if (!response.ok) throw new Error('Unavailable');
     const data = await response.json();
     const checked = data.meeting_information_last_checked ? new Date(data.meeting_information_last_checked).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Denver' }) : 'Not recorded';

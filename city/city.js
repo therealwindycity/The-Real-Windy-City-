@@ -6,6 +6,15 @@ const localNow = () => {
   return { date: `${parts.year}-${parts.month}-${parts.day}`, minute: Number(parts.hour) * 60 + Number(parts.minute) };
 };
 let meetings = [], limit = 12, request = 0;
+async function fetchWithTimeout(url, ms = 15000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 function meetingStatus(m) {
   const explicit = String(m.outcome_status || m.meeting_status || '').toLowerCase();
   if (/cancel/.test(explicit)) return 'Cancelled';
@@ -62,7 +71,7 @@ async function openTranscript(m) {
   $('prov-source').replaceChildren(); const link = document.createElement('a'); link.href = sourceUrl; link.target = '_blank'; link.rel = 'noopener'; link.textContent = sourceUrl; $('prov-source').append(link);
   $('reader').focus(); $('reader').scrollIntoView();
   try {
-    const response = await fetch(path); if (!response.ok) throw new Error('Unavailable');
+    const response = await fetchWithTimeout(path); if (!response.ok) throw new Error('Unavailable');
     const text = await response.text(); if (ticket !== request) return;
     $('transcript').textContent = text;
     const captionLine = text.match(/\*\*Captions:\*\*\s*([^\n]+)/i);
@@ -81,7 +90,7 @@ async function openTranscript(m) {
 }
 async function loadFreshness() {
   try {
-    const response = await fetch('freshness.json'); if (!response.ok) throw new Error('Unavailable');
+    const response = await fetchWithTimeout('freshness.json'); if (!response.ok) throw new Error('Unavailable');
     const data = await response.json();
     const timestamp = data.meeting_information_last_checked ? new Date(data.meeting_information_last_checked).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Denver' }) : 'Not recorded';
     $('home-checked').textContent = timestamp;
@@ -99,7 +108,7 @@ for (const id of ['search', 'body']) $(id).addEventListener(id === 'search' ? 'i
 loadFreshness();
 (async () => {
   try {
-    const response = await fetch('../cheyenne-2026-transcripts/meetings.json'); if (!response.ok) throw new Error('Unavailable');
+    const response = await fetchWithTimeout('../cheyenne-2026-transcripts/meetings.json'); if (!response.ok) throw new Error('Unavailable');
     const data = await response.json();
     if (!Array.isArray(data)) throw new Error('Invalid catalog');
     meetings = data.filter(m => typeof m.date === 'string' && typeof m.body === 'string' && typeof m.youtube_id === 'string' && (m.file === null || typeof m.file === 'string') && (!m.file || /^[\w-]+\/[\w-]+\.md$/.test(m.file))).sort((a,b) => b.date.localeCompare(a.date));

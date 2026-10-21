@@ -1,13 +1,14 @@
 name: City mirror tests
+# Runs on pull requests touching the mirror, evidence pages, or their tests.
+# Pushes to publishing branches are covered by the Deploy site workflow's
+# publish job, which runs the same offline tests plus browser-script checks.
 on:
   pull_request:
     paths:
       - 'city/**'
-      - 'tools/sync_city.py'
+      - 'tools/**'
       - 'tests/**'
       - '.github/workflows/**'
-  push:
-    branches: [arena/142bedb5-the-real-windy-city]
 permissions:
   contents: read
 jobs:
@@ -19,8 +20,9 @@ jobs:
         run: python3 -m unittest discover -s tests -v
       - name: Validate browser script syntax
         run: |
-          node --check city/city.js
-          node --check city/mirror-search.js
+          for f in city/city.js city/mirror-search.js city/portal.js city/coverage.js; do
+            node --check "$f"
+          done
       - name: Render an honest empty-state mirror
         run: |
           python3 tools/sync_city.py --render-only

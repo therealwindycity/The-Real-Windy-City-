@@ -2,8 +2,17 @@
 (async () => {
   const $ = id => document.getElementById(id);
   const fmt = value => value ? new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Denver' }) : 'Not recorded';
+  async function fetchWithTimeout(url, ms = 15000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ms);
+    try {
+      return await fetch(url, { signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
   try {
-    const [freshResponse, coverageResponse] = await Promise.all([fetch('freshness.json'), fetch('coverage.json')]);
+    const [freshResponse, coverageResponse] = await Promise.all([fetchWithTimeout('freshness.json'), fetchWithTimeout('coverage.json')]);
     if (!freshResponse.ok || !coverageResponse.ok) throw new Error('Coverage data unavailable');
     const fresh = await freshResponse.json();
     const coverage = await coverageResponse.json();

@@ -37,6 +37,10 @@ def key(url):
     return hashlib.sha256(url.encode()).hexdigest()[:24]
 
 
+def fresh_state():
+    return {'records': {}, 'changes': []}
+
+
 class PageParser(HTMLParser):
     """Extract readable text and links, never active markup or form controls."""
     blocked = {'script', 'style', 'noscript', 'iframe', 'svg', 'form', 'template'}
@@ -116,7 +120,7 @@ class Mirror:
         self.output = Path(output_dir)
         self.state_dir.mkdir(parents=True, exist_ok=True)
         self.state_path = self.state_dir / 'state.json'
-        self.state = json.loads(self.state_path.read_text()) if self.state_path.exists() else {'records': {}, 'changes': []}
+        self.state = self._load_state()
         self.records = self.state['records']
         self.archive_bytes = sum(r.get('source_bytes', 0) for r in self.records.values())
         self.transport = transport or self.http
@@ -129,6 +133,42 @@ class Mirror:
         self.report = {'started_at': now(), 'status': 'running', 'checked': 0,
                        'updated': 0, 'unchanged': 0, 'blocked': 0, 'errors': [],
                        'excluded': 0, 'bytes_downloaded': 0, 'pending': 0}
+
+    def _load_state(self):
+        """Load the persisted snapshot, quarantining it if it fails validation.
+
+        A restored Actions cache can be truncated or otherwise unreadable. Rather
+        than failing the whole publish (or silently discarding history), the bad
+        file is moved outside the cached directory and rendering proceeds from an
+        explicit empty state with a visible recovery note. The previous cache
+        entries still exist server-side, so a later crawl can rebuild from them.
+        """
+        if not self.state_path.exists():
+            return fresh_state()
+        try:
+            state = json.loads(self.state_path.read_text())
+            if not isinstance(state, dict) or not isinstance(state.get('records'), dict):
+                raise ValueError('snapshot shape invalid: expected {"records": {...}}')
+            state.setdefault('changes', [])
+            if not isinstance(state['changes'], list):
+                raise ValueError('snapshot shape invalid: expected "changes" to be a list')
+            return state
+        except (ValueError, OSError, UnicodeDecodeError) as error:
+            quarantine = self.state_dir.parent / 'city-mirror-quarantine'
+            quarantine.mkdir(parents=True, exist_ok=True)
+            stamp = now().replace(':', '').replace('+', '')
+            salvaged = quarantine / f'state-{stamp}.json'
+            try:
+                self.state_path.replace(salvaged)
+            except OSError:
+                salvaged = None
+            state = fresh_state()
+            state['state_recovery'] = {
+                'quarantined_at': now(),
+                'reason': f'Previous snapshot failed validation ({error}); rendering an explicit empty mirror.',
+                'quarantined_file': salvaged.name if salvaged else None,
+            }
+            return state
 
     def canonical(self, raw, base=None):
         try:
@@ -348,6 +388,10 @@ class Mirror:
         self.report['finished_at'] = now()
         self.report['bytes_downloaded'] = self.bytes
         self.state['latest_run'] = self.report
+        if self.report.get('checked') and 'state_recovery' in self.state:
+            # Sources were actually re-checked, so the snapshot is rebuilt from
+            # real fetches rather than empty. Keep the incident as history.
+            self.state['last_recovery'] = self.state.pop('state_recovery')
         save_json(self.state_path, self.state)
         self.render()
         return self.report
