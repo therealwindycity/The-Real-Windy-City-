@@ -31,6 +31,7 @@ import argparse
 import datetime
 import html
 import json
+import os
 import re
 import subprocess
 import sys
@@ -221,8 +222,15 @@ def run_yt_dlp(args: list[str]) -> bool:
     cmd = ["yt-dlp", "--no-warnings", *args]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
     if result.returncode != 0:
-        tail = "\n".join((result.stdout + result.stderr).strip().splitlines()[-6:])
+        out = (result.stdout + result.stderr).strip()
+        tail = "\n".join(out.splitlines()[-6:])
         print(f"  yt-dlp failed ({result.returncode}):\n{tail}", file=sys.stderr)
+        if os.environ.get("GITHUB_ACTIONS"):
+            # Annotations are readable without downloading job logs.
+            errors = [ln for ln in out.splitlines() if "ERROR" in ln] or out.splitlines()[-1:]
+            for ln in errors[:3]:
+                cleaned = ln.replace("%", "%25").replace("\r", " ").replace("\n", " ")[:500]
+                print(f"::error title=yt-dlp::{cleaned}")
         return False
     return True
 
@@ -240,8 +248,10 @@ def download_captions(youtube_id: str) -> tuple[Path, str] | None:
         "--skip-download",
         "--sub-format",
         "vtt",
+        "--impersonate",
+        "chrome",
         "--extractor-args",
-        "youtube:player_client=android,tv,web",
+        "youtube:player_client=android,ios,tv,web",
         "-o",
         out,
         url,
