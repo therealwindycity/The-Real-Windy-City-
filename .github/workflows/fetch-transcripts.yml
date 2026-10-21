@@ -50,28 +50,21 @@ jobs:
 
       - name: Install yt-dlp
         run: |
-          pip install -q "yt-dlp[default]"
+          pip install -q "yt-dlp[default]" curl-cffi
           yt-dlp --version
 
       - name: Probe caption sources (diagnostics, never fails the job)
         continue-on-error: true
         run: |
-          {
-            echo "## Caption probe"
-            echo "### yt-dlp --list-subs (Finance 10-20-26, tuNz5g8X0YA)"
-            echo '```'
-            yt-dlp --list-subs --skip-download --impersonate chrome \
-              --extractor-args "youtube:player_client=android,ios,tv,web" \
-              "https://www.youtube.com/watch?v=tuNz5g8X0YA" 2>&1 | tail -25 || true
-            echo '```'
-            echo "### Granicus clip 1139 (City Council 10-12-26)"
-            echo '```'
-            curl -s -m 30 -A "Mozilla/5.0" "https://cheyenne.granicus.com/MediaPlayer.php?view_id=5&clip_id=1139" \
-              | grep -oiE "(caption|subtitle|\.vtt|\.srt|\.xml)[^\"<> ]{0,120}" | head -15 || true
-            curl -s -o /dev/null -m 30 -w "player HTTP %{http_code}\n" -A "Mozilla/5.0" \
-              "https://cheyenne.granicus.com/player/clip/1139?view_id=5" || true
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          note() { while IFS= read -r line; do [ -n "$line" ] && echo "::notice title=probe::${line:0:400}"; done; }
+          echo "::notice title=probe::--- impersonate targets ---"
+          yt-dlp --list-impersonate-targets 2>&1 | head -8 | note || true
+          python3 -c "import curl_cffi; print('curl_cffi', curl_cffi.__version__)" 2>&1 | note || true
+          echo "::notice title=probe::--- list-subs plain ---"
+          yt-dlp --list-subs --skip-download --extractor-args "youtube:player_client=android,ios,tv,web" "https://www.youtube.com/watch?v=tuNz5g8X0YA" 2>&1 | tail -14 | note || true
+          echo "::notice title=probe::--- granicus clip 1139 ---"
+          curl -s -m 30 -A "Mozilla/5.0" "https://cheyenne.granicus.com/MediaPlayer.php?view_id=5&clip_id=1139" | grep -oiE "(caption|subtitle|\\.vtt|\\.srt|\\.xml)[^\"<> ]{0,100}" | head -10 | note || true
+          curl -s -o /dev/null -m 30 -w "granicus player HTTP %{http_code}" -A "Mozilla/5.0" "https://cheyenne.granicus.com/player/clip/1139?view_id=5" | note || true
 
       - name: Fetch pending transcripts
         id: fetch

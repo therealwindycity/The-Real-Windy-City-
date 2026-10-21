@@ -235,42 +235,56 @@ def run_yt_dlp(args: list[str]) -> bool:
     return True
 
 
+def impersonate_available() -> bool:
+    try:
+        out = subprocess.run(
+            ["yt-dlp", "--list-impersonate-targets"],
+            capture_output=True, text=True, timeout=120,
+        )
+        return "chrome" in (out.stdout + out.stderr).lower()
+    except Exception:
+        return False
+
+
 def download_captions(youtube_id: str) -> tuple[Path, str] | None:
     """Download English captions to raw/{id}.en.vtt.
 
     Returns (path, captions_label) or None. Manual (creator-provided)
     captions are tried before auto-generated ones so the header label
-    can say which kind the transcript came from.
+    can say which kind the transcript came from. Each kind is tried
+    plain first, then with browser impersonation if available.
     """
     url = f"https://www.youtube.com/watch?v={youtube_id}"
     out = str(RAW / f"{youtube_id}.%(ext)s")
-    common = [
+    expected = RAW / f"{youtube_id}.en.vtt"
+    kinds = [
+        (["--write-subs", "--sub-langs", "en"], "English (creator-provided)"),
+        (["--write-auto-subs", "--sub-langs", "en.*"], "English (auto-generated)"),
+    ]
+    base = [
         "--skip-download",
         "--sub-format",
         "vtt",
-        "--impersonate",
-        "chrome",
         "--extractor-args",
         "youtube:player_client=android,ios,tv,web",
         "-o",
         out,
         url,
     ]
-    expected = RAW / f"{youtube_id}.en.vtt"
-    attempts = [
-        (["--write-subs", "--sub-langs", "en"], "English (creator-provided)"),
-        (["--write-auto-subs", "--sub-langs", "en.*"], "English (auto-generated)"),
-    ]
-    for flags, label in attempts:
-        if expected.exists():
-            expected.unlink()
-        if run_yt_dlp([*flags, *common]) and expected.is_file() and expected.stat().st_size > 0:
-            return expected, label
-        # yt-dlp may write e.g. {id}.en-US.vtt; normalize to {id}.en.vtt
-        for candidate in sorted(RAW.glob(f"{youtube_id}.en*.vtt")):
-            if candidate.stat().st_size > 0:
-                candidate.replace(expected)
+    variants: list[list[str]] = [[]]
+    if impersonate_available():
+        variants.append(["--impersonate", "chrome"])
+    for variant in variants:
+        for flags, label in kinds:
+            if expected.exists():
+                expected.unlink()
+            if run_yt_dlp([*variant, *flags, *base]) and expected.is_file() and expected.stat().st_size > 0:
                 return expected, label
+            # yt-dlp may write e.g. {id}.en-US.vtt; normalize to {id}.en.vtt
+            for candidate in sorted(RAW.glob(f"{youtube_id}.en*.vtt")):
+                if candidate.stat().st_size > 0:
+                    candidate.replace(expected)
+                    return expected, label
     return None
 
 
