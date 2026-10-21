@@ -265,6 +265,11 @@ def download_captions(youtube_id: str) -> tuple[Path, str] | None:
         "--skip-download",
         "--sub-format",
         "vtt",
+        *(
+            ["--cookies", os.environ["YTDLP_COOKIES_FILE"]]
+            if os.environ.get("YTDLP_COOKIES_FILE")
+            else []
+        ),
         "--extractor-args",
         "youtube:player_client=android,ios,tv,web",
         "-o",

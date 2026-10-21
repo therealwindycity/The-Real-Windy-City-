@@ -16,6 +16,10 @@ on:
         description: "Optional comma-separated YouTube IDs to limit the run"
         required: false
         default: ""
+      probe:
+        description: "Also run caption-source diagnostics"
+        required: false
+        default: "false"
   # Fallback for tokens that can push but cannot dispatch workflows:
   # a push whose head-commit message contains [fetch-transcripts] runs the
   # same job. The bot's own result commit never contains the marker, so
@@ -54,6 +58,7 @@ jobs:
           yt-dlp --version
 
       - name: Probe caption sources (diagnostics, never fails the job)
+        if: inputs.probe == 'true' || contains(github.event.head_commit.message, '[fetch-probe]')
         continue-on-error: true
         run: |
           note() { while IFS= read -r line; do [ -n "$line" ] && echo "::notice title=probe::${line:0:400}"; done; }
@@ -65,6 +70,26 @@ jobs:
           echo "::notice title=probe::--- granicus clip 1139 ---"
           curl -s -m 30 -A "Mozilla/5.0" "https://cheyenne.granicus.com/MediaPlayer.php?view_id=5&clip_id=1139" | grep -oiE "(caption|subtitle|\\.vtt|\\.srt|\\.xml)[^\"<> ]{0,100}" | head -10 | note || true
           curl -s -o /dev/null -m 30 -w "granicus player HTTP %{http_code}" -A "Mozilla/5.0" "https://cheyenne.granicus.com/player/clip/1139?view_id=5" | note || true
+
+      - name: Prepare optional YouTube cookies
+        # YouTube bot-gates datacenter IPs ("Sign in to confirm you're not a
+        # bot"), which blocks unauthenticated caption downloads from Actions
+        # runners. THAT IS EXPECTED: run tools/fetch_transcripts.py locally
+        # (residential IP) instead — see cheyenne-2026-transcripts/README.md.
+        # Only if the repository owner deliberately adds a YOUTUBE_COOKIES
+        # secret (Netscape cookies.txt from a THROWAWAY Google account) will
+        # the fetch use it. Unset = no cookies anywhere near this workflow.
+        env:
+          YOUTUBE_COOKIES: ${{ secrets.YOUTUBE_COOKIES }}
+        run: |
+          if [ -n "$YOUTUBE_COOKIES" ]; then
+            printf '%s' "$YOUTUBE_COOKIES" > /tmp/yt-cookies.txt
+            chmod 600 /tmp/yt-cookies.txt
+            echo "YTDLP_COOKIES_FILE=/tmp/yt-cookies.txt" >> "$GITHUB_ENV"
+            echo "Using owner-provided YOUTUBE_COOKIES secret."
+          else
+            echo "No YOUTUBE_COOKIES secret; unauthenticated fetch (YouTube may bot-gate this runner)."
+          fi
 
       - name: Fetch pending transcripts
         id: fetch

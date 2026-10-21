@@ -160,3 +160,35 @@ Auto-generated captions mis-transcribe words and names. Timestamps let you verif
 ## License
 
 Transcript text: [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) (public domain dedication). Video remains © City of Cheyenne / YouTube.
+
+## Adding new meetings
+
+1. **Inventory** what is missing: compare each body's last entry in
+   `meetings.json` against the city's
+   [Minutes and Agendas](https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas)
+   page, the board pages (Planning Commission, Board of Adjustment, Historic
+   Preservation Board, Urban Renewal), and the
+   [@TheCityofCheyenne](https://www.youtube.com/@TheCityofCheyenne) channel
+   (the channel RSS feed `feeds/videos.xml?channel_id=UC_SbB-4DCUA-NPDtkw2UA5A`
+   lists the newest ~15 uploads; older gaps need a title search).
+2. **Add catalog entries** to `meetings.json` with `"file": null` (the city
+   reader shows "Transcript unavailable" and links the source video).
+   Use `expected_file`/`note` only for multi-part videos and similar quirks.
+3. **Fetch captions and convert**:
+   `pip install yt-dlp && python3 tools/fetch_transcripts.py fetch`
+   downloads English captions into `raw/`, writes timestamped Markdown in
+   this format, and fills in `file`. Entries whose note records verified
+   missing captions are skipped. **Run this locally**: on 2026-10-21,
+   YouTube bot-gated every unauthenticated request from GitHub Actions
+   runners ("Sign in to confirm you're not a bot"), across player clients
+   and with browser impersonation; a residential connection is not gated.
+   The `Fetch meeting transcripts` workflow remains available for manual
+   dispatch (it only succeeds from Actions if the owner adds an optional
+   `YOUTUBE_COOKIES` secret from a throwaway account — see the workflow).
+4. **Update freshness**: set `meeting_information_last_checked` in
+   `city/freshness.json` to the plain `YYYY-MM-DD` date of the collection
+   check, refresh `known_gaps`, then run
+   `python3 tools/build_archive_coverage.py` and
+   `python3 -m unittest discover -s tests`.
+5. Spot-check each new transcript's opening lines against its catalog date
+   and body before committing (duplicate and mis-titled uploads happen).
