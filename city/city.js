@@ -92,7 +92,11 @@ async function loadFreshness() {
   try {
     const response = await fetchWithTimeout('freshness.json'); if (!response.ok) throw new Error('Unavailable');
     const data = await response.json();
-    const timestamp = data.meeting_information_last_checked ? new Date(data.meeting_information_last_checked).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Denver' }) : 'Not recorded';
+    const checkedRaw = data.meeting_information_last_checked;
+    // Plain YYYY-MM-DD collection dates display as dates only (UTC).
+    const timestamp = !checkedRaw ? 'Not recorded'
+      : /^\d{4}-\d{2}-\d{2}$/.test(checkedRaw) ? new Date(checkedRaw).toLocaleDateString(undefined, { dateStyle: 'medium', timeZone: 'UTC' })
+      : new Date(checkedRaw).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Denver' });
     $('home-checked').textContent = timestamp;
     $('home-indexed').textContent = data.latest_meeting_indexed ? `${data.latest_meeting_indexed} (catalog maximum)` : 'Not recorded';
     $('home-outcome').textContent = data.latest_verified_outcome || 'None documented as verified';
