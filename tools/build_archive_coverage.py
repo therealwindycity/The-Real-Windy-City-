@@ -3,10 +3,15 @@
 
 This deliberately does not treat CI/build time as a collection timestamp and does
 not claim coverage of external archive repositories or PDF attachments.
+
+After writing coverage.json / freshness.json, the same values are copied into the
+static HTML so crawlers and no-JS browsers never see a "Loading…" placeholder for
+record-based freshness. JavaScript remains a progressive enhancement.
 """
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import re
 from pathlib import Path
@@ -16,6 +21,118 @@ ARCHIVE = ROOT / "cheyenne-2026-transcripts"
 CATALOG = ARCHIVE / "meetings.json"
 OUTPUT = ROOT / "city" / "coverage.json"
 FRESHNESS = ROOT / "city" / "freshness.json"
+
+METRIC_LABELS = {
+    "meetings_indexed": "Meetings indexed",
+    "unique_document_contents": "Unique document contents",
+    "stored_markdown_files": "Stored Markdown files",
+    "searchable_catalog_documents": "Searchable catalog documents",
+    "caption_transcripts": "Caption transcripts",
+    "auto_generated_caption_transcripts": "Auto-generated caption transcripts",
+    "other_or_unlabeled_caption_sources": "Other / unlabeled caption sources",
+    "catalog_entries_without_transcript_file": "Catalog entries without transcript file",
+    "audio_checked_excerpts": "Audio-checked excerpts",
+    "original_source_checks": "Original-source checks",
+    "image_review_or_ocr_pending": "Image-review / OCR pending",
+}
+
+METRIC_DEFINITIONS_FALLBACK = {
+    "meetings_indexed": "Meeting entries in the JSON catalog; not necessarily unique dates or complete meetings.",
+    "catalog_entries_without_transcript_file": "Catalog entries without a corresponding transcript Markdown file.",
+}
+
+
+def set_inner_by_id(page: str, element_id: str, inner: str, tags: tuple[str, ...] = ("dd", "p", "span")) -> str:
+    tag_alt = "|".join(tags)
+    pattern = rf'(<(?:{tag_alt})\b[^>]*\sid="{re.escape(element_id)}"[^>]*>)(.*?)(</(?:{tag_alt})>)'
+    updated, count = re.subn(pattern, lambda match: match.group(1) + inner + match.group(3), page, count=1, flags=re.S)
+    if count != 1:
+        raise ValueError(f'expected exactly one element id="{element_id}", found {count}')
+    return updated
+
+
+def set_ul_by_id(page: str, element_id: str, items: list[str]) -> str:
+    inner = "".join(f"<li>{html.escape(item)}</li>" for item in items) or "<li>See coverage page</li>"
+    pattern = rf'(<ul\b[^>]*\sid="{re.escape(element_id)}"[^>]*>)(.*?)(</ul>)'
+    updated, count = re.subn(pattern, lambda match: match.group(1) + inner + match.group(3), page, count=1, flags=re.S)
+    if count != 1:
+        raise ValueError(f'expected exactly one ul id="{element_id}", found {count}')
+    return updated
+
+
+def set_tbody_by_id(page: str, element_id: str, inner: str) -> str:
+    pattern = rf'(<tbody\b[^>]*\sid="{re.escape(element_id)}"[^>]*>)(.*?)(</tbody>)'
+    updated, count = re.subn(pattern, lambda match: match.group(1) + inner + match.group(3), page, count=1, flags=re.S)
+    if count != 1:
+        raise ValueError(f'expected exactly one tbody id="{element_id}", found {count}')
+    return updated
+
+
+def checked_label(value) -> str:
+    return "Not recorded" if not value else str(value)
+
+
+def indexed_label(value, *, catalog_note: bool = True) -> str:
+    if not value:
+        return "Not recorded"
+    return f"{value} (catalog maximum)" if catalog_note else f"{value} — catalog maximum; not a completeness claim."
+
+
+def outcome_label(value) -> str:
+    return value or "None documented as verified"
+
+
+def gaps_sentence(gaps: list[str]) -> str:
+    if not gaps:
+        return "See coverage page"
+    return f"{len(gaps)} known gaps — {gaps[0]}"
+
+
+def embed_freshness(freshness: dict, coverage: dict) -> None:
+    gaps = list(freshness.get("known_gaps") or [])
+    checked = html.escape(checked_label(freshness.get("meeting_information_last_checked")))
+    indexed_short = html.escape(indexed_label(freshness.get("latest_meeting_indexed"), catalog_note=True))
+    indexed_long = html.escape(indexed_label(freshness.get("latest_meeting_indexed"), catalog_note=False))
+    outcome = html.escape(outcome_label(freshness.get("latest_verified_outcome")))
+    gaps_short = html.escape(gaps_sentence(gaps))
+
+    homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+    homepage = set_inner_by_id(homepage, "portal-checked", checked)
+    homepage = set_inner_by_id(homepage, "portal-indexed", indexed_short)
+    homepage = set_inner_by_id(homepage, "portal-outcome", outcome)
+    homepage = set_inner_by_id(homepage, "portal-gaps", gaps_short)
+    (ROOT / "index.html").write_text(homepage, encoding="utf-8")
+
+    city_home = (ROOT / "city" / "index.html").read_text(encoding="utf-8")
+    city_home = set_inner_by_id(city_home, "home-checked", checked)
+    city_home = set_inner_by_id(city_home, "home-indexed", indexed_short)
+    city_home = set_inner_by_id(city_home, "home-outcome", outcome)
+    city_home = set_inner_by_id(city_home, "home-gaps", html.escape(f"{len(gaps)} known gaps · {gaps[0]}" if gaps else "See coverage page"))
+    (ROOT / "city" / "index.html").write_text(city_home, encoding="utf-8")
+
+    rules = coverage.get("rules") or {}
+    rows = []
+    for key, value in (coverage.get("metrics") or {}).items():
+        label = METRIC_LABELS.get(key, key)
+        display = "Not measured" if value is None else str(value)
+        definition = rules.get(key) or METRIC_DEFINITIONS_FALLBACK.get(key, "See coverage index.")
+        rows.append(
+            "<tr>"
+            f"<td>{html.escape(label)}</td>"
+            f"<td>{html.escape(display)}</td>"
+            f"<td>{html.escape(definition)}</td>"
+            "</tr>"
+        )
+
+    coverage_html = (ROOT / "city" / "coverage.html").read_text(encoding="utf-8")
+    coverage_html = set_inner_by_id(coverage_html, "checked-at", checked)
+    coverage_html = set_inner_by_id(coverage_html, "latest-indexed", indexed_long)
+    coverage_html = set_inner_by_id(coverage_html, "latest-outcome", outcome)
+    coverage_html = set_ul_by_id(coverage_html, "known-gaps", gaps)
+    coverage_html = set_tbody_by_id(coverage_html, "metrics", "".join(rows) or "<tr><td colspan=\"3\">Coverage data unavailable.</td></tr>")
+    coverage_html = set_inner_by_id(coverage_html, "scope", html.escape(coverage.get("scope") or ""), tags=("p",))
+    coverage_html = set_inner_by_id(coverage_html, "count-note", html.escape(coverage.get("verification_note") or ""), tags=("p",))
+    (ROOT / "city" / "coverage.html").write_text(coverage_html, encoding="utf-8")
 
 
 def main() -> None:
@@ -70,7 +187,9 @@ def main() -> None:
         "verification_note": "A successful site build or deployment is not evidence that new government records were collected or verified.",
     }
     OUTPUT.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    embed_freshness(freshness, data)
     print(f"Wrote {OUTPUT.relative_to(ROOT)}: {len(meetings)} catalog entries, {len(files)} Markdown files")
+    print("Embedded freshness into index.html, city/index.html, and city/coverage.html")
 
 
 if __name__ == "__main__":

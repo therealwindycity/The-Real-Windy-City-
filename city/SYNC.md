@@ -9,9 +9,13 @@
   internally mirrored links stay local. Other links go to their source.
 - `/city/mirror/status.html`: run status, coverage limitations, errors, source
   hashes, and observed change history. JSON versions support other tools.
-- The existing Pages workflow runs the sync before publishing, daily at **09:17
-  UTC**, on existing publishing-branch pushes, and on manual dispatch. Scheduled
-  workflows only run after this change reaches the default branch.
+- The existing Pages workflow **publishes independently of the crawl**. Publish
+  restores the last validated snapshot and renders it offline; crawl runs on
+  schedule or manual dispatch only, with network and job timeouts. A snapshot is
+  cached only after `tools/validate_mirror_snapshot.py` accepts it, so a
+  truncated or unreadable run cannot hide last-known-good state.
+- Scheduled crawl: daily at **09:17 UTC** on the default branch, plus manual
+  dispatch. Push events publish without waiting for the city website.
 
 **This is a readable content mirror, not a pixel-identical city-site clone.**
 Upstream CSS, scripts, forms, cookies, authentication and transactional systems are
@@ -100,8 +104,10 @@ run-level status for network errors. No automated takedown decision is made.
 If a restored snapshot fails validation (truncated or unparseable cache), it is
 quarantined outside the cached directory and the publish renders an explicit
 empty mirror with a visible recovery note instead of failing or inventing
-figures. The next successful crawl rebuilds the snapshot from real fetches and
-moves the note to history (`last_recovery`).
+figures. A crawl whose `state.json` fails the same validation is not saved to
+the Actions cache, so restore-keys keep the previous last-known-good snapshot.
+The next successful crawl rebuilds from real fetches and moves the note to
+history (`last_recovery`).
 
 ## Troubleshooting
 
