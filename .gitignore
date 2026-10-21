@@ -26,3 +26,7 @@ node_modules/
 
 # Audit pipeline output (rebuild in ~10 s: python3 audit/audit_ingest_node.py --mode rebuild transcripts)
 audit/output/
+
+# Rebuilt public mirror; crawl state lives in .cache and the Actions cache.
+city/mirror/
+site/
