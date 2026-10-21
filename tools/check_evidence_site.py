@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import urllib.parse as urlparse
 from html.parser import HTMLParser
@@ -62,6 +63,14 @@ RUNTIME_FETCHES = {
 # The limited-scope audit sentence that must never be broadened into a
 # repository-wide OCR claim.
 AUDIT_SCOPE_SENTENCE = 'only that audited local set'
+
+# Record-based freshness fields that must be present in static HTML. A JS-only
+# "Loading…" placeholder is not a truthful no-JS / crawler fallback.
+FRESHNESS_ELEMENT_IDS = {
+    'index.html': ('portal-checked', 'portal-indexed', 'portal-outcome', 'portal-gaps'),
+    'city/index.html': ('home-checked', 'home-indexed', 'home-outcome', 'home-gaps'),
+    'city/coverage.html': ('checked-at', 'latest-indexed', 'latest-outcome', 'known-gaps', 'metrics'),
+}
 
 
 class LinkCollector(HTMLParser):
@@ -182,6 +191,36 @@ def main():
             problems.append('city/coverage.html: limited-scope audit wording is missing or was broadened')
         if 'does not claim an overall OCR-pending count' not in coverage_html:
             problems.append('city/coverage.html: OCR-pending disclaimer is missing')
+
+    # Static HTML must already contain record-based freshness, not "Loading…".
+    latest = None
+    if freshness_path.is_file():
+        try:
+            latest = json.loads(freshness_path.read_text(encoding='utf-8')).get('latest_meeting_indexed')
+        except (ValueError, OSError):
+            latest = None
+    for page_name, element_ids in FRESHNESS_ELEMENT_IDS.items():
+        page_path = site / page_name
+        if not page_path.is_file():
+            continue
+        page = page_path.read_text(encoding='utf-8')
+        for element_id in element_ids:
+            match = re.search(
+                rf'<(?:dd|p|span|ul|tbody)\b[^>]*\sid="{re.escape(element_id)}"[^>]*>(.*?)</(?:dd|p|span|ul|tbody)>',
+                page,
+                flags=re.S,
+            )
+            if not match:
+                problems.append(f'{page_name}: missing static freshness element id={element_id!r}')
+                continue
+            inner = match.group(1)
+            if re.search(r'Loading(?:…|\.\.\.| from )', inner, flags=re.I):
+                problems.append(f'{page_name}: #{element_id} still contains a Loading placeholder in static HTML')
+        if latest and latest not in page and page_name != 'city/coverage.html':
+            # Coverage page states the date in latest-indexed; the other two must too.
+            problems.append(f'{page_name}: static HTML does not include catalog latest {latest!r}')
+        elif latest and page_name == 'city/coverage.html' and latest not in page:
+            problems.append(f'{page_name}: static HTML does not include catalog latest {latest!r}')
 
     # Every catalog transcript referenced by the reader must be deployed.
     archive = site / 'cheyenne-2026-transcripts'

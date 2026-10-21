@@ -101,6 +101,16 @@ class WorkflowSplitTests(unittest.TestCase):
         for script in ('city/city.js', 'city/mirror-search.js', 'city/portal.js', 'city/coverage.js'):
             self.assertIn(script, text)
 
+    def test_crawl_saves_cache_only_after_snapshot_validation(self):
+        crawl = self.jobs['crawl']
+        self.assertIn('tools/validate_mirror_snapshot.py', crawl)
+        self.assertIn('id: snapshot', crawl)
+        save_block = crawl.split('Preserve city mirror state', 1)[1]
+        first_if = re.search(r'(?m)^        if:\s*(.+)$', save_block)
+        self.assertIsNotNone(first_if, 'cache save step needs an if: guard')
+        self.assertIn("steps.snapshot.outputs.save == 'true'", first_if.group(1))
+        self.assertNotEqual(first_if.group(1).strip(), 'always()')
+
 
 class NoScriptFallbackTests(unittest.TestCase):
     def test_root_homepage_has_noscript_fallback(self):
@@ -117,6 +127,25 @@ class NoScriptFallbackTests(unittest.TestCase):
         page = (ROOT / 'city/coverage.html').read_text()
         self.assertIn('<noscript>', page)
         self.assertIn('coverage.json', page)
+
+    def test_freshness_fields_are_baked_into_static_html(self):
+        freshness = json.loads((ROOT / 'city/freshness.json').read_text())
+        latest = freshness['latest_meeting_indexed']
+        for name, element_id in (
+            ('index.html', 'portal-indexed'),
+            ('city/index.html', 'home-indexed'),
+            ('city/coverage.html', 'latest-indexed'),
+        ):
+            page = (ROOT / name).read_text()
+            self.assertIn(latest, page, f'{name} static HTML missing catalog date {latest}')
+            match = re.search(
+                rf'<(?:dd|p)\b[^>]*\sid="{element_id}"[^>]*>(.*?)</(?:dd|p)>',
+                page,
+                flags=re.S,
+            )
+            self.assertIsNotNone(match, f'{name} missing #{element_id}')
+            self.assertNotRegex(match.group(1), r'Loading(?:…|\.\.\.| from )')
+            self.assertIn(latest, match.group(1))
 
     def test_every_loading_placeholder_ships_with_a_fallback(self):
         for name in ('index.html', 'city/index.html', 'city/coverage.html'):
@@ -195,16 +224,33 @@ def minimal_site(root):
     (root / 'index.html').write_text(
         '<!doctype html><html><head><script src="city/portal.js" defer></script></head><body>'
         '<p>FRESHNESS · RECORD-BASED</p><p>Meeting information last checked</p>'
+        '<dd id="portal-checked">Not recorded</dd>'
+        '<dd id="portal-indexed">2026-09-22 (catalog maximum)</dd>'
+        '<dd id="portal-outcome">None documented as verified</dd>'
+        '<dd id="portal-gaps">1 known gaps — gap one</dd>'
         '<a href="city/coverage.html">coverage</a><a href="city/corrections.html">corrections</a>'
         '</body></html>', encoding='utf-8')
-    for name in ('city/index.html', 'city/corrections.html',
+    (root / 'city/index.html').write_text(
+        '<!doctype html><html><body>'
+        '<dd id="home-checked">Not recorded</dd>'
+        '<dd id="home-indexed">2026-09-22 (catalog maximum)</dd>'
+        '<dd id="home-outcome">None documented as verified</dd>'
+        '<dd id="home-gaps">1 known gaps · gap one</dd>'
+        '<a href="../">home</a></body></html>', encoding='utf-8')
+    for name in ('city/corrections.html',
                  'city/citizen-connect-methodology.html',
                  'city/data-center-amendment-2026-10-19.html',
                  'city/mirror/index.html', 'city/mirror/status.html'):
         (root / name).write_text('<!doctype html><html><body><a href="../">home</a></body></html>', encoding='utf-8')
     (root / 'city/coverage.html').write_text(
         '<!doctype html><html><body><p>only that audited local set</p>'
-        '<p>does not claim an overall OCR-pending count</p></body></html>', encoding='utf-8')
+        '<p>does not claim an overall OCR-pending count</p>'
+        '<dd id="checked-at">Not recorded</dd>'
+        '<dd id="latest-indexed">2026-09-22 — catalog maximum; not a completeness claim.</dd>'
+        '<dd id="latest-outcome">None documented as verified</dd>'
+        '<ul id="known-gaps"><li>gap one</li></ul>'
+        '<tbody id="metrics"><tr><td>Meetings indexed</td><td>1</td><td>rule</td></tr></tbody>'
+        '</body></html>', encoding='utf-8')
     for name in ('robots.txt', 'sitemap.xml', 'city/city.css', 'city/city.js',
                  'city/portal.js', 'city/coverage.js', 'city/mirror-search.js'):
         (root / name).write_text('ok', encoding='utf-8')
@@ -272,6 +318,57 @@ class EvidenceArtifactCheckerTests(unittest.TestCase):
             proc = self.run_checker(site)
             self.assertNotEqual(proc.returncode, 0)
             self.assertIn('missing from artifact', proc.stdout)
+
+    def test_checker_rejects_loading_placeholder_in_freshness_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            site = minimal_site(Path(tmp))
+            (site / 'index.html').write_text(
+                '<!doctype html><html><head><script src="city/portal.js" defer></script></head><body>'
+                '<p>FRESHNESS · RECORD-BASED</p><p>Meeting information last checked</p>'
+                '<dd id="portal-checked">Not recorded</dd>'
+                '<dd id="portal-indexed">Loading…</dd>'
+                '<dd id="portal-outcome">Loading…</dd>'
+                '<dd id="portal-gaps">Loading…</dd>'
+                '<a href="city/coverage.html">coverage</a><a href="city/corrections.html">corrections</a>'
+                '</body></html>',
+                encoding='utf-8',
+            )
+            proc = self.run_checker(site)
+            self.assertNotEqual(proc.returncode, 0)
+            self.assertIn('Loading placeholder', proc.stdout)
+
+
+class SnapshotValidationTests(unittest.TestCase):
+    def run_validator(self, path):
+        return subprocess.run(
+            [sys.executable, str(ROOT / 'tools/validate_mirror_snapshot.py'), str(path)],
+            capture_output=True, text=True, timeout=30)
+
+    def test_missing_snapshot_is_not_cacheable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            proc = self.run_validator(Path(tmp) / 'state.json')
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn('no snapshot', proc.stdout)
+
+    def test_truncated_snapshot_is_not_cacheable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'state.json'
+            path.write_text('{truncated', encoding='utf-8')
+            proc = self.run_validator(path)
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn('unreadable snapshot', proc.stdout)
+
+    def test_valid_failed_run_with_records_is_cacheable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'state.json'
+            path.write_text(json.dumps({
+                'records': {'https://www.cheyennecity.org/': {'kind': 'page'}},
+                'changes': [],
+                'latest_run': {'status': 'failed'},
+            }), encoding='utf-8')
+            proc = self.run_validator(path)
+            self.assertEqual(proc.returncode, 0, proc.stdout)
+            self.assertIn('status=failed', proc.stdout)
 
 
 class ScopePreservationTests(unittest.TestCase):

@@ -182,8 +182,21 @@ jobs:
         timeout-minutes: 95
         run: python3 tools/sync_city.py
 
-      - name: Preserve city mirror state
+      - name: Validate snapshot before caching
+        # Restore-keys pick the most recent prefix match. A truncated or
+        # unreadable snapshot must not hide the last-known-good cache.
+        id: snapshot
         if: always()
+        run: |
+          if python3 tools/validate_mirror_snapshot.py .cache/city-mirror/state.json; then
+            echo "save=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "save=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::City mirror snapshot is not cacheable; keeping the previous last-known-good cache."
+          fi
+
+      - name: Preserve city mirror state
+        if: always() && steps.snapshot.outputs.save == 'true'
         uses: actions/cache/save@v4
         with:
           path: .cache/city-mirror
