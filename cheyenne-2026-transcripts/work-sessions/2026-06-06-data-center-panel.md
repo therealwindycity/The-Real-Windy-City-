@@ -1,6 +1,6 @@
-# Cheyenne City Council Work Session — 2026 (Cheyenne Data Center Panel)
+# Cheyenne City Council Work Session — June 6, 2026 (Cheyenne Data Center Panel)
 
-**Verbatim transcript** of the Cheyenne City Council Work Session meeting held 2026 in Cheyenne, Wyoming.
+**Verbatim transcript** of the Cheyenne City Council Work Session meeting held June 6, 2026 in Cheyenne, Wyoming.
 
 - **Video:** [https://www.youtube.com/watch?v=Hq26nwpjs2k](https://www.youtube.com/watch?v=Hq26nwpjs2k)
 - **YouTube ID:** `Hq26nwpjs2k`

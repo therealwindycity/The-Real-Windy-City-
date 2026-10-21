@@ -53,8 +53,17 @@ function render() {
     heading.append(date, title, badge);
     const links = document.createElement('div'); links.className = 'meeting-links';
     const read = document.createElement('button'); read.type = 'button'; read.textContent = m.file ? 'Read transcript' : 'Transcript unavailable'; read.disabled = !m.file; read.setAttribute('aria-label', `${m.file ? 'Read' : 'Transcript unavailable for'} ${label(m.body)} ${m.date}`); read.onclick = () => openTranscript(m);
-    const video = document.createElement('a'); video.href = `https://www.youtube.com/watch?v=${encodeURIComponent(m.youtube_id)}`; video.target = '_blank'; video.rel = 'noopener'; video.textContent = 'Source video ↗';
-    links.append(read, video); row.append(heading, links); $('results').append(row);
+    links.append(read);
+    if (m.youtube_id) {
+      const video = document.createElement('a'); video.href = `https://www.youtube.com/watch?v=${encodeURIComponent(m.youtube_id)}`; video.target = '_blank'; video.rel = 'noopener'; video.textContent = 'Source video ↗';
+      links.append(video);
+    } else {
+      const noVideo = document.createElement('span'); noVideo.className = 'no-video'; noVideo.textContent = 'No source video posted';
+      links.append(noVideo);
+    }
+    row.append(heading, links);
+    if (m.note) { const note = document.createElement('p'); note.className = 'meeting-note'; note.textContent = m.note; row.append(note); }
+    $('results').append(row);
   }
   if (!filtered.length) $('results').textContent = 'No meetings match these filters. Try another date or public body.';
   $('more').hidden = filtered.length <= limit;
@@ -64,11 +73,13 @@ async function openTranscript(m) {
   $('reader').hidden = false; $('reader-title').textContent = `${m.topic || label(m.body)} · ${m.date}`;
   $('transcript').textContent = 'Loading transcript…';
   const path = `../cheyenne-2026-transcripts/${m.file.split('/').map(encodeURIComponent).join('/')}`;
-  const sourceUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(m.youtube_id)}`;
+  const sourceUrl = m.youtube_id ? `https://www.youtube.com/watch?v=${encodeURIComponent(m.youtube_id)}` : null;
   $('download').href = path; $('prov-meeting').textContent = `${label(m.body)} · ${m.date}${m.topic ? ` · ${m.topic}` : ''}`;
   $('prov-hash').textContent = 'Calculating after load…'; $('prov-type').textContent = 'Timestamped caption transcript; individual caption source loading…';
   $('caption-warning').textContent = 'Caption transcript. Names, technical terminology, and quotations may contain errors. Check the linked recording before formal use. This transcript is not official minutes.';
-  $('prov-source').replaceChildren(); const link = document.createElement('a'); link.href = sourceUrl; link.target = '_blank'; link.rel = 'noopener'; link.textContent = sourceUrl; $('prov-source').append(link);
+  $('prov-source').replaceChildren();
+  if (sourceUrl) { const link = document.createElement('a'); link.href = sourceUrl; link.target = '_blank'; link.rel = 'noopener'; link.textContent = sourceUrl; $('prov-source').append(link); }
+  else $('prov-source').textContent = 'No source video posted for this meeting.';
   $('reader').focus(); $('reader').scrollIntoView();
   try {
     const response = await fetchWithTimeout(path); if (!response.ok) throw new Error('Unavailable');
@@ -115,7 +126,7 @@ loadFreshness();
     const response = await fetchWithTimeout('../cheyenne-2026-transcripts/meetings.json'); if (!response.ok) throw new Error('Unavailable');
     const data = await response.json();
     if (!Array.isArray(data)) throw new Error('Invalid catalog');
-    meetings = data.filter(m => typeof m.date === 'string' && typeof m.body === 'string' && typeof m.youtube_id === 'string' && (m.file === null || typeof m.file === 'string') && (!m.file || /^[\w-]+\/[\w-]+\.md$/.test(m.file))).sort((a,b) => b.date.localeCompare(a.date));
+    meetings = data.filter(m => typeof m.date === 'string' && typeof m.body === 'string' && (m.youtube_id === null || m.youtube_id === undefined || typeof m.youtube_id === 'string') && (m.file === null || typeof m.file === 'string') && (!m.file || /^[\w-]+\/[\w-]+\.md$/.test(m.file))).sort((a,b) => b.date.localeCompare(a.date));
     for (const body of [...new Set(meetings.map(m => m.body))].sort()) { const option = document.createElement('option'); option.value = body; option.textContent = label(body); $('body').append(option); }
     render();
   } catch { $('status').textContent = 'The catalog could not be loaded. Reload this page or browse the archive on GitHub using the link under Research tools.'; }

@@ -176,7 +176,7 @@ def render_markdown(
 ) -> str:
     display = BODIES[body][0]
     when = long_date(iso_date)
-    title_suffix = f" ({topic})" if topic and body == "work-session" else ""
+    title_suffix = f" ({topic})" if topic else ""
     header = "\n".join(
         [
             f"# {display} — {when}{title_suffix}",

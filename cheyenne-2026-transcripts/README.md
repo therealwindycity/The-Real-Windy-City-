@@ -14,7 +14,12 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-01-26 | City Council | [▶](https://www.youtube.com/watch?v=x6Veeticz3Q) | [city-council/2026-01-26-city-council.md](city-council/2026-01-26-city-council.md) |
 | 2026-02-09 | City Council | [▶](https://www.youtube.com/watch?v=OxeCnRnBLkU) | [city-council/2026-02-09-city-council.md](city-council/2026-02-09-city-council.md) |
 | 2026-02-23 | City Council | [▶](https://www.youtube.com/watch?v=rgnKyKmx3JU) | [city-council/2026-02-23-city-council.md](city-council/2026-02-23-city-council.md) |
+| 2026-02-23 | City Council (Special Meeting — Fire Negotiations) | [▶](https://www.youtube.com/watch?v=exnksYjsUks) | _transcript pending_ |
+| 2026-03-05 | City Council (Special Meeting — Fire Negotiations) | [▶](https://www.youtube.com/watch?v=rNF28Y6Ehhg) | _transcript pending_ |
 | 2026-03-09 | City Council | [▶](https://www.youtube.com/watch?v=19tQtLA8klo) | [city-council/2026-03-09-city-council.md](city-council/2026-03-09-city-council.md) |
+| 2026-03-12 | City Council (Special Meeting — Fire Negotiations) | [▶](https://www.youtube.com/watch?v=TWHE04QLQAY) | _transcript pending_ |
+| 2026-03-16 | City Council (Special Meeting — Fire Negotiations) | [▶](https://www.youtube.com/watch?v=pizUXui6X0s) | _transcript pending_ |
+| 2026-03-17 | City Council (Special Meeting — Fire Negotiations) | [▶](https://www.youtube.com/watch?v=8yeQGSX0zbM) | _transcript pending_ |
 | 2026-03-23 | City Council | [▶](https://www.youtube.com/watch?v=ey_oCFcK7Cs) | [city-council/2026-03-23-city-council.md](city-council/2026-03-23-city-council.md) |
 | 2026-04-13 | City Council | [▶](https://www.youtube.com/watch?v=mPv73_3Clls) | [city-council/2026-04-13-city-council.md](city-council/2026-04-13-city-council.md) |
 | 2026-04-27 | City Council | [▶](https://www.youtube.com/watch?v=y9vnXtjZpR0) | [city-council/2026-04-27-city-council.md](city-council/2026-04-27-city-council.md) |
@@ -83,10 +88,30 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 
 | Date | Meeting | Video | Transcript |
 |---|---|---|---|
-| 2026 | Cheyenne Data Center Panel | [▶](https://www.youtube.com/watch?v=Hq26nwpjs2k) | [work-sessions/2026-data-center-panel.md](work-sessions/2026-data-center-panel.md) |
 | 2026-01-14 | Committee of the Whole | [▶](https://www.youtube.com/watch?v=tUTtHJp87Iw) | [work-sessions/2026-01-14-committee-of-the-whole.md](work-sessions/2026-01-14-committee-of-the-whole.md) |
 | 2026-01-15 | City Council Goal Setting 2026 | [▶](https://www.youtube.com/watch?v=Ro4BGPNnMMM) | [work-sessions/2026-01-15-goal-setting.md](work-sessions/2026-01-15-goal-setting.md) |
+| 2026-01-16 | Fiscal Year 2025 Audit | [▶](https://www.youtube.com/watch?v=dBfJojl7z4A) | _transcript pending_ |
+| 2026-01-23 | Annual UDC Review | [▶](https://www.youtube.com/watch?v=_66qb9ib2a8) | _transcript pending_ |
 | 2026-01-30 | 6th Penny Projects — Municipal Building Renovation | [▶](https://www.youtube.com/watch?v=uxdbgW5oXIE) | [work-sessions/2026-01-30-6th-penny-municipal-building.md](work-sessions/2026-01-30-6th-penny-municipal-building.md) |
+| 2026-02-06 | City Council Discussion of New Council Office Space | [▶](https://www.youtube.com/watch?v=Pd6lYW4sDMQ) | _transcript pending_ |
+| 2026-03-06 | Wyoming Business Council Statewide Poll Results | [▶](https://www.youtube.com/watch?v=DfIIXvPzkoA) | _transcript pending_ |
+| 2026-03-20 | Downtown Development Authority Updates | [▶](https://www.youtube.com/watch?v=ke7KkG--4bw) | _transcript pending_ |
+| 2026-04-15 | Former Senior Center Building Tour | _no video posted_ | — |
+| 2026-04-17 | Fiscal Year 2027 Board of Public Utilities Budget Presentation | _no video posted_ | — |
+| 2026-05-01 | City Employee Pay Structure | [▶](https://www.youtube.com/watch?v=khQwvxHwQLc) | _transcript pending_ |
+| 2026-05-06 | Fiscal Year 2027 Budget: Overview, Mayor's Department and Treasurer's Department | [▶](https://www.youtube.com/watch?v=jWRM72a_Bm4) | _transcript pending_ |
+| 2026-05-07 | Fiscal Year 2027 Budget: Public Works | [▶](https://www.youtube.com/watch?v=L7oVjOCqF5Y) | _transcript pending_ |
+| 2026-05-08 | Fiscal Year 2027 Budget: Engineering | [▶](https://www.youtube.com/watch?v=BCsj4vDUW0w) | _transcript pending_ |
+| 2026-05-11 | Fiscal Year 2027 Budget: Compliance Department | [▶](https://www.youtube.com/watch?v=a1bMkpMR5Xw) | _transcript pending_ |
+| 2026-05-12 | Fiscal Year 2027 Budget: Municipal Court, Fire Department and Police Department | [▶](https://www.youtube.com/watch?v=sD1_V8VJJoA) | _transcript pending_ |
+| 2026-05-13 | Fiscal Year 2027 Budget: Community Recreation and Events | [▶](https://www.youtube.com/watch?v=wQp96dz4Fmk) | _transcript pending_ |
+| 2026-05-14 | Fiscal Year 2027 Budget: City Attorney, Clerk, Human Resources and Youth Alternatives | [▶](https://www.youtube.com/watch?v=odbfDtUO19o) | _transcript pending_ |
+| 2026-05-15 | Fiscal Year 2027 Budget: Planning and Development Department and Downtown Development Authority | [▶](https://www.youtube.com/watch?v=o0n-V8CtOrk) | _transcript pending_ |
+| 2026-05-20 | Committee of the Whole | [▶](https://www.youtube.com/watch?v=iOkqB_Yp2kU) | _transcript pending_ |
+| 2026-05-29 | Safe Streets for All Presentation | [▶](https://www.youtube.com/watch?v=xAWqYVrnqhI) | _transcript pending_ |
+| 2026-06-02 | Committee of the Whole | [▶](https://www.youtube.com/watch?v=GFUm9t4r7WQ) | _transcript pending_ |
+| 2026-06-06 | Cheyenne Data Center Panel | [▶](https://www.youtube.com/watch?v=Hq26nwpjs2k) | [work-sessions/2026-06-06-data-center-panel.md](work-sessions/2026-06-06-data-center-panel.md) |
+| 2026-06-26 | Juvenile Justice Taskforce | [▶](https://www.youtube.com/watch?v=WEEXvV54620) | _transcript pending_ |
 | 2026-07-29 | 2026 Goal Setting Review | [▶](https://www.youtube.com/watch?v=CNvVfCztL_c) | [work-sessions/2026-07-29-goal-setting-review.md](work-sessions/2026-07-29-goal-setting-review.md) |
 | 2026-08-21 | Urban Farm Unified Development Code Updates | [▶](https://www.youtube.com/watch?v=kAPVTM1oJTo) | [work-sessions/2026-08-21-urban-farm-udc.md](work-sessions/2026-08-21-urban-farm-udc.md) |
 | 2026-08-28 | Cox Ranch Work Session | [▶](https://www.youtube.com/watch?v=MG6Zaw7ATGA) | [work-sessions/2026-08-28-cox-work-session.md](work-sessions/2026-08-28-cox-work-session.md) |
@@ -118,11 +143,14 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 |---|---|---|---|
 | 2026-01-15 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=zAHof-zK-kg) | [board-of-adjustment/2026-01-15-board-of-adjustment.md](board-of-adjustment/2026-01-15-board-of-adjustment.md) |
 | 2026-02-19 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=YZp8nOWtFsk) | [board-of-adjustment/2026-02-19-board-of-adjustment.md](board-of-adjustment/2026-02-19-board-of-adjustment.md) |
+| 2026-03-19 | Board of Adjustment | _no video posted_ | — |
 | 2026-04-16 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=dp7BxPMiBc8) | [board-of-adjustment/2026-04-16-board-of-adjustment.md](board-of-adjustment/2026-04-16-board-of-adjustment.md) |
 | 2026-05-21 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=klmSqd148Og) | [board-of-adjustment/2026-05-21-board-of-adjustment.md](board-of-adjustment/2026-05-21-board-of-adjustment.md) |
 | 2026-06-18 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=c-rdM6D4RMo) | *no captions on file — transcript unavailable* |
 | 2026-06-25 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=FnQgytLIkTY) | [board-of-adjustment/2026-06-25-board-of-adjustment.md](board-of-adjustment/2026-06-25-board-of-adjustment.md) |
 | 2026-07-16 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=fNwLJO6tX4g) | [board-of-adjustment/2026-07-16-board-of-adjustment.md](board-of-adjustment/2026-07-16-board-of-adjustment.md) |
+| 2026-08-20 | Board of Adjustment | _no video posted_ | — |
+| 2026-09-17 | Board of Adjustment | _no video posted_ | — |
 | 2026-10-15 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=HW4LVHWcf-Y) | _transcript pending_ |
 
 ### Historic Preservation Board
