@@ -1,0 +1,43 @@
+services:
+  scanner-transcriber:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    container_name: civic-scanner-47003
+    env_file:
+      - ../.env
+    environment:
+      SCANNER_BIND_HOST: 0.0.0.0
+      SCANNER_BIND_PORT: "8787"
+      SCANNER_DATA_DIR: /var/lib/civic-scanner
+    volumes:
+      - scanner_data:/var/lib/civic-scanner
+    restart: unless-stopped
+    stop_grace_period: 45s
+    mem_limit: 2g
+    cpus: 2.0
+    expose:
+      - "8787"
+
+  caddy:
+    image: caddy:2.8-alpine
+    container_name: civic-scanner-https
+    depends_on:
+      - scanner-transcriber
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SCANNER_API_HOSTNAME: ${SCANNER_API_HOSTNAME:-scanner-api.example.org}
+      SCANNER_API_TOKEN: ${SCANNER_API_TOKEN}
+      ALLOWED_WEB_ORIGIN: ${ALLOWED_WEB_ORIGIN:-https://therealwindycity.github.io}
+    volumes:
+      - ../caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+
+volumes:
+  scanner_data:
+  caddy_data:
+  caddy_config:

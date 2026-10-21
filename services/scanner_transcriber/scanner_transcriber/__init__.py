@@ -1,0 +1,3 @@
+"""Civic Cheyenne Live Scanner Transcription Service."""
+
+__version__ = "0.1.0"

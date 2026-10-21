@@ -1,0 +1,45 @@
+name: Live Scanner Service CI
+
+# Automated CI test suite ONLY — NOT a continuous live transcription service.
+# Continuous radio capture requires a persistent always-on Linux host running
+# `deploy/systemd/civic-scanner-transcriber.service` or `deploy/docker/docker-compose.yml`.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "arena/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-scanner-service:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11 and ffmpeg
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: services/scanner_transcriber/requirements.lock.txt
+
+      - name: Install system ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - name: Install pinned scanner_transcriber dependencies
+        run: |
+          python -m pip install --upgrade pip==26.2.2
+          pip install -r services/scanner_transcriber/requirements.lock.txt
+          pip install --no-deps -e services/scanner_transcriber
+
+      - name: Run full real faster-whisper, storage, fault-injection, SSRF, and live HTTP stream pytest suite
+        run: pytest -vv services/scanner_transcriber/tests/test_scanner_service.py
+
+      - name: Run repository mirror & archive regression suite
+        if: hashFiles('tests/test_mirror_service.py') != ''
+        run: python3 -m unittest discover -s tests -v
