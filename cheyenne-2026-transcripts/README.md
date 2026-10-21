@@ -213,6 +213,17 @@ Transcript text: [CC0 1.0 Universal](https://creativecommons.org/publicdomain/ze
    The `Fetch meeting transcripts` workflow remains available for manual
    dispatch (it only succeeds from Actions if the owner adds an optional
    `YOUTUBE_COOKIES` secret from a throwaway account — see the workflow).
+   Other routes probed from GitHub Actions on 2026-10-21 are also closed:
+   cheyenne.granicus.com resets connections from runner IPs, and public
+   Invidious/Piped caption APIs were down. One untested local fallback:
+   other cities' Granicus clips expose a WebVTT closed-caption track that
+   yt-dlp can download. Entries with a known `granicus_clip_id` (from the
+   Video links on the Minutes & Agendas page) can be retried that way
+   with `FETCH_GRANICUS=1 python3 tools/fetch_transcripts.py fetch`;
+   whether Cheyenne clips carry caption tracks is unknown, and any
+   success is labeled "Granicus closed captions" in the transcript
+   header. YouTube's own transcript view has no cue timestamps and is
+   only a reading aid here — never back-fill timestamps by estimation.
 4. **Update freshness**: set `meeting_information_last_checked` in
    `city/freshness.json` to the plain `YYYY-MM-DD` date of the collection
    check, refresh `known_gaps`, then run

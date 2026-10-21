@@ -246,13 +246,27 @@ def impersonate_available() -> bool:
         return False
 
 
-def download_captions(youtube_id: str) -> tuple[Path, str] | None:
+def download_captions(
+    youtube_id: str,
+    granicus_clip_id: int | None = None,
+    granicus_view_id: int = 5,
+) -> tuple[Path, str] | None:
     """Download English captions to raw/{id}.en.vtt.
 
     Returns (path, captions_label) or None. Manual (creator-provided)
     captions are tried before auto-generated ones so the header label
     can say which kind the transcript came from. Each kind is tried
     plain first, then with browser impersonation if available.
+
+    If every YouTube attempt fails and FETCH_GRANICUS=1 is set and the
+    catalog entry carries a granicus_clip_id, one fallback attempt is
+    made against the city's Granicus player URL: other cities' Granicus
+    clips expose a WebVTT closed-caption track that yt-dlp's generic
+    extractor can download (see paul-codes-1/fuzzy-potato). This is
+    UNTESTED against cheyenne.granicus.com -- that host resets
+    connections from GitHub Actions runners (probed 2026-10-21), so it
+    can only be tried from a network Granicus accepts. Whether Cheyenne
+    clips carry caption tracks at all is unknown; YouTube stays primary.
     """
     url = f"https://www.youtube.com/watch?v={youtube_id}"
     out = str(RAW / f"{youtube_id}.%(ext)s")
@@ -290,6 +304,23 @@ def download_captions(youtube_id: str) -> tuple[Path, str] | None:
                 if candidate.stat().st_size > 0:
                     candidate.replace(expected)
                     return expected, label
+    if granicus_clip_id and os.environ.get("FETCH_GRANICUS") == "1":
+        g_url = (
+            f"https://cheyenne.granicus.com/player/clip/{granicus_clip_id}"
+            f"?view_id={granicus_view_id}&redirect=true"
+        )
+        g_out = str(RAW / f"{youtube_id}.granicus.%(ext)s")
+        for stale in RAW.glob(f"{youtube_id}.granicus*.vtt"):
+            stale.unlink()
+        if run_yt_dlp([
+            "--write-subs", "--sub-langs", "en.*", "--skip-download",
+            "--sub-format", "vtt", "-o", g_out, g_url,
+        ]):
+            for candidate in sorted(RAW.glob(f"{youtube_id}.granicus*.vtt")):
+                if candidate.stat().st_size > 0:
+                    dest = RAW / f"{youtube_id}.granicus.en.vtt"
+                    candidate.replace(dest)
+                    return dest, "English (Granicus closed captions)"
     return None
 
 
@@ -321,7 +352,11 @@ def fetch_pending(only: set[str] | None, dry_run: bool) -> int:
             print(f"would fetch {label} -> {target_file(entry)}")
             continue
         print(f"fetching {label} ...", flush=True)
-        got = download_captions(youtube_id)
+        got = download_captions(
+            youtube_id,
+            granicus_clip_id=entry.get("granicus_clip_id"),
+            granicus_view_id=entry.get("granicus_view_id", 5),
+        )
         if not got:
             failures.append(label)
             print(f"  FAILED: no captions downloaded for {label}", file=sys.stderr)
