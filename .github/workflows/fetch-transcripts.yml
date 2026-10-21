@@ -61,15 +61,57 @@ jobs:
         if: inputs.probe == 'true' || contains(github.event.head_commit.message, '[fetch-probe]')
         continue-on-error: true
         run: |
-          note() { while IFS= read -r line; do [ -n "$line" ] && echo "::notice title=probe::${line:0:400}"; done; }
-          echo "::notice title=probe::--- impersonate targets ---"
-          yt-dlp --list-impersonate-targets 2>&1 | head -8 | note || true
-          python3 -c "import curl_cffi; print('curl_cffi', curl_cffi.__version__)" 2>&1 | note || true
-          echo "::notice title=probe::--- list-subs plain ---"
-          yt-dlp --list-subs --skip-download --extractor-args "youtube:player_client=android,ios,tv,web" "https://www.youtube.com/watch?v=tuNz5g8X0YA" 2>&1 | tail -14 | note || true
-          echo "::notice title=probe::--- granicus clip 1139 ---"
-          curl -s -m 30 -A "Mozilla/5.0" "https://cheyenne.granicus.com/MediaPlayer.php?view_id=5&clip_id=1139" | grep -oiE "(caption|subtitle|\\.vtt|\\.srt|\\.xml)[^\"<> ]{0,100}" | head -10 | note || true
-          curl -s -o /dev/null -m 30 -w "granicus player HTTP %{http_code}" -A "Mozilla/5.0" "https://cheyenne.granicus.com/player/clip/1139?view_id=5" | note || true
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+          say() { echo "::notice title=probe::$(echo "$1" | tr -d '\n\r' | cut -c1-900)"; }
+          # 1-2. Does yt-dlp see a Granicus clip + its subtitles? (CC 2026-10-12 = clip 1139)
+          out=$(yt-dlp --list-subs --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" 2>&1)
+          say "GRANICUS list-subs tail: $(echo "$out" | tail -4 | tr '\n' ' ')"
+          subs=$(yt-dlp -J --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" 2>/dev/null | python3 -c "import json,sys
+          try:
+              d=json.load(sys.stdin); s=d.get('subtitles') or {}; a=d.get('automatic_captions') or {}
+              print('title=', (d.get('title') or '')[:60], '| subs=', {k:[f.get('ext') for f in v] for k,v in list(s.items())[:4]}, '| auto=', list(a)[:4], '| dur=', d.get('duration'))
+          except Exception as e: print('JSON fail', e)" 2>&1)
+          say "GRANICUS -J: $subs"
+          # 3. Does the subtitles payload include a direct VTT url we can hit in later runs?
+          vtt=$(yt-dlp -J --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" 2>/dev/null | python3 -c "import json,sys
+          try:
+              d=json.load(sys.stdin); s=d.get('subtitles') or {}
+              en=s.get('en') or (list(s.values())[0] if s else [])
+              print(next((f.get('url','') for f in en if f.get('ext')=='vtt'), 'no-vtt-url')[:300])
+          except Exception as e: print('fail', e)" 2>&1)
+          say "GRANICUS vtt url: $vtt"
+          # 4. Legacy MediaPlayer page: any caption/vtt/m3u8 references?
+          hits=$(curl -s -m 30 -A "$UA" "https://cheyenne.granicus.com/MediaPlayer.php?view_id=5&clip_id=1139" | grep -oiE "[^\"<> ]*(\.vtt|caption|\.m3u8)[^\"<> ]*" | sort -u | head -6 | tr '\n' ' ')
+          say "MEDIAPLAYER hits: ${hits:-none}"
+          # 5. Which Granicus views exist (committees? boards?) - one compressed line
+          views=""
+          for v in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            title=$(curl -s -m 20 -A "$UA" "https://cheyenne.granicus.com/ViewPublisher.php?view_id=$v" | grep -oiE "<title>[^<]*" | head -1 | sed 's/<title>//I' | cut -c1-40)
+            views="$views [$v:${title:-?}]"
+          done
+          say "VIEWS:$views"
+          # 6-7. Fallback caption APIs from runner IP
+          code=$(curl -s -o /tmp/inv.json -w "%{http_code}" -m 25 "https://inv.nadeko.net/api/v1/captions/tuNz5g8X0YA" || echo FAIL)
+          say "INVIDIOUS nadeko HTTP $code body: $(head -c 220 /tmp/inv.json | tr -d '\n')"
+          code=$(curl -s -o /tmp/piped.json -w "%{http_code}" -m 25 "https://pipedapi.kavin.rocks/streams/tuNz5g8X0YA" || echo FAIL)
+          say "PIPED kavin HTTP $code subs: $(python3 -c "import json; d=json.load(open('/tmp/piped.json')); print([ (s.get('name'), (s.get('url') or '')[:90]) for s in (d.get('subtitles') or [])][:3])" 2>&1 | head -c 300)"
+          # 8. Older clip with known YT transcript (CC 2026-09-14 = 1134): granicus subs too?
+          out=$(yt-dlp --list-subs --skip-download "https://cheyenne.granicus.com/player/clip/1134?view_id=5&redirect=true" 2>&1)
+          say "GRANICUS 1134 list-subs tail: $(echo "$out" | tail -3 | tr '\n' ' ')"
+          # full probe log as artifact for the record
+          yt-dlp -J --skip-download "https://cheyenne.granicus.com/player/clip/1139?view_id=5&redirect=true" > /tmp/granicus-1139.json 2>/tmp/granicus-1139.err || true
+
+      - name: Upload probe artifacts
+        if: always() && (inputs.probe == 'true' || contains(github.event.head_commit.message, '[fetch-probe]'))
+        uses: actions/upload-artifact@v4
+        with:
+          name: caption-probe
+          path: |
+            /tmp/granicus-1139.json
+            /tmp/granicus-1139.err
+            /tmp/inv.json
+            /tmp/piped.json
+          if-no-files-found: ignore
 
       - name: Prepare optional YouTube cookies
         # YouTube bot-gates datacenter IPs ("Sign in to confirm you're not a
