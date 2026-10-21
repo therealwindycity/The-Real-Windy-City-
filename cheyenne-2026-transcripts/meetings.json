@@ -519,5 +519,109 @@
     "body": "urban-renewal-authority",
     "youtube_id": "iIEQrKRojPU",
     "file": "urban-renewal-authority/2026-05-07-urban-renewal-authority.md"
+  },
+  {
+    "date": "2026-08-11",
+    "body": "historic-preservation-board",
+    "youtube_id": "ufjMMFxH7xc",
+    "file": null
+  },
+  {
+    "date": "2026-09-08",
+    "body": "planning-commission",
+    "youtube_id": "9IKQoKgv6HE",
+    "file": null,
+    "expected_file": "planning-commission/2026-09-08-planning-commission-a.md",
+    "note": "First of two videos the city posted for this meeting (Part 1)."
+  },
+  {
+    "date": "2026-09-08",
+    "body": "planning-commission",
+    "youtube_id": "gwRfYP56p6Q",
+    "file": null,
+    "expected_file": "planning-commission/2026-09-08-planning-commission-b.md",
+    "note": "Second of two videos the city posted for this meeting (Part 2)."
+  },
+  {
+    "date": "2026-09-09",
+    "body": "historic-preservation-board",
+    "youtube_id": "OZWHslT5-Xc",
+    "file": null,
+    "note": "Held Wednesday, September 9, 2026 (city board page and video title), not the board's usual second Tuesday."
+  },
+  {
+    "date": "2026-09-21",
+    "body": "planning-commission",
+    "youtube_id": "gPZDFSlamCc",
+    "file": null
+  },
+  {
+    "date": "2026-09-25",
+    "body": "work-session",
+    "topic": "Hanwha Energy Presentation",
+    "youtube_id": "Wvw2VsuSRD8",
+    "file": null,
+    "expected_file": "work-sessions/2026-09-25-hanwha-energy-presentation.md"
+  },
+  {
+    "date": "2026-09-28",
+    "body": "city-council",
+    "youtube_id": "nwoFTXVqsH8",
+    "file": null
+  },
+  {
+    "date": "2026-10-05",
+    "body": "planning-commission",
+    "youtube_id": "VelHHw7Jnew",
+    "file": null
+  },
+  {
+    "date": "2026-10-05",
+    "body": "public-services-committee",
+    "youtube_id": "R_XjnSIIq5o",
+    "file": null
+  },
+  {
+    "date": "2026-10-06",
+    "body": "finance-committee",
+    "youtube_id": "XtS4d51ZcmM",
+    "file": null
+  },
+  {
+    "date": "2026-10-12",
+    "body": "city-council",
+    "youtube_id": "4LHLk6WY07Q",
+    "file": null
+  },
+  {
+    "date": "2026-10-13",
+    "body": "historic-preservation-board",
+    "youtube_id": "YPOe1yN_2h0",
+    "file": null
+  },
+  {
+    "date": "2026-10-15",
+    "body": "board-of-adjustment",
+    "youtube_id": "HW4LVHWcf-Y",
+    "file": null,
+    "note": "The city also posted this meeting as an untitled upload (g_32gta97jM); cataloged once, under the titled upload."
+  },
+  {
+    "date": "2026-10-19",
+    "body": "planning-commission",
+    "youtube_id": "Wu4g09Zv02c",
+    "file": null
+  },
+  {
+    "date": "2026-10-19",
+    "body": "public-services-committee",
+    "youtube_id": "ZCzuyH_79AQ",
+    "file": null
+  },
+  {
+    "date": "2026-10-20",
+    "body": "finance-committee",
+    "youtube_id": "tuNz5g8X0YA",
+    "file": null
   }
 ]

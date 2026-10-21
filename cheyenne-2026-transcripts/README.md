@@ -27,6 +27,8 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-08-10 | City Council | [▶](https://www.youtube.com/watch?v=7tVKl_N80dE) | [city-council/2026-08-10-city-council.md](city-council/2026-08-10-city-council.md) |
 | 2026-08-24 | City Council | [▶](https://www.youtube.com/watch?v=HX3_qn0rw_Q) | [city-council/2026-08-24-city-council.md](city-council/2026-08-24-city-council.md) |
 | 2026-09-14 | City Council | [▶](https://www.youtube.com/watch?v=-zBOAUpDE3E) | [city-council/2026-09-14-city-council.md](city-council/2026-09-14-city-council.md) |
+| 2026-09-28 | City Council | [▶](https://www.youtube.com/watch?v=nwoFTXVqsH8) | _transcript pending_ |
+| 2026-10-12 | City Council | [▶](https://www.youtube.com/watch?v=4LHLk6WY07Q) | _transcript pending_ |
 
 ### Public Services Committee
 
@@ -49,6 +51,8 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-08-03 | Public Services Committee | [▶](https://www.youtube.com/watch?v=IM0VKGNplhA) | [public-services-committee/2026-08-03-public-services-committee.md](public-services-committee/2026-08-03-public-services-committee.md) |
 | 2026-09-08 | Public Services Committee | [▶](https://www.youtube.com/watch?v=znfsfJ9O0mo) | [public-services-committee/2026-09-08-public-services-committee.md](public-services-committee/2026-09-08-public-services-committee.md) |
 | 2026-09-21 | Public Services Committee | [▶](https://www.youtube.com/watch?v=BPUJeNwgjoE) | [public-services-committee/2026-09-21-public-services-committee.md](public-services-committee/2026-09-21-public-services-committee.md) |
+| 2026-10-05 | Public Services Committee | [▶](https://www.youtube.com/watch?v=R_XjnSIIq5o) | _transcript pending_ |
+| 2026-10-19 | Public Services Committee | [▶](https://www.youtube.com/watch?v=ZCzuyH_79AQ) | _transcript pending_ |
 
 ### Finance Committee
 
@@ -72,6 +76,8 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-08-18 | Finance Committee | [▶](https://www.youtube.com/watch?v=tZKp5g6g4EQ) | [finance-committee/2026-08-18-finance-committee.md](finance-committee/2026-08-18-finance-committee.md) |
 | 2026-09-09 | Finance Committee | [▶](https://www.youtube.com/watch?v=TJArdO5j0Oc) | [finance-committee/2026-09-09-finance-committee.md](finance-committee/2026-09-09-finance-committee.md) |
 | 2026-09-22 | Finance Committee | [▶](https://www.youtube.com/watch?v=AED7FDEZ-5k) | [finance-committee/2026-09-22-finance-committee.md](finance-committee/2026-09-22-finance-committee.md) |
+| 2026-10-06 | Finance Committee | [▶](https://www.youtube.com/watch?v=XtS4d51ZcmM) | _transcript pending_ |
+| 2026-10-20 | Finance Committee | [▶](https://www.youtube.com/watch?v=tuNz5g8X0YA) | _transcript pending_ |
 
 ### Council work sessions & special sessions
 
@@ -84,6 +90,7 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-07-29 | 2026 Goal Setting Review | [▶](https://www.youtube.com/watch?v=CNvVfCztL_c) | [work-sessions/2026-07-29-goal-setting-review.md](work-sessions/2026-07-29-goal-setting-review.md) |
 | 2026-08-21 | Urban Farm Unified Development Code Updates | [▶](https://www.youtube.com/watch?v=kAPVTM1oJTo) | [work-sessions/2026-08-21-urban-farm-udc.md](work-sessions/2026-08-21-urban-farm-udc.md) |
 | 2026-08-28 | Cox Ranch Work Session | [▶](https://www.youtube.com/watch?v=MG6Zaw7ATGA) | [work-sessions/2026-08-28-cox-work-session.md](work-sessions/2026-08-28-cox-work-session.md) |
+| 2026-09-25 | Work Session — Hanwha Energy Presentation | [▶](https://www.youtube.com/watch?v=Wvw2VsuSRD8) | _transcript pending_ |
 
 ### Planning Commission
 
@@ -99,6 +106,11 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-05-18 | Planning Commission | [▶](https://www.youtube.com/watch?v=erIc1_2tYk0) | [planning-commission/2026-05-18-planning-commission.md](planning-commission/2026-05-18-planning-commission.md) |
 | 2026-06-01 | Planning Commission | [▶](https://www.youtube.com/watch?v=GcTnJFfrApg) | [planning-commission/2026-06-01-planning-commission.md](planning-commission/2026-06-01-planning-commission.md) |
 | 2026-07-06 | Planning Commission | [▶](https://www.youtube.com/watch?v=encf6QzJoVM) | [planning-commission/2026-07-06-planning-commission.md](planning-commission/2026-07-06-planning-commission.md) |
+| 2026-09-08 | Planning Commission (Part 1) | [▶](https://www.youtube.com/watch?v=9IKQoKgv6HE) | _transcript pending_ |
+| 2026-09-08 | Planning Commission (Part 2) | [▶](https://www.youtube.com/watch?v=gwRfYP56p6Q) | _transcript pending_ |
+| 2026-09-21 | Planning Commission | [▶](https://www.youtube.com/watch?v=gPZDFSlamCc) | _transcript pending_ |
+| 2026-10-05 | Planning Commission | [▶](https://www.youtube.com/watch?v=VelHHw7Jnew) | _transcript pending_ |
+| 2026-10-19 | Planning Commission | [▶](https://www.youtube.com/watch?v=Wu4g09Zv02c) | _transcript pending_ |
 
 ### Board of Adjustment
 
@@ -111,6 +123,7 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-06-18 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=c-rdM6D4RMo) | *no captions on file — transcript unavailable* |
 | 2026-06-25 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=FnQgytLIkTY) | [board-of-adjustment/2026-06-25-board-of-adjustment.md](board-of-adjustment/2026-06-25-board-of-adjustment.md) |
 | 2026-07-16 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=fNwLJO6tX4g) | [board-of-adjustment/2026-07-16-board-of-adjustment.md](board-of-adjustment/2026-07-16-board-of-adjustment.md) |
+| 2026-10-15 | Board of Adjustment | [▶](https://www.youtube.com/watch?v=HW4LVHWcf-Y) | _transcript pending_ |
 
 ### Historic Preservation Board
 
@@ -123,6 +136,9 @@ Why this exists: searchable timestamped text can make public meeting videos easi
 | 2026-05-12 | Historic Preservation Board | [▶](https://www.youtube.com/watch?v=MjwalalTdp8) | [historic-preservation-board/2026-05-12-historic-preservation-board.md](historic-preservation-board/2026-05-12-historic-preservation-board.md) |
 | 2026-06-09 | Historic Preservation Board | [▶](https://www.youtube.com/watch?v=wMjM4JjqDwU) | [historic-preservation-board/2026-06-09-historic-preservation-board.md](historic-preservation-board/2026-06-09-historic-preservation-board.md) |
 | 2026-07-14 | Historic Preservation Board | [▶](https://www.youtube.com/watch?v=YMsVe6JHm3k) | [historic-preservation-board/2026-07-14-historic-preservation-board.md](historic-preservation-board/2026-07-14-historic-preservation-board.md) |
+| 2026-08-11 | Historic Preservation Board | [▶](https://www.youtube.com/watch?v=ufjMMFxH7xc) | _transcript pending_ |
+| 2026-09-09 | Historic Preservation Board | [▶](https://www.youtube.com/watch?v=OZWHslT5-Xc) | _transcript pending_ |
+| 2026-10-13 | Historic Preservation Board | [▶](https://www.youtube.com/watch?v=YPOe1yN_2h0) | _transcript pending_ |
 
 ### Urban Renewal Authority
 

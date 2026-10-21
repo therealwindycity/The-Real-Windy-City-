@@ -1,43 +1,80 @@
 name: Fetch meeting transcripts
+
+# Downloads captions for catalog entries in cheyenne-2026-transcripts/
+# meetings.json that do not have a transcript file yet, converts them with
+# tools/fetch_transcripts.py, rebuilds coverage, runs the test suite, and
+# commits the result back to the ref the workflow was dispatched on.
+#
+# Manual dispatch only: caption availability and wording are evidence, so a
+# human chooses when a collection run happens (and reviews the commit).
+# Dispatch it on the branch that should receive the transcript commit.
+
 on:
   workflow_dispatch:
     inputs:
-      video_ids:
-        description: "Comma-separated YouTube IDs to test (blank = all pending in meetings.json)"
+      only:
+        description: "Optional comma-separated YouTube IDs to limit the run"
         required: false
         default: ""
-      test_only:
-        description: "true = upload artifacts only, do not commit"
-        required: false
-        default: "true"
+
 permissions:
   contents: write
+
+concurrency:
+  group: fetch-transcripts-${{ github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install yt-dlp
-        run: pip install -q yt-dlp && yt-dlp --version
-      - name: Probe caption download
         run: |
-          mkdir -p /tmp/caps
-          IDS="${{ inputs.video_ids }}"
-          if [ -z "$IDS" ]; then IDS="tuNz5g8X0YA"; fi
-          IFS=',' read -ra ARR <<< "$IDS"
-          for id in "${ARR[@]}"; do
-            echo "=== $id ==="
-            yt-dlp --skip-download --write-auto-subs --write-subs --sub-langs "en.*" --sub-format "vtt" \
-              --extractor-args "youtube:player_client=android,tv,web" \
-              -o "/tmp/caps/$id.%(ext)s" "https://www.youtube.com/watch?v=$id" 2>&1 | tail -20 || true
-            ls -la /tmp/caps/ || true
-          done
-      - uses: actions/upload-artifact@v4
-        with:
-          name: caption-probe
-          path: /tmp/caps/
-          if-no-files-found: warn
+          pip install -q yt-dlp
+          yt-dlp --version
+
+      - name: Fetch pending transcripts
+        id: fetch
+        run: |
+          if [ -n "${{ inputs.only }}" ]; then
+            python3 tools/fetch_transcripts.py fetch --only "${{ inputs.only }}"
+          else
+            python3 tools/fetch_transcripts.py fetch
+          fi
+
+      - name: Rebuild coverage counts
+        run: python3 tools/build_archive_coverage.py
+
+      - name: Test before committing
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cheyenne-2026-transcripts city index.html
+          if git diff --cached --quiet; then
+            echo "No transcript changes to commit."
+            echo "## No changes" >> "$GITHUB_STEP_SUMMARY"
+          else
+            git diff --cached --stat | tail -30
+            git commit -m "Fetch pending meeting transcripts (automated caption download)"
+            git push origin HEAD:${{ github.ref_name }}
+            {
+              echo "## Transcripts fetched"
+              echo '```'
+              git show --stat --format='%h %s' HEAD | tail -30
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
