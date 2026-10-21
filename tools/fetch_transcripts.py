@@ -31,6 +31,7 @@ import argparse
 import datetime
 import html
 import json
+import os
 import re
 import subprocess
 import sys
@@ -221,10 +222,28 @@ def run_yt_dlp(args: list[str]) -> bool:
     cmd = ["yt-dlp", "--no-warnings", *args]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
     if result.returncode != 0:
-        tail = "\n".join((result.stdout + result.stderr).strip().splitlines()[-6:])
+        out = (result.stdout + result.stderr).strip()
+        tail = "\n".join(out.splitlines()[-6:])
         print(f"  yt-dlp failed ({result.returncode}):\n{tail}", file=sys.stderr)
+        if os.environ.get("GITHUB_ACTIONS"):
+            # Annotations are readable without downloading job logs.
+            errors = [ln for ln in out.splitlines() if "ERROR" in ln] or out.splitlines()[-1:]
+            for ln in errors[:3]:
+                cleaned = ln.replace("%", "%25").replace("\r", " ").replace("\n", " ")[:500]
+                print(f"::error title=yt-dlp::{cleaned}")
         return False
     return True
+
+
+def impersonate_available() -> bool:
+    try:
+        out = subprocess.run(
+            ["yt-dlp", "--list-impersonate-targets"],
+            capture_output=True, text=True, timeout=120,
+        )
+        return "chrome" in (out.stdout + out.stderr).lower()
+    except Exception:
+        return False
 
 
 def download_captions(youtube_id: str) -> tuple[Path, str] | None:
@@ -232,35 +251,45 @@ def download_captions(youtube_id: str) -> tuple[Path, str] | None:
 
     Returns (path, captions_label) or None. Manual (creator-provided)
     captions are tried before auto-generated ones so the header label
-    can say which kind the transcript came from.
+    can say which kind the transcript came from. Each kind is tried
+    plain first, then with browser impersonation if available.
     """
     url = f"https://www.youtube.com/watch?v={youtube_id}"
     out = str(RAW / f"{youtube_id}.%(ext)s")
-    common = [
+    expected = RAW / f"{youtube_id}.en.vtt"
+    kinds = [
+        (["--write-subs", "--sub-langs", "en"], "English (creator-provided)"),
+        (["--write-auto-subs", "--sub-langs", "en.*"], "English (auto-generated)"),
+    ]
+    base = [
         "--skip-download",
         "--sub-format",
         "vtt",
+        *(
+            ["--cookies", os.environ["YTDLP_COOKIES_FILE"]]
+            if os.environ.get("YTDLP_COOKIES_FILE")
+            else []
+        ),
         "--extractor-args",
-        "youtube:player_client=android,tv,web",
+        "youtube:player_client=android,ios,tv,web",
         "-o",
         out,
         url,
     ]
-    expected = RAW / f"{youtube_id}.en.vtt"
-    attempts = [
-        (["--write-subs", "--sub-langs", "en"], "English (creator-provided)"),
-        (["--write-auto-subs", "--sub-langs", "en.*"], "English (auto-generated)"),
-    ]
-    for flags, label in attempts:
-        if expected.exists():
-            expected.unlink()
-        if run_yt_dlp([*flags, *common]) and expected.is_file() and expected.stat().st_size > 0:
-            return expected, label
-        # yt-dlp may write e.g. {id}.en-US.vtt; normalize to {id}.en.vtt
-        for candidate in sorted(RAW.glob(f"{youtube_id}.en*.vtt")):
-            if candidate.stat().st_size > 0:
-                candidate.replace(expected)
+    variants: list[list[str]] = [[]]
+    if impersonate_available():
+        variants.append(["--impersonate", "chrome"])
+    for variant in variants:
+        for flags, label in kinds:
+            if expected.exists():
+                expected.unlink()
+            if run_yt_dlp([*variant, *flags, *base]) and expected.is_file() and expected.stat().st_size > 0:
                 return expected, label
+            # yt-dlp may write e.g. {id}.en-US.vtt; normalize to {id}.en.vtt
+            for candidate in sorted(RAW.glob(f"{youtube_id}.en*.vtt")):
+                if candidate.stat().st_size > 0:
+                    candidate.replace(expected)
+                    return expected, label
     return None
 
 

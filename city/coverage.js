@@ -1,7 +1,11 @@
 'use strict';
 (async () => {
   const $ = id => document.getElementById(id);
-  const fmt = value => value ? new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Denver' }) : 'Not recorded';
+  // Plain YYYY-MM-DD collection dates display as dates only (UTC), never
+  // with an invented time-of-day or a timezone-shifted day.
+  const fmt = value => !value ? 'Not recorded'
+    : /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(value).toLocaleDateString(undefined, { dateStyle: 'medium', timeZone: 'UTC' })
+    : new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Denver' });
   async function fetchWithTimeout(url, ms = 15000) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), ms);
