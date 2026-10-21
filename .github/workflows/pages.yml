@@ -78,6 +78,7 @@ jobs:
 
       - name: Assemble the site
         run: |
+          python3 tools/build_archive_coverage.py
           mkdir -p site
           rsync -a --delete \
             --exclude='.git' \
