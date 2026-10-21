@@ -1,0 +1,43 @@
+name: Fetch meeting transcripts
+on:
+  workflow_dispatch:
+    inputs:
+      video_ids:
+        description: "Comma-separated YouTube IDs to test (blank = all pending in meetings.json)"
+        required: false
+        default: ""
+      test_only:
+        description: "true = upload artifacts only, do not commit"
+        required: false
+        default: "true"
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install yt-dlp
+        run: pip install -q yt-dlp && yt-dlp --version
+      - name: Probe caption download
+        run: |
+          mkdir -p /tmp/caps
+          IDS="${{ inputs.video_ids }}"
+          if [ -z "$IDS" ]; then IDS="tuNz5g8X0YA"; fi
+          IFS=',' read -ra ARR <<< "$IDS"
+          for id in "${ARR[@]}"; do
+            echo "=== $id ==="
+            yt-dlp --skip-download --write-auto-subs --write-subs --sub-langs "en.*" --sub-format "vtt" \
+              --extractor-args "youtube:player_client=android,tv,web" \
+              -o "/tmp/caps/$id.%(ext)s" "https://www.youtube.com/watch?v=$id" 2>&1 | tail -20 || true
+            ls -la /tmp/caps/ || true
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: caption-probe
+          path: /tmp/caps/
+          if-no-files-found: warn
