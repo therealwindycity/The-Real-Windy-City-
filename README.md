@@ -58,3 +58,18 @@ Scores are keyword counts that rank passages for human review. They are not find
 - [Meeting archives, 2022](https://github.com/therealwindycity/cheyenne-archives-2022) — agendas, agenda packets, supporting documents, minutes.
 - [Meeting archives, 2023–2024](https://github.com/therealwindycity/cheyenne-archives-2023-2024) — agendas, agenda packets, supporting documents, minutes.
 - [Meeting archives, 2025–2026](https://github.com/therealwindycity/cheyenne-archives-2025-2026) — agendas, agenda packets, supporting documents, minutes.
+
+## Classic city view
+
+[`city/`](city/) provides an independent municipal-style directory, searchable
+meeting catalog and plain-text transcript reader. It reads the existing
+`cheyenne-2026-transcripts/meetings.json` without duplicating the archive.
+No build dependencies or third-party scripts are required. Preview with
+`python3 -m http.server 8000 --bind 0.0.0.0` and visit `/city/`.
+
+The existing Pages workflow includes this directory when deployed; the expected
+URL is https://therealwindycity.github.io/The-Real-Windy-City-/city/ . Changes on
+other branches require merging to a publishing branch before they appear there.
+This does not deploy to the separate `/therealwindycity/` site or Streamlit app.
+The read-only city mirror and scheduled synchronization service are documented
+in [city/SYNC.md](city/SYNC.md). Official transactions remain on the official city website.

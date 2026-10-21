@@ -1,0 +1,31 @@
+{
+  "origin": "https://www.cheyennecity.org",
+  "seeds": [
+    "/"
+  ],
+  "user_agent": "RealWindyCityArchive/1.0 (+https://github.com/therealwindycity/The-Real-Windy-City-)",
+  "delay_seconds": 3,
+  "max_pages_per_run": 1500,
+  "max_bytes_per_run": 250000000,
+  "max_file_bytes": 20000000,
+  "max_sitemaps": 30,
+  "timeout_seconds": 35,
+  "exclude_path_patterns": [
+    "/admin(?:/|$)",
+    "/login(?:/|$)",
+    "/logout(?:/|$)",
+    "/search(?:/|$)",
+    "/cart(?:/|$)",
+    "/checkout(?:/|$)",
+    "/myaccount(?:/|$)",
+    "/forms?(?:/|$)",
+    "/payments?(?:/|$)",
+    "\\.(?:js|css|png|jpe?g|gif|webp|svg|ico|woff2?|ttf|eot|mp[34]|mov|avi|zip|exe|msi)$"
+  ],
+  "document_types": {
+    "application/pdf": ".pdf",
+    "text/plain": ".txt"
+  },
+  "max_run_seconds": 5400,
+  "max_archive_bytes": 400000000
+}

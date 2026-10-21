@@ -1,0 +1,28 @@
+name: City mirror tests
+on:
+  pull_request:
+    paths:
+      - 'city/**'
+      - 'tools/sync_city.py'
+      - 'tests/**'
+      - '.github/workflows/**'
+  push:
+    branches: [arena/142bedb5-the-real-windy-city]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run offline fixture tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate browser script syntax
+        run: |
+          node --check city/city.js
+          node --check city/mirror-search.js
+      - name: Render an honest empty-state mirror
+        run: |
+          python3 tools/sync_city.py --render-only
+          test -f city/mirror/index.html
+          test -f city/mirror/status.html
