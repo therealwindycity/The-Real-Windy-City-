@@ -30,3 +30,13 @@ audit/output/
 # Rebuilt public mirror; crawl state lives in .cache and the Actions cache.
 city/mirror/
 site/
+
+# Live scanner transcriber runtime state & private audio (never commit runtime DBs or audio chunks)
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.egg-info/
+.pytest_cache/
+private_audio/
+services/scanner_transcriber/models/
+

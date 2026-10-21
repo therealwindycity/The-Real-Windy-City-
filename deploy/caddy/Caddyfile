@@ -1,0 +1,29 @@
+{$SCANNER_API_HOSTNAME} {
+    encode zstd gzip
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    @public_read {
+        method GET OPTIONS
+        path /api/scanner/health /api/scanner/feeds /api/scanner/feeds/*/segments /api/scanner/feeds/*/stream
+    }
+
+    # Inject the backend bearer credential purely inside the TLS reverse proxy so the public
+    # static frontend never embeds secrets in client JavaScript bundles.
+    handle @public_read {
+        reverse_proxy scanner-transcriber:8787 {
+            header_up Authorization "Bearer {$SCANNER_API_TOKEN}"
+            flush_interval -1
+        }
+    }
+
+    handle /healthz {
+        reverse_proxy scanner-transcriber:8787
+    }
+
+    respond 404
+}

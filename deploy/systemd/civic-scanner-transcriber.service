@@ -1,0 +1,33 @@
+[Unit]
+Description=Civic Cheyenne Live Scanner Transcription Worker & API (Feed 47003)
+Documentation=file:///opt/civic-scanner/services/scanner_transcriber/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=civic-scanner
+Group=civic-scanner
+WorkingDirectory=/opt/civic-scanner/services/scanner_transcriber
+EnvironmentFile=/etc/civic-scanner/scanner.env
+StateDirectory=civic-scanner
+StateDirectoryMode=0700
+UMask=0077
+ExecStart=/opt/civic-scanner/venv/bin/scanner-transcriber serve
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+TimeoutStopSec=45
+Restart=always
+RestartSec=5
+StartLimitIntervalSec=120
+StartLimitBurst=8
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/civic-scanner
+
+[Install]
+WantedBy=multi-user.target

@@ -98,6 +98,8 @@ jobs:
             --exclude='tools' \
             --exclude='audit' \
             --exclude='data' \
+            --exclude='services' \
+            --exclude='deploy' \
             --exclude='node_modules' \
             --exclude='*.zip' \
             ./ site/
