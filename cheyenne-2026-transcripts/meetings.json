@@ -33,7 +33,8 @@
     "date": "2026-03-23",
     "body": "city-council",
     "youtube_id": "ey_oCFcK7Cs",
-    "file": "city-council/2026-03-23-city-council.md"
+    "file": "city-council/2026-03-23-city-council.md",
+    "note": "The city's combined stream is titled 'City Council & Special Meeting - Fire Negotiations - 03-23-26': this one video contains both the regular meeting and the special meeting held immediately after it (Granicus lists them separately as clips 1086 and 1087). Cataloged once."
   },
   {
     "date": "2026-04-13",
@@ -312,12 +313,12 @@
     "file": "finance-committee/2026-09-22-finance-committee.md"
   },
   {
-    "date": "2026",
+    "date": "2026-06-06",
     "body": "work-session",
     "topic": "Cheyenne Data Center Panel",
     "youtube_id": "Hq26nwpjs2k",
-    "file": "work-sessions/2026-data-center-panel.md",
-    "note": "Exact session date unknown; listed by the city as 'Cheyenne Data Center Panel' (2026)."
+    "file": "work-sessions/2026-06-06-data-center-panel.md",
+    "note": "Session date determined 2026-10-21: the city's Data Centers page and its May 29, 2026 news article date the panel Saturday, June 6, 2026 (Civic Center); previously cataloged with year only as work-sessions/2026-data-center-panel.md."
   },
   {
     "date": "2026-01-14",
@@ -623,5 +624,213 @@
     "body": "finance-committee",
     "youtube_id": "tuNz5g8X0YA",
     "file": null
+  },
+  {
+    "date": "2026-01-16",
+    "body": "work-session",
+    "topic": "Fiscal Year 2025 Audit",
+    "youtube_id": "dBfJojl7z4A",
+    "file": null
+  },
+  {
+    "date": "2026-01-23",
+    "body": "work-session",
+    "topic": "Annual UDC Review",
+    "youtube_id": "_66qb9ib2a8",
+    "file": null,
+    "note": "Per the city's work-session listing, the video contains a short Special Meeting at the beginning; the same recording is the 'Special Meeting' of January 23, 2026 in the City Council list (Granicus clip 1052). Cataloged once, as the work session."
+  },
+  {
+    "date": "2026-02-06",
+    "body": "work-session",
+    "topic": "City Council Discussion of New Council Office Space",
+    "youtube_id": "Pd6lYW4sDMQ",
+    "file": null
+  },
+  {
+    "date": "2026-03-06",
+    "body": "work-session",
+    "topic": "Wyoming Business Council Statewide Poll Results",
+    "youtube_id": "DfIIXvPzkoA",
+    "file": null
+  },
+  {
+    "date": "2026-03-20",
+    "body": "work-session",
+    "topic": "Downtown Development Authority Updates",
+    "youtube_id": "ke7KkG--4bw",
+    "file": null
+  },
+  {
+    "date": "2026-05-01",
+    "body": "work-session",
+    "topic": "City Employee Pay Structure",
+    "youtube_id": "khQwvxHwQLc",
+    "file": null
+  },
+  {
+    "date": "2026-05-06",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: Overview, Mayor's Department and Treasurer's Department",
+    "youtube_id": "jWRM72a_Bm4",
+    "file": null
+  },
+  {
+    "date": "2026-05-07",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: Public Works",
+    "youtube_id": "L7oVjOCqF5Y",
+    "file": null
+  },
+  {
+    "date": "2026-05-08",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: Engineering",
+    "youtube_id": "BCsj4vDUW0w",
+    "file": null
+  },
+  {
+    "date": "2026-05-11",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: Compliance Department",
+    "youtube_id": "a1bMkpMR5Xw",
+    "file": null
+  },
+  {
+    "date": "2026-05-12",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: Municipal Court, Fire Department and Police Department",
+    "youtube_id": "sD1_V8VJJoA",
+    "file": null
+  },
+  {
+    "date": "2026-05-13",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: Community Recreation and Events",
+    "youtube_id": "wQp96dz4Fmk",
+    "file": null
+  },
+  {
+    "date": "2026-05-14",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: City Attorney, Clerk, Human Resources and Youth Alternatives",
+    "youtube_id": "odbfDtUO19o",
+    "file": null
+  },
+  {
+    "date": "2026-05-15",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Budget: Planning and Development Department and Downtown Development Authority",
+    "youtube_id": "o0n-V8CtOrk",
+    "file": null
+  },
+  {
+    "date": "2026-05-20",
+    "body": "work-session",
+    "topic": "Committee of the Whole",
+    "youtube_id": "iOkqB_Yp2kU",
+    "file": null,
+    "expected_file": "work-sessions/2026-05-20-committee-of-the-whole.md"
+  },
+  {
+    "date": "2026-05-29",
+    "body": "work-session",
+    "topic": "Safe Streets for All Presentation",
+    "youtube_id": "xAWqYVrnqhI",
+    "file": null
+  },
+  {
+    "date": "2026-06-02",
+    "body": "work-session",
+    "topic": "Committee of the Whole",
+    "youtube_id": "GFUm9t4r7WQ",
+    "file": null,
+    "expected_file": "work-sessions/2026-06-02-committee-of-the-whole.md"
+  },
+  {
+    "date": "2026-06-26",
+    "body": "work-session",
+    "topic": "Juvenile Justice Taskforce",
+    "youtube_id": "WEEXvV54620",
+    "file": null,
+    "note": "The Video link on the city's Minutes and Agendas page for this session points to an unrelated funeral-home obituary (checked 2026-10-21). This entry uses the City of Cheyenne channel upload titled 'Work Session - Juvenile Justice Taskforce - 06-26-26'."
+  },
+  {
+    "date": "2026-04-15",
+    "body": "work-session",
+    "topic": "Former Senior Center Building Tour",
+    "youtube_id": null,
+    "file": null,
+    "note": "The city's work-session listing states 'NO VIDEO AVAILABLE' for this session (checked 2026-10-21); indexed from its posted agenda so the gap is explicit."
+  },
+  {
+    "date": "2026-04-17",
+    "body": "work-session",
+    "topic": "Fiscal Year 2027 Board of Public Utilities Budget Presentation",
+    "youtube_id": null,
+    "file": null,
+    "note": "Held at the Board of Public Utilities, per the city's listing, which posts an agenda and no video (checked 2026-10-21); indexed so the gap is explicit."
+  },
+  {
+    "date": "2026-02-23",
+    "body": "city-council",
+    "topic": "Special Meeting \u2014 Fire Negotiations",
+    "youtube_id": "exnksYjsUks",
+    "file": null,
+    "expected_file": "city-council/2026-02-23-city-council-special-meeting.md",
+    "note": "Special meeting separate from the regular February 23, 2026 meeting (Granicus clip 1063); the city's upload runs under four minutes."
+  },
+  {
+    "date": "2026-03-05",
+    "body": "city-council",
+    "topic": "Special Meeting \u2014 Fire Negotiations",
+    "youtube_id": "rNF28Y6Ehhg",
+    "file": null,
+    "expected_file": "city-council/2026-03-05-city-council-special-meeting.md"
+  },
+  {
+    "date": "2026-03-12",
+    "body": "city-council",
+    "topic": "Special Meeting \u2014 Fire Negotiations",
+    "youtube_id": "TWHE04QLQAY",
+    "file": null,
+    "expected_file": "city-council/2026-03-12-city-council-special-meeting.md"
+  },
+  {
+    "date": "2026-03-16",
+    "body": "city-council",
+    "topic": "Special Meeting \u2014 Fire Negotiations",
+    "youtube_id": "pizUXui6X0s",
+    "file": null,
+    "expected_file": "city-council/2026-03-16-city-council-special-meeting.md"
+  },
+  {
+    "date": "2026-03-17",
+    "body": "city-council",
+    "topic": "Special Meeting \u2014 Fire Negotiations",
+    "youtube_id": "8yeQGSX0zbM",
+    "file": null,
+    "expected_file": "city-council/2026-03-17-city-council-special-meeting.md"
+  },
+  {
+    "date": "2026-03-19",
+    "body": "board-of-adjustment",
+    "youtube_id": null,
+    "file": null,
+    "note": "The city Board of Adjustment page lists an agenda for this date but no minutes and no meeting video (checked 2026-10-21); indexed so the gap is explicit."
+  },
+  {
+    "date": "2026-08-20",
+    "body": "board-of-adjustment",
+    "youtube_id": null,
+    "file": null,
+    "note": "Agenda and signed minutes are posted on the city Board of Adjustment page, but no meeting video (checked 2026-10-21); the board approved these minutes on October 15, 2026. Indexed so the gap is explicit."
+  },
+  {
+    "date": "2026-09-17",
+    "body": "board-of-adjustment",
+    "youtube_id": null,
+    "file": null,
+    "note": "The city Board of Adjustment page lists an agenda for this date but no minutes and no meeting video (checked 2026-10-21); whether the meeting occurred is unconfirmed from the posted record alone."
   }
 ]

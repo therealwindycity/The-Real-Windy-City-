@@ -492,7 +492,7 @@ def main() -> int:
             m["artifact_url"] = (
                 f"https://github.com/therealwindycity/The-Real-Windy-City-/blob/main/"
                 f"cheyenne-2026-transcripts/{m['file']}")
-            m["video_url"] = f"https://www.youtube.com/watch?v={m['youtube_id']}"
+            m["video_url"] = f"https://www.youtube.com/watch?v={m['youtube_id']}" if m.get("youtube_id") else None
 
     meta = {
         "generated": datetime.now(timezone.utc).isoformat(),
