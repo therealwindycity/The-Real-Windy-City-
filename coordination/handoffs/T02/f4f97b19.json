@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "task_id": "T02",
+  "title": "Complete GitHub and Google Drive Public Civic Corpus Inventory, Provenance Hash Separation, Duplicate Audit, and Date-Conflict Reconciliation",
+  "agent_id": "f4f97b19",
+  "status": "ready_for_review",
+  "branch": "agent/f4f97b19/T02",
+  "target_integration_branch": "arena/civic-build-center-2026-10-21",
+  "base_sha": "491612784a0f8ec626802209dd0c3f23759ee083",
+  "upstream_contract_compatibility": {
+    "task_id": "T00",
+    "reference_branch": "agent/perplexity/T00-corpus-contract-v1",
+    "reference_sha": "864aee8cbab16c472b38a990cdba3f8345d0e7b7",
+    "schema_version": 1,
+    "verified_invariants": [
+      "Every emitted GitHub and Google Drive record validates against validateInventoryRecord (100% superset of T00 validateCorpusRecord).",
+      "Git SHA-1 (40-hex) and Google Drive MD5 (32-hex) are stored in git_blob_sha1 and drive_md5_checksum, never conflated with original_bytes_sha256 (64-hex SHA-256 or null).",
+      "Original binaries, connector HTML/captions, normalized speaker-turn transcripts, and folder/index summaries carry distinct representation_kind values.",
+      "Whenever date_conflicts is non-empty, event_date and date_evidence are strictly null.",
+      "All public-repo artifacts pass assertZeroPrivacyLeaks() before write; private/litigation/minor/runtime/archive-export items are summarized strictly by aggregate exclusion counts."
+    ]
+  },
+  "owned_paths": [
+    "scripts/inventory/privacy-gate.mjs",
+    "scripts/inventory/date-audit.mjs",
+    "scripts/inventory/record-contract.mjs",
+    "scripts/inventory/enumerate-github.mjs",
+    "scripts/inventory/enumerate-drive.mjs",
+    "scripts/inventory/build-inventory.mjs",
+    "scripts/inventory/validate-inventory.mjs",
+    "catalog/inventory/inventory-summary.json",
+    "catalog/inventory/github-inventory.json",
+    "catalog/inventory/drive-inventory.json",
+    "catalog/inventory/duplicate-groups.json",
+    "catalog/inventory/anomaly-report.json",
+    "catalog/inventory/inventory-report.md",
+    "tests/inventory/inventory.test.mjs",
+    "coordination/handoffs/T02/f4f97b19.json"
+  ],
+  "shared_files_modified": [],
+  "record_counts": {
+    "canonical_public_records_total": 10456,
+    "github_records_total": 6046,
+    "github_canonical_repositories": 8,
+    "github_non_canonical_org_repositories": 1,
+    "github_canonical_default_branch_blobs": 6037,
+    "github_canonical_default_branch_trees": 1405,
+    "github_canonical_default_branch_bytes": 7217007268,
+    "github_integration_branch_delta_blobs": 9,
+    "github_locally_sha256_verified_records": 367,
+    "drive_records_total": 4410,
+    "drive_live_v3_public_items": 178,
+    "drive_native_sha256_verified_items": 51,
+    "drive_master_meetings_transcripts": 720,
+    "drive_granicus_supporting_attachments": 2304,
+    "drive_historical_snapshot_rows_scanned": 41861,
+    "drive_historical_snapshot_public_retained": 1208,
+    "drive_date_conflicted_records_null_event_date": 532,
+    "drive_consistent_dated_records": 902,
+    "drive_privacy_excluded_items_aggregate_only": 40662,
+    "duplicate_groups_total": 1363,
+    "duplicate_groups_github": 924,
+    "duplicate_groups_drive": 439,
+    "anomalies_documented": 9
+  },
+  "baseline_integration_audit": {
+    "integration_pr": 25,
+    "integration_sha": "491612784a0f8ec626802209dd0c3f23759ee083",
+    "handoff_main_sha": "6ec2509c07716a9b61eb00863a5f5f5841d0f13d",
+    "live_main_sha": "e5479fac497ddc38a06fa1410ddd9de1f73ecd88",
+    "pr25_ci_lint_root_cause": "5 pre-existing react/no-unescaped-entities errors in src/app/explore/public-safety/page.tsx:7:253, src/app/page.tsx:6:651,7:164,7:306, and src/components/site-help.tsx:44:451 (owned by T01; untouched by T02)."
+  },
+  "verification_commands_run": [
+    {
+      "command": "node scripts/inventory/build-inventory.mjs --from-raw /tmp/t02-raw",
+      "exit_code": 0,
+      "outcome": "Generated all 6 catalog/inventory artifacts (10,456 validated records, 1,363 duplicate groups, 9 anomalies, 0 privacy leaks)."
+    },
+    {
+      "command": "node scripts/inventory/validate-inventory.mjs",
+      "exit_code": 0,
+      "outcome": "Verified all 6 output files, cross-file count totals, unique record IDs, T00 schema invariants, hash separation, and zero redline leaks."
+    },
+    {
+      "command": "node --test tests/inventory/inventory.test.mjs",
+      "exit_code": 0,
+      "outcome": "4/4 tests passing (privacy gate, date conflict audit, hash separation contract, full catalog validation)."
+    },
+    {
+      "command": "npx eslint scripts/inventory tests/inventory",
+      "exit_code": 0,
+      "outcome": "0 errors, 0 warnings across all T02 JavaScript modules and test suites."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "task_id": "T02",
+  "agent_id": "f4f97b19",
+  "branch": "agent/f4f97b19/T02",
+  "integration_base_branch": "arena/civic-build-center-2026-10-21",
+  "integration_base_sha": "491612784a0f8ec626802209dd0c3f23759ee083",
+  "generated_at": "2026-10-21T20:15:00Z",
+  "totals": {
+    "canonical_public_records": 10456,
+    "github_records": 6046,
+    "drive_records": 4410,
+    "duplicate_groups": 1363,
+    "anomalies": 9
+  },
+  "github": {
+    "canonical_repository_count": 8,
+    "total_org_repository_count": 9,
+    "canonical_default_branch_blob_count": 6037,
+    "canonical_default_branch_tree_count": 1405,
+    "canonical_default_branch_bytes": 7217007268,
+    "integration_delta_blob_count": 9,
+    "total_emitted_github_records": 6046,
+    "locally_sha256_verified_records": 367,
+    "duplicate_blob_groups": 924,
+    "redundant_blob_copies": 1306,
+    "cross_repo_duplicate_groups": 8,
+    "reclaimable_duplicate_bytes": 2203705387
+  },
+  "google_drive": {
+    "shared_drives_count": 0,
+    "trashed_items_audited_and_excluded": 50,
+    "live_public_drive_items_count": 178,
+    "live_sha256_verified_items_count": 51,
+    "master_meetings_transcripts_count": 720,
+    "granicus_supporting_attachments_count": 2304,
+    "historical_snapshot_rows_scanned": 41861,
+    "historical_snapshot_deduped_against_live": 8,
+    "historical_snapshot_public_retained": 1208,
+    "total_emitted_drive_records": 4410,
+    "date_conflicted_drive_records": 532,
+    "consistent_dated_drive_records": 902,
+    "privacy_excluded_total_items": 40662,
+    "privacy_exclusion_counts_by_category": {
+      "active-drive-private-personal-or-litigation-items": 17,
+      "default-deny-unverified-drive-item": 35827,
+      "private-litigation-or-identity": 38,
+      "browser-or-archive-export": 762,
+      "non-civic-or-unverified-youtube-download": 220,
+      "minor-or-student-privacy": 4,
+      "venv-or-package-runtime-noise": 3793,
+      "email-address": 1
+    },
+    "duplicate_groups_count": 439
+  }
+}
