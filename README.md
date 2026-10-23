@@ -53,6 +53,24 @@ streamlit run audit/app.py
 Scores are keyword counts that rank passages for human review. They are not findings. See
 [audit/README.md](audit/README.md).
 
+## Any-city crawler: point it at another town
+
+[`tools/anycity_crawler.py`](tools/anycity_crawler.py) generalises the Cheyenne
+mirror into an **adaptive focused incremental crawler with platform
+fingerprinting and automatic wrapper induction**: point it at any city or town
+seed URL and a reconnaissance crawl first maps that site's infrastructure
+(CivicPlus, Granicus, BoardDocs, Laserfiche, generic WordPress/Drupal, …),
+induces a reviewable `site-profile.json` wrapper (allowed vendor hosts,
+document URL templates, listing pages), and then harvests agendas, minutes
+and other PDFs incrementally — only new or hash-changed files on later runs.
+Terminology, architecture, usage and limits:
+[docs/anycity-crawler.md](docs/anycity-crawler.md).
+
+```bash
+python3 tools/anycity_crawler.py run https://www.exampleville.gov --workdir towns/exampleville
+python3 -m unittest tests.test_anycity_crawler -v   # offline fixture towns
+```
+
 ## Other archives in this series
 - [Meeting archives, 2008–2013](https://github.com/therealwindycity/cheyenne-archives-2008-2013) — agendas, agenda packets, supporting documents, minutes.
 - [Meeting archives, 2014–2017](https://github.com/therealwindycity/cheyenne-archives-2014-2017) — agendas, agenda packets, supporting documents, minutes.
